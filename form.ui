@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>595</width>
-    <height>342</height>
+    <width>633</width>
+    <height>362</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,8 +29,14 @@
       <height>400</height>
      </rect>
     </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>16777215</height>
+     </size>
+    </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="tabsClosable">
      <bool>true</bool>
@@ -115,7 +121,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>595</width>
+     <width>633</width>
      <height>21</height>
     </rect>
    </property>
