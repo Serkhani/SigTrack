@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QDockWidget
 
 from PySide6.QtCore import Qt
 
@@ -11,4 +11,11 @@ _DOCK_POSITIONS = (
     Qt.TopDockWidgetArea,
     Qt.RightDockWidgetArea,
     Qt.BottomDockWidgetArea
+)
+
+_DOCK_FEATURES = (
+    QDockWidget.DockWidgetClosable,
+    QDockWidget.DockWidgetMovable,
+    QDockWidget.DockWidgetFloatable,
+    QDockWidget.DockWidgetVerticalTitleBar
 )

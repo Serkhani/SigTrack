@@ -1,3 +1,3 @@
 {
-    "files": ["mainwindow.py","form.ui","constants.py"]
+    "files": ["mainwindow.py","DockWidgets/ImageViewDockWidget.py","constants.py","form.ui","DockWidgets/dockWidget.py"]
 }

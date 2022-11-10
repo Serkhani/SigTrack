@@ -1,8 +1,9 @@
 # This Python file uses the following encoding: utf-8
 import sys
-from constants import _DOCK_OPTS
-
-from PySide6.QtWidgets import QApplication, QMainWindow
+from constants import _DOCK_OPTS, _DOCK_POSITIONS
+from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
+from DockWidgets.dockWidget import DockWidget
+from PySide6.QtWidgets import QApplication, QMainWindow, QDockWidget
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -15,6 +16,7 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.dockCount = 0
         self.setDockOptions(_DOCK_OPTS)# defines docking behaviour
 #       setting up function callbacks for menu actions
         self.ui.actionlocal.triggered.connect(self.importLocalAction)
@@ -31,15 +33,35 @@ class MainWindow(QMainWindow):
         self.ui.actionImage.triggered.connect(self.imageAction)
         self.ui.actionVideo.triggered.connect(self.videoAction)
 
+        self.imageViewer = ImageViewDockWidget(self)
+
     def videoAction(self):
 #        add video dockwidget to central widget area
-        pass
+
+#        increment dockCount
+        self.dockCount += 1
+#        hide the label when there are views
+        self.ui.label.hide()
+
     def imageAction(self):
 #        add image dockwidget to central widget area
-        pass
+
+#        increment dockCount
+        self.dockCount += 1
+#        hide the label when there are views
+        self.ui.label.hide()
+        dockWidget = DockWidget(self)
+        dockWidget.setWidget(self.imageViewer)
+        self.addDockWidget(_DOCK_POSITIONS[0], dockWidget)
+
     def mapAction(self):
 #        add map dockwidget to central widget area
-        pass
+
+#        increment dockCount
+        self.dockCount += 1
+#        hide the label when there are views
+        self.ui.label.hide()
+
     def panAction(self):
 #        pan the view
         pass
