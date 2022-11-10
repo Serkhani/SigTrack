@@ -3,7 +3,7 @@ import sys
 from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
 from DockWidgets.dockWidget import DockWidget
-from PySide6.QtWidgets import QApplication, QMainWindow, QDockWidget
+from PySide6.QtWidgets import QApplication, QMainWindow
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -51,8 +51,8 @@ class MainWindow(QMainWindow):
 #        hide the label when there are views
         self.ui.label.hide()
         dockWidget = DockWidget(self)
-        dockWidget.setWidget(self.imageViewer)
-        self.addDockWidget(_DOCK_POSITIONS[0], dockWidget)
+#        dockWidget.setWidget(self.imageViewer)
+        self.addDockWidget(_DOCK_POSITIONS[self.dockCount%4], dockWidget)
 
     def mapAction(self):
 #        add map dockwidget to central widget area
