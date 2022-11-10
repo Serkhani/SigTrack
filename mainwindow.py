@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import sys
+from constants import _DOCK_OPTS
 
 from PySide6.QtWidgets import QApplication, QMainWindow
 
@@ -14,6 +15,7 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setDockOptions(_DOCK_OPTS)
 
 
 if __name__ == "__main__":
