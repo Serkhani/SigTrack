@@ -16,17 +16,15 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
-from PySide6.QtWidgets import (QApplication, QDockWidget, QGraphicsView, QGridLayout,
-    QMainWindow, QMdiArea, QMenu, QMenuBar,
-    QSizePolicy, QTabWidget, QToolBar, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QLabel, QMainWindow, QMenu,
+    QMenuBar, QSizePolicy, QToolBar, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(464, 312)
+        MainWindow.resize(502, 320)
+        MainWindow.setDocumentMode(True)
         self.actionO = QAction(MainWindow)
         self.actionO.setObjectName(u"actionO")
         self.actionReopen = QAction(MainWindow)
@@ -64,59 +62,23 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
         self.centralwidget.setSizePolicy(sizePolicy)
-        self.gridLayout_2 = QGridLayout(self.centralwidget)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.mdiArea_2 = QMdiArea(self.centralwidget)
-        self.mdiArea_2.setObjectName(u"mdiArea_2")
-
-        self.gridLayout_2.addWidget(self.mdiArea_2, 0, 0, 1, 1)
-
-        self.mdiArea = QMdiArea(self.centralwidget)
-        self.mdiArea.setObjectName(u"mdiArea")
-
-        self.gridLayout_2.addWidget(self.mdiArea, 0, 1, 1, 1)
-
-        self.tabWidget = QTabWidget(self.centralwidget)
-        self.tabWidget.setObjectName(u"tabWidget")
-        sizePolicy.setHeightForWidth(self.tabWidget.sizePolicy().hasHeightForWidth())
-        self.tabWidget.setSizePolicy(sizePolicy)
-        self.tabWidget.setMaximumSize(QSize(16777215, 16777215))
-        self.tabWidget.setTabsClosable(True)
-        self.tabWidget.setMovable(True)
-        self.imageTab = QWidget()
-        self.imageTab.setObjectName(u"imageTab")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.imageTab.sizePolicy().hasHeightForWidth())
-        self.imageTab.setSizePolicy(sizePolicy1)
-        self.verticalLayout = QVBoxLayout(self.imageTab)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.graphicsView = QGraphicsView(self.imageTab)
-        self.graphicsView.setObjectName(u"graphicsView")
-
-        self.verticalLayout.addWidget(self.graphicsView)
-
-        self.tabWidget.addTab(self.imageTab, "")
-        self.map = QWidget()
-        self.map.setObjectName(u"map")
-        sizePolicy1.setHeightForWidth(self.map.sizePolicy().hasHeightForWidth())
-        self.map.setSizePolicy(sizePolicy1)
-        self.gridLayout = QGridLayout(self.map)
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.openGLWidget = QOpenGLWidget(self.map)
-        self.openGLWidget.setObjectName(u"openGLWidget")
-
-        self.gridLayout.addWidget(self.openGLWidget, 0, 0, 1, 1)
-
-        self.tabWidget.addTab(self.map, "")
-
-        self.gridLayout_2.addWidget(self.tabWidget, 0, 2, 2, 2)
-
+        self.label = QLabel(self.centralwidget)
+        self.label.setObjectName(u"label")
+        self.label.setGeometry(QRect(170, 120, 145, 36))
+        font = QFont()
+        font.setPointSize(20)
+        font.setBold(True)
+        font.setItalic(True)
+        self.label.setFont(font)
+        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setWordWrap(True)
+        self.widget = QWidget(self.centralwidget)
+        self.widget.setObjectName(u"widget")
+        self.widget.setGeometry(QRect(-1, -1, 501, 281))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 464, 21))
+        self.menubar.setGeometry(QRect(0, 0, 502, 21))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuImport = QMenu(self.menuFile)
@@ -131,21 +93,6 @@ class Ui_MainWindow(object):
         self.editingToolbar = QToolBar(MainWindow)
         self.editingToolbar.setObjectName(u"editingToolbar")
         MainWindow.addToolBar(Qt.TopToolBarArea, self.editingToolbar)
-        self.toolBar = QToolBar(MainWindow)
-        self.toolBar.setObjectName(u"toolBar")
-        MainWindow.addToolBar(Qt.TopToolBarArea, self.toolBar)
-        self.toolBar_2 = QToolBar(MainWindow)
-        self.toolBar_2.setObjectName(u"toolBar_2")
-        MainWindow.addToolBar(Qt.TopToolBarArea, self.toolBar_2)
-        self.toolBar_3 = QToolBar(MainWindow)
-        self.toolBar_3.setObjectName(u"toolBar_3")
-        MainWindow.addToolBar(Qt.TopToolBarArea, self.toolBar_3)
-        self.dockWidget = QDockWidget(MainWindow)
-        self.dockWidget.setObjectName(u"dockWidget")
-        self.dockWidgetContents = QWidget()
-        self.dockWidgetContents.setObjectName(u"dockWidgetContents")
-        self.dockWidget.setWidget(self.dockWidgetContents)
-        MainWindow.addDockWidget(Qt.LeftDockWidgetArea, self.dockWidget)
 
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
@@ -169,9 +116,6 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
-
-
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
@@ -180,7 +124,13 @@ class Ui_MainWindow(object):
         self.actionO.setText(QCoreApplication.translate("MainWindow", u"O", None))
         self.actionReopen.setText(QCoreApplication.translate("MainWindow", u"Reopen", None))
         self.actionlocal.setText(QCoreApplication.translate("MainWindow", u"Local", None))
+#if QT_CONFIG(shortcut)
+        self.actionlocal.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Shift+L", None))
+#endif // QT_CONFIG(shortcut)
         self.actionNetwork.setText(QCoreApplication.translate("MainWindow", u"Network", None))
+#if QT_CONFIG(shortcut)
+        self.actionNetwork.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Shift+N", None))
+#endif // QT_CONFIG(shortcut)
         self.actionSave.setText(QCoreApplication.translate("MainWindow", u"Save", None))
 #if QT_CONFIG(statustip)
         self.actionSave.setStatusTip(QCoreApplication.translate("MainWindow", u"Save edited file", None))
@@ -220,18 +170,23 @@ class Ui_MainWindow(object):
         self.actionPan.setShortcut(QCoreApplication.translate("MainWindow", u"Shift+P", None))
 #endif // QT_CONFIG(shortcut)
         self.actionMap.setText(QCoreApplication.translate("MainWindow", u"Map", None))
+#if QT_CONFIG(shortcut)
+        self.actionMap.setShortcut(QCoreApplication.translate("MainWindow", u"F1", None))
+#endif // QT_CONFIG(shortcut)
         self.actionImage.setText(QCoreApplication.translate("MainWindow", u"Image", None))
+#if QT_CONFIG(shortcut)
+        self.actionImage.setShortcut(QCoreApplication.translate("MainWindow", u"F2", None))
+#endif // QT_CONFIG(shortcut)
         self.actionVideo.setText(QCoreApplication.translate("MainWindow", u"Video", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.imageTab), QCoreApplication.translate("MainWindow", u"imageTab", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.map), QCoreApplication.translate("MainWindow", u"Map", None))
+#if QT_CONFIG(shortcut)
+        self.actionVideo.setShortcut(QCoreApplication.translate("MainWindow", u"F3", None))
+#endif // QT_CONFIG(shortcut)
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Add a View", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuImport.setTitle(QCoreApplication.translate("MainWindow", u"Import", None))
         self.menuEdit.setTitle(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.menuZoom.setTitle(QCoreApplication.translate("MainWindow", u"Zoom", None))
         self.menuView.setTitle(QCoreApplication.translate("MainWindow", u"View", None))
         self.editingToolbar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
-        self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
-        self.toolBar_2.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar_2", None))
-        self.toolBar_3.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar_3", None))
     # retranslateUi
 
