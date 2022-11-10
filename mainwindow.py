@@ -1,9 +1,11 @@
 # This Python file uses the following encoding: utf-8
-import sys
+import sys, os
 from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
 from DockWidgets.dockWidget import DockWidget
-from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PySide6.QtGui import QImage, QPixmap
+from PySide6.QtCore import QRectF
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -94,8 +96,22 @@ class MainWindow(QMainWindow):
 
     def importLocalAction(self):
 #        this function imports files from the local disk
-        pass
-
+        self.inputFile = os.path.normpath(QFileDialog.getOpenFileName(
+        self, caption="Select image",
+        #directory=os.path.expanduser("~")
+        dir="C:\\Users\\LENOVO\\Desktop\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images"
+        )[0])
+        if self.inputFile:
+            if not self.dockCount:
+                self.imageAction()
+            print(self.inputFile)
+            img = QImage(self.inputFile)
+            self.imageViewer.scene.clear()
+            pixmap = QPixmap.fromImage(img)
+            self.imageViewer.scene.addPixmap(pixmap)
+            self.imageViewer.setSceneRect(QRectF(pixmap.rect()))
+            self.imageViewer.resizeEvent([])
+            self.imageViewer.showNormal()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
