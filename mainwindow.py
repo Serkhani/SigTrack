@@ -34,6 +34,7 @@ class MainWindow(QMainWindow):
         self.ui.actionMap.triggered.connect(self.mapAction)
         self.ui.actionImage.triggered.connect(self.imageAction)
         self.ui.actionVideo.triggered.connect(self.videoAction)
+        self.setCentralWidget(self.ui.label)
 
         self.imageViewer = ImageViewDockWidget(self)
 
@@ -53,8 +54,10 @@ class MainWindow(QMainWindow):
 #        hide the label when there are views
         self.ui.label.hide()
         dockWidget = DockWidget(self)
-#        dockWidget.setWidget(self.imageViewer)
-        self.addDockWidget(_DOCK_POSITIONS[self.dockCount%4], dockWidget)
+        imageViewer = self.imageViewer
+        dockWidget.setWidget(imageViewer)
+        index = self.getDockIndex()
+        self.addDockWidget(_DOCK_POSITIONS[index], dockWidget)
 
     def mapAction(self):
 #        add map dockwidget to central widget area
@@ -63,6 +66,15 @@ class MainWindow(QMainWindow):
         self.dockCount += 1
 #        hide the label when there are views
         self.ui.label.hide()
+
+    def getDockIndex(self):
+#        returns the index which will be used to specify the docking position of the view
+        if self.dockCount == 1:
+            return 0
+        elif self.dockCount%2 == 0:
+            return 3
+        else: return 1
+
 
     def panAction(self):
 #        pan the view
