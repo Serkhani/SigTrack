@@ -1,11 +1,14 @@
 # This Python file uses the following encoding: utf-8
-import sys, os
+import sys, os, io
+import folium
 from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
+from DockWidgets.MapViewDockWidget import MapViewDockWidget
 from DockWidgets.dockWidget import DockWidget
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtCore import QRectF
+
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -45,6 +48,11 @@ class MainWindow(QMainWindow):
         self.dockCount += 1
 #        hide the label when there are views
         self.ui.label.hide()
+#        create dockwidget
+        dockWidget = DockWidget(self)
+        dockWidget.setWidget(self.imageViewer)
+        dockWidget.setWindowTitle('VideoView')
+        self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def imageAction(self):
 #        add image dockwidget to central widget area
@@ -53,11 +61,11 @@ class MainWindow(QMainWindow):
         self.dockCount += 1
 #        hide the label when there are views
         self.ui.label.hide()
+#        create dock widget
         dockWidget = DockWidget(self)
-        imageViewer = self.imageViewer
-        dockWidget.setWidget(imageViewer)
-        index = self.getDockIndex()
-        self.addDockWidget(_DOCK_POSITIONS[index], dockWidget)
+        dockWidget.setWidget(self.imageViewer)
+        dockWidget.setWindowTitle('ImageView')
+        self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def mapAction(self):
 #        add map dockwidget to central widget area
@@ -66,6 +74,13 @@ class MainWindow(QMainWindow):
         self.dockCount += 1
 #        hide the label when there are views
         self.ui.label.hide()
+#        create dock widget
+        dockWidget = DockWidget(self)
+        dockWidget.setWindowTitle('MapView')
+#        creating map widget
+        mapView = MapViewDockWidget()
+        dockWidget.setWidget(mapView.webView)
+        self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def getDockIndex(self):
 #        returns the index which will be used to specify the docking position of the view
@@ -130,3 +145,4 @@ if __name__ == "__main__":
     widget = MainWindow()
     widget.show()
     sys.exit(app.exec())
+

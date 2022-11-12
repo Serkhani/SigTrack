@@ -7,6 +7,7 @@ class ImageViewDockWidget(QGraphicsView):
     def __init__(self, mainWindow):
         super().__init__()
         self.mainWindow = mainWindow
+        self.setWindowTitle('ImageView')
         self.scene = QGraphicsScene()
         self.setScene(self.scene)
 
