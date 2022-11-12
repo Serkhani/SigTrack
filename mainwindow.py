@@ -6,24 +6,28 @@ from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
 from DockWidgets.MapViewDockWidget import MapViewDockWidget
 from DockWidgets.dockWidget import DockWidget
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
-from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtCore import QRectF
-
-
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     pyside6-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
+from exif import Image
+from constants import PHOTO_EXTENSIONS, DEPENDENCIES
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.dockCount = 0
         self.setDockOptions(_DOCK_OPTS)# defines docking behaviour
-#       setting up function callbacks for menu actions
+#        variable initializations
+        self.dockCount = 0
+        self.inputFolderPath = None
+        self.inputFile = None
+        self.images_dict = {}
+        self.imagePaths = []
+#        setting up function callbacks for menu actions
         self.ui.actionlocal.triggered.connect(self.importLocalAction)
         self.ui.actionNetwork.triggered.connect(self.importNetworkAction)
         self.ui.actionSave.triggered.connect(self.saveAction)
@@ -38,52 +42,48 @@ class MainWindow(QMainWindow):
         self.ui.actionImage.triggered.connect(self.imageAction)
         self.ui.actionVideo.triggered.connect(self.videoAction)
         self.setCentralWidget(self.ui.label)
-
+#        custom dockwidgetviews initializations
+        self.mapView = MapViewDockWidget()
         self.imageViewer = ImageViewDockWidget(self)
-
+#        various functions
     def videoAction(self):
-#        add video dockwidget to central widget area
-
-#        increment dockCount
+        #add video dockwidget to central widget area
+        #increment dockCount
         self.dockCount += 1
-#        hide the label when there are views
+        #hide the label when there are views
         self.ui.label.hide()
-#        create dockwidget
+        #create dockwidget
         dockWidget = DockWidget(self)
         dockWidget.setWidget(self.imageViewer)
         dockWidget.setWindowTitle('VideoView')
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def imageAction(self):
-#        add image dockwidget to central widget area
-
-#        increment dockCount
+        #add image dockwidget to central widget area
+        #increment dockCount
         self.dockCount += 1
-#        hide the label when there are views
+        #hide the label when there are views
         self.ui.label.hide()
-#        create dock widget
+        #create dock widget
         dockWidget = DockWidget(self)
         dockWidget.setWidget(self.imageViewer)
         dockWidget.setWindowTitle('ImageView')
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
-
     def mapAction(self):
-#        add map dockwidget to central widget area
-
-#        increment dockCount
+        #add map dockwidget to central widget area
+        #increment dockCount
         self.dockCount += 1
-#        hide the label when there are views
+        #hide the label when there are views
         self.ui.label.hide()
-#        create dock widget
+        #create dock widget
         dockWidget = DockWidget(self)
         dockWidget.setWindowTitle('MapView')
-#        creating map widget
-        mapView = MapViewDockWidget()
-        dockWidget.setWidget(mapView.webView)
+        #creating map widget
+        dockWidget.setWidget(self.mapView.webView)
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def getDockIndex(self):
-#        returns the index which will be used to specify the docking position of the view
+        #returns the index which will be used to specify the docking position of the view
         if self.dockCount == 1:
             return 0
         elif self.dockCount%2 == 0:
@@ -92,57 +92,101 @@ class MainWindow(QMainWindow):
 
 
     def panAction(self):
-#        pan the view
+        #pan the view
         pass
+
     def zoomSelectionAction(self):
-#        fit selected area into view
+        #fit selected area into view
         pass
+
     def zoomOutAction(self):
-#        zoom out of frame
+        #zoom out of frame
         pass
+
     def zoomInAction(self):
-#        zoom into frame
+        #zoom into frame
         pass
+
     def redoAction(self):
-#        redo an edited action
+        #redo an edited action
         pass
 
     def undoAction(self):
-#        undo an edited action
+        #undo an edited action
         pass
 
     def saveAsAction(self):
-#        create a file with current image state
+        #create a file with current image state
         pass
     def saveAction(self):
-#        save file being edited
+        #save file being edited
         pass
     def importNetworkAction(self):
-#        import files from network
+        #import files from network
         pass
 
     def importLocalAction(self):
-#        this function imports files from the local disk
-        self.inputFile = os.path.normpath(QFileDialog.getOpenFileName(
-        self, caption="Select image",
+        #function used to gather images from a directory
+        self.inputFolderPath = QFileDialog.getExistingDirectory(
+        self, caption="Select input folder",
         #directory=os.path.expanduser("~")
         dir="C:\\Users\\LENOVO\\Desktop\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images"
-        )[0])
-        if self.inputFile:
-            if not self.dockCount:
-                self.imageAction()
-            print(self.inputFile)
-            img = QImage(self.inputFile)
-            self.imageViewer.scene.clear()
-            pixmap = QPixmap.fromImage(img)
-            self.imageViewer.scene.addPixmap(pixmap)
-            self.imageViewer.setSceneRect(QRectF(pixmap.rect()))
-            self.imageViewer.resizeEvent([])
-            self.imageViewer.showNormal()
+        )
+        self.import_folder_path()
+
+    def import_folder_path(self):
+        # adds the markers to the mapView
+        if self.inputFolderPath:
+           self.importImages(os.path.normpath(self.inputFolderPath))
+           if self.images_dict:
+               for img, dict_ in self.images_dict.items():
+                   self.mapView.addMarker(dict_['long'], dict_['lat'],img)
+#                   print(dict_, img)
+                   print(self.mapView.map)
+
+    def getGPSInfo(self, img):
+       #return a dictionary with long, lat, ..... ie: NOT YET... orientation, date_time
+       gpsInfo = {
+           'gps_long': img.gps_longitude,
+           'gps_lat': img.gps_latitude,
+           'gps_lat_ref': img.gps_latitude_ref,
+           'gps_long_ref': img.gps_longitude_ref
+           }
+       long_ = self.dms2dd(gpsInfo['gps_long'], gpsInfo['gps_long_ref'])
+       lat = self.dms2dd(gpsInfo['gps_lat'], gpsInfo['gps_lat_ref'])
+       return  {'lat': lat, 'long': long_}
+
+    def dms2dd(self, dms, ref):
+       # conversion function to convert dms to long and lat
+       sec = (dms[1] * 60.0 )+ float(dms[2])
+       hrs = sec / 3600.0
+       deg = float(dms[0]) + hrs
+       if ref.upper() == 'W':
+           print("west")
+           deg = deg * -1
+       if ref.upper() == 'S':
+           print("south")
+           deg = deg * -1
+       return deg
+
+    def importImages(self, path):
+       # function that imports the images in the directory
+       for i in os.listdir(path):
+           imgfilePath = path+os.sep+i
+           if i.split(".")[-1] in PHOTO_EXTENSIONS:
+               with open(imgfilePath, 'rb') as src:
+                   img = Image(src)
+                   if img.has_exif:
+                       self.imagePaths.append(imgfilePath)
+                       self.images_dict[i] = self.getGPSInfo(img)
+                       self.images_dict[i]['altitude'] = img.gps_altitude
+                       self.images_dict[i]['timestamp'] = img.gps_timestamp
+                       self.images_dict[i]['img_direction'] = img.gps_img_direction
+                       self.images_dict[i]['datestamp'] = img.gps_datestamp
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = MainWindow()
     widget.show()
     sys.exit(app.exec())
-

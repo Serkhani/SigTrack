@@ -2,6 +2,7 @@
 
 from PySide6.QtWidgets import QGraphicsScene, QGraphicsView
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QImage, QPixmap
 
 class ImageViewDockWidget(QGraphicsView):
     def __init__(self, mainWindow):
@@ -14,6 +15,15 @@ class ImageViewDockWidget(QGraphicsView):
     def resizeEvent(self, event):
         self.fitInView(self.scene.sceneRect(), Qt.KeepAspectRatio)
 
-    def uploadImage(self):
-#        self.scene.
-        pass
+    def showImageOnView(self, imgPath):
+        #this function is called to show the image on the view
+        if imgPath:
+            if not self.mainWindow.dockCount:
+                self.mainWindow.imageAction()
+            img = QImage(imgPath)
+            self.scene.clear()
+            pixmap = QPixmap.fromImage(img)
+            self.scene.addPixmap(pixmap)
+            self.setSceneRect(QRectF(pixmap.rect()))
+            self.resizeEvent([])
+            self.showNormal()
