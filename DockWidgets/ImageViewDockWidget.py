@@ -3,6 +3,7 @@
 from PySide6.QtWidgets import QGraphicsScene, QGraphicsView
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
+from PySide6.QtCore import QRectF
 
 class ImageViewDockWidget(QGraphicsView):
     def __init__(self, mainWindow):

@@ -6,7 +6,6 @@ from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
 from DockWidgets.MapViewDockWidget import MapViewDockWidget
 from DockWidgets.dockWidget import DockWidget
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
-from PySide6.QtCore import QRectF
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     pyside6-uic form.ui -o ui_form.py, or
@@ -24,7 +23,6 @@ class MainWindow(QMainWindow):
 #        variable initializations
         self.dockCount = 0
         self.inputFolderPath = None
-        self.inputFile = None
         self.images_dict = {}
         self.imagePaths = []
 #        setting up function callbacks for menu actions
@@ -132,6 +130,8 @@ class MainWindow(QMainWindow):
         #directory=os.path.expanduser("~")
         dir="C:\\Users\\LENOVO\\Desktop\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images"
         )
+        if not self.findChild(MapViewDockWidget):
+            self.mapAction()
         self.import_folder_path()
 
     def import_folder_path(self):

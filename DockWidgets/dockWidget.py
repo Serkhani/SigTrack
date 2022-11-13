@@ -6,12 +6,8 @@ class DockWidget(QDockWidget):
     def __init__(self, mainWindow):
         super().__init__()
         self.mainWindow = mainWindow
-        self.setWidget(self.mainWindow.imageViewer)
 
     def closeEvent(self, event):
         self.mainWindow.dockCount -= 1
         if self.mainWindow.dockCount == 0:
             self.mainWindow.ui.label.show()
-        print(self.mainWindow.dockCount)
-
-
