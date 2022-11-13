@@ -140,9 +140,7 @@ class MainWindow(QMainWindow):
            self.importImages(os.path.normpath(self.inputFolderPath))
            if self.images_dict:
                for img, dict_ in self.images_dict.items():
-                   self.mapView.addMarker(dict_['long'], dict_['lat'],img)
-#                   print(dict_, img)
-                   print(self.mapView.map)
+                   self.mapView.addMarker(dict_['lat'], dict_['long'],img)
 
     def getGPSInfo(self, img):
        #return a dictionary with long, lat, ..... ie: NOT YET... orientation, date_time

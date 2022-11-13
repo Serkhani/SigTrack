@@ -23,10 +23,10 @@ class MapViewDockWidget(QWidget):
         self.map.save(self.data, close_file=False)
         self.webView.setHtml(self.data.getvalue().decode())
 
-    def addMarker(self, long_, lat, name):
+    def addMarker(self, lat, long_, name):
 #        a function that adds image markers to map
         folium.Marker(
-        location=[long_, lat],
+        location=[lat, long_],
         popup=name,
         icon=folium.Icon(color='green')).add_to(self.map)
         self.save()
