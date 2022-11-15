@@ -137,10 +137,12 @@ class MainWindow(QMainWindow):
     def import_folder_path(self):
         # adds the markers to the mapView
         if self.inputFolderPath:
-           self.importImages(os.path.normpath(self.inputFolderPath))
+           imgPath = os.path.normpath(self.inputFolderPath)
+           self.importImages(imgPath)
            if self.images_dict:
                for img, dict_ in self.images_dict.items():
-                   self.mapView.addMarker(dict_['lat'], dict_['long'],img)
+                   print(img)
+                   self.mapView.addMarker(imgPath+os.sep+img,dict_)
 
     def getGPSInfo(self, img):
        #return a dictionary with long, lat, ..... ie: NOT YET... orientation, date_time
