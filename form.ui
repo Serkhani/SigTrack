@@ -78,7 +78,14 @@
      <property name="title">
       <string>Import</string>
      </property>
-     <addaction name="actionlocal"/>
+     <widget class="QMenu" name="menuLocal">
+      <property name="title">
+       <string>Local</string>
+      </property>
+      <addaction name="actionFile_s"/>
+      <addaction name="actionFolder"/>
+     </widget>
+     <addaction name="menuLocal"/>
      <addaction name="actionNetwork"/>
     </widget>
     <addaction name="menuImport"/>
@@ -134,14 +141,6 @@
   <action name="actionReopen">
    <property name="text">
     <string>Reopen</string>
-   </property>
-  </action>
-  <action name="actionlocal">
-   <property name="text">
-    <string>Local</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Shift+L</string>
    </property>
   </action>
   <action name="actionNetwork">
@@ -244,6 +243,16 @@
    </property>
    <property name="shortcut">
     <string>F3</string>
+   </property>
+  </action>
+  <action name="actionFile_s">
+   <property name="text">
+    <string>File(s)</string>
+   </property>
+  </action>
+  <action name="actionFolder">
+   <property name="text">
+    <string>Folder</string>
    </property>
   </action>
  </widget>
