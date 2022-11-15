@@ -249,10 +249,16 @@
    <property name="text">
     <string>File(s)</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F</string>
+   </property>
   </action>
   <action name="actionFolder">
    <property name="text">
     <string>Folder</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+L</string>
    </property>
   </action>
  </widget>

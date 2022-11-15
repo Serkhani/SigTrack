@@ -1,6 +1,5 @@
 # This Python file uses the following encoding: utf-8
-import sys, os, io
-import folium
+import sys, os
 from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
 from DockWidgets.MapViewDockWidget import MapViewDockWidget
@@ -12,7 +11,7 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
 from exif import Image
-from constants import PHOTO_EXTENSIONS, DEPENDENCIES
+from constants import PHOTO_EXTENSIONS#, DEPENDENCIES
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -22,11 +21,12 @@ class MainWindow(QMainWindow):
         self.setDockOptions(_DOCK_OPTS)# defines docking behaviour
 #        variable initializations
         self.dockCount = 0
-        self.inputFolderPath = None
+        self.inputFolderPath, self.inputFilesList = None, None
         self.images_dict = {}
         self.imagePaths = []
 #        setting up function callbacks for menu actions
-        self.ui.actionlocal.triggered.connect(self.importLocalAction)
+        self.ui.actionFile_s.triggered.connect(self.importFileLocalAction)
+        self.ui.actionFolder.triggered.connect(self.importFolderLocalAction)
         self.ui.actionNetwork.triggered.connect(self.importNetworkAction)
         self.ui.actionSave.triggered.connect(self.saveAction)
         self.ui.actionSave_As.triggered.connect(self.saveAsAction)
@@ -122,12 +122,33 @@ class MainWindow(QMainWindow):
     def importNetworkAction(self):
         #import files from network
         pass
+    def importFileLocalAction(self):
+        #function used to gather selected images in a directory
+        self.inputFilesList = QFileDialog.getOpenFileNames(
+        self, caption="Select image(s)",
+        dir="C:\\Users\\LENOVO\\Desktop\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
+        filter="Image (*.jpg)")
+        for imgfilePath in self.inputFilesList[0]:
+            i = imgfilePath.split("/")[-1]
+            with open(imgfilePath, 'rb') as src:
+                img = Image(src)
+                print(i)
+                if img.has_exif:
+                    self.imagePaths.append(imgfilePath)
+                    self.images_dict[i] = self.getGPSInfo(img)
+                    self.images_dict[i]['altitude'] = img.gps_altitude
+                    self.images_dict[i]['timestamp'] = img.gps_timestamp
+                    self.images_dict[i]['img_direction'] = img.gps_img_direction
+                    self.images_dict[i]['datestamp'] = img.gps_datestamp
+                    self.mapView.addMarker(i,self.images_dict[i])
 
-    def importLocalAction(self):
-        #function used to gather images from a directory
+
+
+    def importFolderLocalAction(self):
+        #function used to gather all images from a specified directory
         self.inputFolderPath = QFileDialog.getExistingDirectory(
         self, caption="Select input folder",
-        #directory=os.path.expanduser("~")
+        #dir=os.path.expanduser("~")
         dir="C:\\Users\\LENOVO\\Desktop\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images"
         )
         if not self.findChild(MapViewDockWidget):
