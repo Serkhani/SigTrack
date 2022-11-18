@@ -1,3 +1,3 @@
 {
-    "files": ["form.ui","DockWidgets/ImageViewDockWidget.py","mainwindow.py","DockWidgets/dockWidget.py","constants.py","DockWidgets/MapViewDockWidget.py"]
+    "files": ["DockWidgets/map/map.qml","constants.py","DockWidgets/dockWidget.py","DockWidgets/map/map.qrc","mainwindow.py","form.ui","DockWidgets/MapViewDockWidget.py","DockWidgets/ImageViewDockWidget.py","DockWidgets/map/MapViewDockWidget.py"]
 }
