@@ -2,12 +2,12 @@
 import sys, os
 from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
-from DockWidgets.MapViewDockWidget import MapViewDockWidget
+from DockWidgets.MapViewDockWidget import MapWidget
 from DockWidgets.dockWidget import DockWidget
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog
 # Important:
 # You need to run the following command to generate the ui_form.py file
-#     pyside6-uic form.ui -o ui_form.py, or
+#     PySide2-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
 from exif import Image
@@ -41,7 +41,9 @@ class MainWindow(QMainWindow):
         self.ui.actionVideo.triggered.connect(self.videoAction)
         self.setCentralWidget(self.ui.label)
 #        custom dockwidgetviews initializations
-        self.mapView = MapViewDockWidget()
+#        self.mapView = MapViewDockWidget()
+#        self.map = MapViewDockWidget()
+        self.map = MapWidget()
         self.imageViewer = ImageViewDockWidget(self)
 #        various functions
     def videoAction(self):
@@ -77,7 +79,8 @@ class MainWindow(QMainWindow):
         dockWidget = DockWidget(self)
         dockWidget.setWindowTitle('MapView')
         #creating map widget
-        dockWidget.setWidget(self.mapView.webView)
+#        dockWidget.setWidget(self.mapView.webView)
+        dockWidget.setWidget(self.map)
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def getDockIndex(self):
@@ -151,7 +154,7 @@ class MainWindow(QMainWindow):
         #dir=os.path.expanduser("~")
         dir="C:\\Users\\LENOVO\\Desktop\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images"
         )
-        if not self.findChild(MapViewDockWidget):
+        if not self.findChild(MapWidget):
             self.mapAction()
         self.import_folder_path()
 
@@ -210,4 +213,4 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = MainWindow()
     widget.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec_())

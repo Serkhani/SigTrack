@@ -1,6 +1,6 @@
-from PySide6.QtWidgets import QMainWindow, QDockWidget
+from PySide2.QtWidgets import QMainWindow, QDockWidget
 
-from PySide6.QtCore import Qt
+from PySide2.QtCore import Qt
 
 _DOCK_OPTS = QMainWindow.AnimatedDocks
 _DOCK_OPTS |= QMainWindow.AllowNestedDocks

@@ -1,46 +1,49 @@
-# This Python file uses the following encoding: utf-8
-import folium
-import io, base64
-from PySide6.QtWebEngineWidgets import QWebEngineView
-from PySide6.QtWidgets import QWidget
+import os
+import DockWidgets.rc_map
 
-class MapViewDockWidget(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.coordinate = (7.9465, 1.0232)
-        self.map= folium.Map(
-                tiles= 'openstreetmap',
-                zoom_start=6,
-                location=self.coordinate
-        )
-        self.webView = QWebEngineView()#creating the widget to be able to view the map
-        self.save()
+from PySide2 import QtCore, QtQuickWidgets, QtPositioning
 
-    def save(self):
-        # save map data to data object
-        self.data = io.BytesIO()
-        self.map.save(self.data, close_file=False)
-        self.webView.setHtml(self.data.getvalue().decode())
+class MarkerModel(QtCore.QAbstractListModel):
+    PositionRole, SourceRole = range(QtCore.Qt.UserRole, QtCore.Qt.UserRole + 2)
 
-    def addMarker(self, imgFilePath, dict_):
-#        a function that adds image markers to map
-        name = imgFilePath.split("\\")[-1].split(".")[0]
-        folium.Marker(
-        location=[dict_['lat'], dict_['long']],
-        tooltip=(
-        "<html>"
-        "<div class='col1'><b>sender: </b>{sender}<br>"
-        "<b>lat: </b>{lat}<br>"
-        "<b>long: </b>{_long}<br>"
-        "<b>time taken: </b>{tHr}:{tMn}<br>"
-        "<b>date: </b>{date}<br>"
-        "<b>altitude: </b>{alt}<br>"
-        "<b>file: </b>{file}<br></div>"
-#        "<div class='col2'>"
-#        "<img src=\"file:///{source}\" width=\"250\" height=\"150\"></div>"
-        "</html>"
-        ).format(
-        #source="/".join(imgFilePath.split("\\")),
-        sender="ama", lat=dict_['lat'], _long=dict_['long'], tHr=int(dict_['timestamp'][0]),tMn=int(dict_['timestamp'][1]), date=dict_['datestamp'],alt=dict_['altitude'],file=name),
-        icon=folium.Icon(color='green')).add_to(self.map)
-        self.save()
+    def __init__(self, parent=None):
+        super(MarkerModel, self).__init__(parent)
+        self._markers = []
+
+    def rowCount(self, parent=QtCore.QModelIndex()):
+        return len(self._markers)
+
+    def data(self, index, role=QtCore.Qt.DisplayRole):
+        if 0 <= index.row() < self.rowCount():
+            if role == MarkerModel.PositionRole:
+                return self._markers[index.row()]["position"]
+            elif role == MarkerModel.SourceRole:
+                return self._markers[index.row()]["source"]
+        return QtCore.QVariant()
+
+    def roleNames(self):
+        return {MarkerModel.PositionRole: b"position_marker", MarkerModel.SourceRole: b"source_marker"}
+
+    def appendMarker(self, marker):
+        self.beginInsertRows(QtCore.QModelIndex(), self.rowCount(), self.rowCount())
+        self._markers.append(marker)
+        self.endInsertRows()
+
+class MapWidget(QtQuickWidgets.QQuickWidget):
+    def __init__(self, parent=None):
+        super(MapWidget, self).__init__(parent,
+            resizeMode=QtQuickWidgets.QQuickWidget.SizeRootObjectToView)
+        model = MarkerModel(self)
+        self.rootContext().setContextProperty("markermodel", model)
+        qml_path = os.path.join(os.path.dirname(__file__), "map.qml")
+        self.setSource(QtCore.QUrl.fromLocalFile(qml_path))
+
+
+        positions = [(44.97104,-93.46055), (44.96104,-93.16055)]
+        urls = ["http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png",
+                "http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_red.png"]
+
+        for c, u in zip(positions, urls):
+            coord = QtPositioning.QGeoCoordinate(*c)
+            source = QtCore.QUrl(u)
+            model.appendMarker({"position": coord , "source": source})

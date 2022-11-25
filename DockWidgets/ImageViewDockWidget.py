@@ -1,9 +1,9 @@
 # This Python file uses the following encoding: utf-8
 
-from PySide6.QtWidgets import QGraphicsScene, QGraphicsView
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtCore import QRectF
+from PySide2.QtWidgets import QGraphicsScene, QGraphicsView
+from PySide2.QtCore import Qt
+from PySide2.QtGui import QImage, QPixmap
+from PySide2.QtCore import QRectF
 
 class ImageViewDockWidget(QGraphicsView):
     def __init__(self, mainWindow):

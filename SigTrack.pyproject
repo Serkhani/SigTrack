@@ -1,3 +1,14 @@
 {
-    "files": ["DockWidgets/map/map.qml","constants.py","DockWidgets/dockWidget.py","DockWidgets/map/map.qrc","mainwindow.py","form.ui","DockWidgets/MapViewDockWidget.py","DockWidgets/ImageViewDockWidget.py","DockWidgets/map/MapViewDockWidget.py"]
+    "files": [
+    "DockWidgets/ImageViewDockWidget.py",
+    "constants.py",
+    "form.ui",
+    "mainwindow.py",
+    "ui_form.py",
+    "DockWidgets/MapViewDockWidget.py",
+    "DockWidgets/dockWidget.py",
+    "DockWidgets/map.qrc",
+    "DockWidgets/map.qml",
+    "DockWidgets/rc_map.py",
+    ]
 }

@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from PySide6.QtWidgets import QDockWidget
+from PySide2.QtWidgets import QDockWidget
 
 
 class DockWidget(QDockWidget):
