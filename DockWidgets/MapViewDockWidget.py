@@ -4,7 +4,7 @@ import DockWidgets.rc_map
 from PySide2 import QtCore, QtQuickWidgets, QtPositioning
 
 class MarkerModel(QtCore.QAbstractListModel):
-    PositionRole, SourceRole = range(QtCore.Qt.UserRole, QtCore.Qt.UserRole + 2)
+    PositionRole, SourceRole, UserDataRole = range(QtCore.Qt.UserRole, QtCore.Qt.UserRole + 3)
 
     def __init__(self, parent=None):
         super(MarkerModel, self).__init__(parent)
@@ -19,10 +19,12 @@ class MarkerModel(QtCore.QAbstractListModel):
                 return self._markers[index.row()]["position"]
             elif role == MarkerModel.SourceRole:
                 return self._markers[index.row()]["source"]
+            elif role == MarkerModel.UserDataRole:
+                return self._markers[index.row()]["imgData"]
         return QtCore.QVariant()
 
     def roleNames(self):
-        return {MarkerModel.PositionRole: b"position_marker", MarkerModel.SourceRole: b"source_marker"}
+        return {MarkerModel.PositionRole: b"position_marker", MarkerModel.SourceRole: b"source_marker", MarkerModel.UserDataRole: b"tooltip"}
 
     def appendMarker(self, marker):
         self.beginInsertRows(QtCore.QModelIndex(), self.rowCount(), self.rowCount())
@@ -33,17 +35,22 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
     def __init__(self, parent=None):
         super(MapWidget, self).__init__(parent,
             resizeMode=QtQuickWidgets.QQuickWidget.SizeRootObjectToView)
-        model = MarkerModel(self)
-        self.rootContext().setContextProperty("markermodel", model)
+        self.model = MarkerModel(self)
+        self.rootContext().setContextProperty("markermodel", self.model)
         qml_path = os.path.join(os.path.dirname(__file__), "map.qml")
         self.setSource(QtCore.QUrl.fromLocalFile(qml_path))
 
 
-        positions = [(44.97104,-93.46055), (44.96104,-93.16055)]
-        urls = ["http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png",
-                "http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_red.png"]
+#        positions = [(44.97104,-93.46055), (44.96104,-93.16055)]
+#        urls = ["http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png",
+#                "http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_red.png"]
 
-        for c, u in zip(positions, urls):
-            coord = QtPositioning.QGeoCoordinate(*c)
-            source = QtCore.QUrl(u)
-            model.appendMarker({"position": coord , "source": source})
+#        for c, u in zip(positions, urls):
+#            coord = QtPositioning.QGeoCoordinate(*c)
+#            source = QtCore.QUrl(u)
+#            self.model.appendMarker({"position": coord , "source": source})
+
+    def addMarker(self, imgPath, imgData):
+        coord = QtPositioning.QGeoCoordinate(imgData['lat'], imgData['long'])
+        source = QtCore.QUrl("http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png")
+        self.model.appendMarker({"position": coord , "source": source, "imgPath": imgPath, "imgData": "hey"})#imgData})

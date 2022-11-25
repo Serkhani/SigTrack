@@ -143,7 +143,7 @@ class MainWindow(QMainWindow):
                     self.images_dict[i]['timestamp'] = img.gps_timestamp
                     self.images_dict[i]['img_direction'] = img.gps_img_direction
                     self.images_dict[i]['datestamp'] = img.gps_datestamp
-                    self.mapView.addMarker(i,self.images_dict[i])
+                    self.map.addMarker(i,self.images_dict[i])
 
 
 
@@ -165,8 +165,9 @@ class MainWindow(QMainWindow):
            self.importImages(imgPath)
            if self.images_dict:
                for img, dict_ in self.images_dict.items():
+                   print("dict:", dict_)
                    print(img)
-                   self.mapView.addMarker(imgPath+os.sep+img,dict_)
+                   self.map.addMarker(imgPath+os.sep+img,dict_)
 
     def getGPSInfo(self, img):
        #return a dictionary with long, lat, ..... ie: NOT YET... orientation, date_time
