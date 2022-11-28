@@ -42,7 +42,6 @@ class iceController(QObject):
 
     @Slot(str)
     def showImage(self, path):
-        print("ice: "+path)
         self.showImageSignal.emit(path)
 
     @Slot(str)
@@ -59,14 +58,20 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
         self.ice = iceController()
         self.rootContext().setContextProperty('PyConsole', self.ice)
         self.rootContext().setContextProperty('ice', self.ice)
-        self.ice.showImageSignal.connect(self.mainWindow.imageAction)
+        self.ice.showImageSignal.connect(self.showImage)
         qml_path = os.path.join(os.path.dirname(__file__), "map.qml")
         self.setSource(QtCore.QUrl.fromLocalFile(qml_path))
 
+    def showImage(self, imgPath):
+        print(imgPath)
+        self.mainWindow.imageViewer.showImageOnView(imgPath)
+        self.mainWindow.imageAction()
+
     def addMarker(self, imgPath, imgData):
+        print("add marker: ",imgPath)
         coord = QtPositioning.QGeoCoordinate(imgData['lat'], imgData['long'])
         source = QtCore.QUrl("http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png")
-        tooltip ="<b>sender: <\b> ama<br><b>lat: <\b> {lat}<br><b>long: <\b> {long_}<br><b>altitude: <\b> {alt}<br><b>time taken: <\b> {ttHr}:{ttMn}:{ttS}<br><b>date: <\b> {date}<br><b>file: <\b> {file}<br>".format(lat=imgData['lat'], long_=imgData['long'], alt=imgData['altitude'], ttHr=int(imgData['timestamp'][0]), ttMn=int(imgData['timestamp'][1]), ttS=int(imgData['timestamp'][2]),date=imgData['datestamp'], file=imgPath.split('\\')[-1])
+        tooltip ="<b>sender: <\b> ama<br><b>lat: <\b> {lat}<br><b>long: <\b> {long_}<br><b>altitude: <\b> {alt}<br><b>time taken: <\b> {ttHr}:{ttMn}:{ttS}<br><b>date: <\b> {date}<br><b>file: <\b> {file}<br>".format(lat=imgData['lat'], long_=imgData['long'], alt=imgData['altitude'], ttHr=int(imgData['timestamp'][0]), ttMn=int(imgData['timestamp'][1]), ttS=int(imgData['timestamp'][2]),date=imgData['datestamp'], file=imgPath.split('/')[-1])
         self.model.appendMarker({"position": coord , "source": source, "imgPath": imgPath, "imgTooltip": tooltip})
 
 
