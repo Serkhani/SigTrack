@@ -13,6 +13,9 @@ class ImageViewDockWidget(QGraphicsView):
         self.scene = QGraphicsScene()
         self.setScene(self.scene)
 
+    def focusInEvent(self, event):
+        self.mainWindow.imageViewer = self
+
     def resizeEvent(self, event):
         self.fitInView(self.scene.sceneRect(), Qt.KeepAspectRatio)
 

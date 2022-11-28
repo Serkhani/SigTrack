@@ -4,7 +4,9 @@ from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
 from DockWidgets.MapViewDockWidget import MapWidget
 from DockWidgets.dockWidget import DockWidget
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel
+from PySide2.QtCore import Qt
+from PySide2.QtGui import QFont
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     PySide2-uic form.ui -o ui_form.py, or
@@ -56,17 +58,32 @@ class MainWindow(QMainWindow):
         dockWidget.setWindowTitle('VideoView')
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
-    def imageAction(self, data=""):
+    def imageAction(self, imgPath=""):
         #add image dockwidget to central widget area
         #increment dockCount
         self.dockCount += 1
         #hide the label when there are views
         self.ui.label.hide()
+        #creating the imageviewer
+        imageViewer = ImageViewDockWidget(self)
         #create dock widget
         dockWidget = DockWidget(self)
-        dockWidget.setWidget(self.imageViewer)
+        if not imgPath:
+            label = QLabel()
+            label.setText("No Image")
+            label.setAlignment(Qt.AlignCenter)
+            font = QFont()
+            font.setPointSize(20)
+            font.setBold(True)
+            font.setItalic(True)
+            label.setFont(font)
+            dockWidget.setWidget(label)
+        else:
+            imageViewer.showImageOnView(imgPath)
+            dockWidget.setWidget(imageViewer)
         dockWidget.setWindowTitle('ImageView')
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
+
     def mapAction(self):
         #add map dockwidget to central widget area
         #increment dockCount

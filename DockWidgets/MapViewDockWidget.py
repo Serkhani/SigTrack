@@ -63,8 +63,8 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
         self.setSource(QtCore.QUrl.fromLocalFile(qml_path))
 
     def showImage(self, imgPath):
-        self.mainWindow.imageViewer.showImageOnView(imgPath)
-        self.mainWindow.imageAction()
+#        self.mainWindow.imageViewer.showImageOnView(imgPath)
+        self.mainWindow.imageAction(imgPath)
 
     def addMarker(self, imgPath, imgData):
         coord = QtPositioning.QGeoCoordinate(imgData['lat'], imgData['long'])
