@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtPositioning 5.15
 import QtLocation 5.15
+import "application.js" as App
 
 Rectangle {
     id: rectangle
@@ -36,10 +37,11 @@ Rectangle {
                 }
                 MouseArea {
                     id: markerMouseArea
+                    objectName: "buttonMouseArea"
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-
+                        App.hi()
                     }
                 }
 
@@ -51,10 +53,7 @@ Rectangle {
             }
         }
     }
-} //                ToolTip.visible: hovered//                ToolTip.text: qsTr("This tool tip is shown after hovering the button for a second.")
-//                    }
-//            MouseArea  {
-//                id: markerMouseArea
+} //                ToolTip.visible: hovered//                ToolTip.text: qsTr("This tool tip is shown after hovering the button for a second.")//                    }//            MouseArea  {//                id: markerMouseArea
 //                property int pressX : -1
 //                property int pressY : -1
 //                property int jitterThreshold : 10

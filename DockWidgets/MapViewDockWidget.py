@@ -2,6 +2,8 @@ import os
 import DockWidgets.rc_map
 
 from PySide2 import QtCore, QtQuickWidgets, QtPositioning
+from PySide2.QtQml import QJSValue
+from PySide2.QtCore import QObject, Slot, Signal
 
 class MarkerModel(QtCore.QAbstractListModel):
     PositionRole, SourceRole, UserDataRole = range(QtCore.Qt.UserRole, QtCore.Qt.UserRole + 3)
@@ -31,26 +33,38 @@ class MarkerModel(QtCore.QAbstractListModel):
         self._markers.append(marker)
         self.endInsertRows()
 
+class iceController(QObject):
+    showImageSignal = Signal()
+    def __init__(self):
+        QObject.__init__(self)
+
+    @Slot()
+    def showImage(self):
+        self.showImageSignal.emit()
+
+    @Slot(str)
+    def log(self, s):
+        print(s)
+
+
 class MapWidget(QtQuickWidgets.QQuickWidget):
-    def __init__(self, parent=None):
-        super(MapWidget, self).__init__(parent,
-            resizeMode=QtQuickWidgets.QQuickWidget.SizeRootObjectToView)
+    def __init__(self, mainWindow, parent=None):
+        super(MapWidget, self).__init__(parent,resizeMode=QtQuickWidgets.QQuickWidget.SizeRootObjectToView)
+        self.mainWindow = mainWindow
         self.model = MarkerModel(self)
         self.rootContext().setContextProperty("markermodel", self.model)
+        self.ice = iceController()
+        self.rootContext().setContextProperty('PyConsole', self.ice)
+        self.rootContext().setContextProperty('ice', self.ice)
+        self.ice.showImageSignal.connect(self.mainWindow.imageAction)
         qml_path = os.path.join(os.path.dirname(__file__), "map.qml")
         self.setSource(QtCore.QUrl.fromLocalFile(qml_path))
-
-
-#        positions = [(44.97104,-93.46055), (44.96104,-93.16055)]
-#        urls = ["http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png",
-#                "http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_red.png"]
-
-#        for c, u in zip(positions, urls):
-#            coord = QtPositioning.QGeoCoordinate(*c)
-#            source = QtCore.QUrl(u)
-#            self.model.appendMarker({"position": coord , "source": source})
 
     def addMarker(self, imgPath, imgData):
         coord = QtPositioning.QGeoCoordinate(imgData['lat'], imgData['long'])
         source = QtCore.QUrl("http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png")
-        self.model.appendMarker({"position": coord , "source": source, "imgPath": imgPath, "imgData": "hey"})#imgData})
+        tooltip ="<b>sender: <\b> ama<br><b>lat: <\b> {lat}<br><b>long: <\b> {long_}<br><b>altitude: <\b> {alt}<br><b>time taken: <\b> {ttHr}:{ttMn}:{ttS}<br><b>date: <\b> {date}<br><b>file: <\b> {file}<br>".format(lat=imgData['lat'], long_=imgData['long'], alt=imgData['altitude'], ttHr=int(imgData['timestamp'][0]), ttMn=int(imgData['timestamp'][1]), ttS=int(imgData['timestamp'][2]),date=imgData['datestamp'], file=imgPath.split('\\')[-1])
+        self.model.appendMarker({"position": coord , "source": source, "imgPath": imgPath,
+        "imgData": tooltip})
+        #imgData})
+

@@ -41,9 +41,7 @@ class MainWindow(QMainWindow):
         self.ui.actionVideo.triggered.connect(self.videoAction)
         self.setCentralWidget(self.ui.label)
 #        custom dockwidgetviews initializations
-#        self.mapView = MapViewDockWidget()
-#        self.map = MapViewDockWidget()
-        self.map = MapWidget()
+        self.map = MapWidget(self)
         self.imageViewer = ImageViewDockWidget(self)
 #        various functions
     def videoAction(self):
