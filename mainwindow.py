@@ -58,7 +58,6 @@ class MainWindow(QMainWindow):
 
     def imageAction(self, data=""):
         #add image dockwidget to central widget area
-        print("imgaction:",data)
         #increment dockCount
         self.dockCount += 1
         #hide the label when there are views
@@ -130,6 +129,8 @@ class MainWindow(QMainWindow):
         self, caption="Select image(s)",
         dir="C:\\Users\\LENOVO\\Desktop\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
         filter="Image (*.jpg)")
+        if not self.findChild(MapWidget):
+            self.mapAction()
         for imgfilePath in self.inputFilesList[0]:
             i = imgfilePath.split("/")[-1]
             with open(imgfilePath, 'rb') as src:
