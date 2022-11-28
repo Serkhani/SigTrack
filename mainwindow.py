@@ -56,8 +56,9 @@ class MainWindow(QMainWindow):
         dockWidget.setWindowTitle('VideoView')
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
-    def imageAction(self):
+    def imageAction(self, data=""):
         #add image dockwidget to central widget area
+        print("imgaction:",data)
         #increment dockCount
         self.dockCount += 1
         #hide the label when there are views

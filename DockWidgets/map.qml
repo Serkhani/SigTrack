@@ -41,7 +41,7 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     onClicked: {
-                        App.hi()
+                        App.showImage(model.imgPath)
                     }
                 }
 
@@ -53,51 +53,4 @@ Rectangle {
             }
         }
     }
-} //                ToolTip.visible: hovered//                ToolTip.text: qsTr("This tool tip is shown after hovering the button for a second.")//                    }//            MouseArea  {//                id: markerMouseArea
-//                property int pressX : -1
-//                property int pressY : -1
-//                property int jitterThreshold : 10
-//                property int lastX: -1
-//                property int lastY: -1
-//                anchors.fill: parent
-//                hoverEnabled : true
-//                drag.target: modelmarker
-
-//                onPressed : {
-//                    map.pressX = mouse.x
-//                    map.pressY = mouse.y
-//                    map.currentMarker = -1
-//                    for (var i = 0; i< map.markers.length; i++){
-//                        if (marker == map.markers[i]){
-//                            map.currentMarker = i
-//                            break
-//                        }
-//                    }
-//                    map.state = ""
-//                }
-
-//                onPressAndHold:{
-//                    if (Math.abs(map.pressX - mouse.x ) < map.jitterThreshold
-//                            && Math.abs(map.pressY - mouse.y ) < map.jitterThreshold) {
-//                        lastX = map.toScreenPosition(marker.coordinate).x
-//                        lastY = map.toScreenPosition(marker.coordinate).y
-//                        map.markerPopup()
-//                    }
-//                }
-//            }
-
-//                    Text{
-//                        id: number
-//                        y: image.height/4
-//                        color: "white"
-//                        font.bold: true
-//                        font.pixelSize: 14
-//                        width:27
-//                        horizontalAlignment: Text.AlignHCenter
-//                        Component.onCompleted: {
-//                            text = map.markerCounter
-//                        }
-//                    }
-
-//        }
-
+}
