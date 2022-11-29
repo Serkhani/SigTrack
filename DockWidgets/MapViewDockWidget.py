@@ -1,8 +1,5 @@
 import os
-import DockWidgets.rc_map
-
 from PySide2 import QtCore, QtQuickWidgets, QtPositioning
-from PySide2.QtQml import QJSValue
 from PySide2.QtCore import QObject, Slot, Signal
 
 class MarkerModel(QtCore.QAbstractListModel):

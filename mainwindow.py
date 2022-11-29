@@ -4,13 +4,14 @@ from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
 from DockWidgets.MapViewDockWidget import MapWidget
 from DockWidgets.dockWidget import DockWidget
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QDockWidget
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QFont
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     PySide2-uic form.ui -o ui_form.py, or
 #     pyside2-uic form.ui -o ui_form.py
+from Editing.EditingPanel import EditingPanel, EditingPanelDockWidget
 from ui_form import Ui_MainWindow
 from exif import Image
 from constants import PHOTO_EXTENSIONS#, DEPENDENCIES
@@ -45,6 +46,12 @@ class MainWindow(QMainWindow):
 #        custom dockwidgetviews initializations
         self.map = MapWidget(self)
         self.imageViewer = ImageViewDockWidget(self)
+#        setting up editing panel
+        editingPanelWidget = EditingPanel(self)
+        self.editingPanel = EditingPanelDockWidget(editingPanelWidget)
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.editingPanel)
+        self.editingPanel.setFloating(True)
+        self.editingPanel.hide()
 #        various functions
     def videoAction(self):
         #add video dockwidget to central widget area

@@ -10,6 +10,7 @@ class DockWidget(QDockWidget):
 
     def closeEvent(self, event):
         self.mainWindow.dockCount -= 1
+        self.mainWindow.editingPanel.hide()
         if self.mainWindow.dockCount == 0:
             self.mainWindow.ui.label.show()
 
