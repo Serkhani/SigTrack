@@ -4,7 +4,7 @@ from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
 from DockWidgets.MapViewDockWidget import MapWidget
 from DockWidgets.dockWidget import DockWidget
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QDockWidget
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QMessageBox
 from PySide2.QtCore import Qt
 from PySide2.QtGui import QFont
 # Important:
@@ -159,15 +159,20 @@ class MainWindow(QMainWindow):
             i = imgfilePath.split("/")[-1]
             with open(imgfilePath, 'rb') as src:
                 img = Image(src)
-                print(i)
                 if img.has_exif:
-                    self.imagePaths.append(imgfilePath)
-                    self.images_dict[i] = self.getGPSInfo(img)
-                    self.images_dict[i]['altitude'] = img.gps_altitude
-                    self.images_dict[i]['timestamp'] = img.gps_timestamp
-                    self.images_dict[i]['img_direction'] = img.gps_img_direction
-                    self.images_dict[i]['datestamp'] = img.gps_datestamp
-                    self.map.addMarker(imgfilePath,self.images_dict[i])
+                    try:
+                        self.images_dict[i] = self.getGPSInfo(img)
+                        self.images_dict[i]['altitude'] = img.gps_altitude
+                        self.images_dict[i]['timestamp'] = img.gps_timestamp
+                        self.images_dict[i]['img_direction'] = img.gps_img_direction
+                        self.images_dict[i]['datestamp'] = img.gps_datestamp
+                    except:
+                        msgBox = QMessageBox()
+                        msgBox.setText("some geo info missing from {}".format(i))
+                        msgBox.exec()
+                    else:
+                        self.imagePaths.append(imgfilePath)
+                        self.map.addMarker(imgfilePath,self.images_dict[i])
 
 
 
@@ -226,12 +231,20 @@ class MainWindow(QMainWindow):
                with open(imgfilePath, 'rb') as src:
                    img = Image(src)
                    if img.has_exif:
-                       self.imagePaths.append(imgfilePath)
-                       self.images_dict[i] = self.getGPSInfo(img)
-                       self.images_dict[i]['altitude'] = img.gps_altitude
-                       self.images_dict[i]['timestamp'] = img.gps_timestamp
-                       self.images_dict[i]['img_direction'] = img.gps_img_direction
-                       self.images_dict[i]['datestamp'] = img.gps_datestamp
+                       try:
+                           self.images_dict[i] = self.getGPSInfo(img)
+                           self.images_dict[i]['altitude'] = img.gps_altitude
+                           self.images_dict[i]['timestamp'] = img.gps_timestamp
+                           self.images_dict[i]['img_direction'] = img.gps_img_direction
+                           self.images_dict[i]['datestamp'] = img.gps_datestamp
+                       except:
+                           msgBox = QMessageBox()
+                           msgBox.setText("some geo info missing from {}".format(i))
+                           msgBox.exec()
+                       else:
+                           self.imagePaths.append(imgfilePath)
+
+
 
 
 if __name__ == "__main__":
