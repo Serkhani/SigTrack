@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="circle">icons/circle.svg</file>
+        <file alias="click">icons/click_photos.svg</file>
+        <file alias="extent">icons/extent.svg</file>
+        <file alias="import">icons/import_icon.png</file>
+        <file alias="pan">icons/pan.svg</file>
+        <file alias="photo">icons/photos.qml</file>
+        <file alias="rect">icons/rectangle.svg</file>
+        <file alias="redo">icons/redo.svg</file>
+        <file alias="save">icons/save.svg</file>
+        <file alias="undo">icons/undo.svg</file>
+        <file alias="zoomSelected">icons/zoom_selected.svg</file>
+        <file alias="zoomIn">icons/zoom-in.svg</file>
+        <file alias="zoomOut">icons/zoom-out.svg</file>
+    </qresource>
+</RCC>
