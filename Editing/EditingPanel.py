@@ -14,10 +14,9 @@ class EditingPanelDockWidget(QDockWidget):
 
 
 class EditingPanel(QWidget):
-    def __init__(self, mainWindow):
+    def __init__(self, viewer):
         super().__init__()
-        self.mainWindow = mainWindow
-        self.viewer = self.mainWindow.imageViewer
+        self.viewer = viewer
         self.editingToolbar = QToolBar("Edit",self)
         self.editingToolbar.setOrientation(Qt.Vertical)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -201,7 +200,7 @@ class EditingPanel(QWidget):
         HBToolViewPropsLayout.addWidget(VBToolPropertiesWidget)
         VBlayout.addLayout(HBToolViewPropsLayout)
 
-        self.setLayout(VBlayout)
+#        self.setLayout(VBlayout)
 
     def strokeColorPickerbutton(self):
         # color picker

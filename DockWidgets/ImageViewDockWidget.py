@@ -6,6 +6,7 @@ from PySide2.QtGui import (QPainterPath, QPainter, QIcon, QPixmap, QPen, QBrush,
 
 from DockWidgets.undo_redo_command import AddCommand#, DeleteCommand, MoveCommand
 from DockWidgets.painter import Painter
+from Editing.EditingPanel import EditingPanel, EditingPanelDockWidget
 
 class ImageViewDockWidget(QGraphicsView):
     afterLeftClick = Signal(float, float)
@@ -18,11 +19,17 @@ class ImageViewDockWidget(QGraphicsView):
         self.mainWindow = mainWindow
         self.setWindowTitle('ImageView')
         self.scene = QGraphicsScene()
-        self.setScene(self.scene)
-        self.imgPath = None
+
 
         self.undoStack = QUndoStack()
         self.painter = Painter()
+
+#        setting up editing panel
+        self.editingPanelWidget = EditingPanel(self)
+#        self.editingPanel = EditingPanelDockWidget(self.editingPanelWidget)
+        self.mainWindow.editingPanel.setWidget(self.editingPanelWidget)
+        self.setScene(self.scene)
+        self.imgPath = None
 
         self.panSelect = False
         self.zoomSelect = False
@@ -124,7 +131,6 @@ class ImageViewDockWidget(QGraphicsView):
         self.rect = self.scene.sceneRect()
 
 
-
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
@@ -143,6 +149,8 @@ class ImageViewDockWidget(QGraphicsView):
 
     def focusInEvent(self, event):
         self.mainWindow.imageViewer = self
+#        self.editingPanel.show()
+        self.mainWindow.editingPanel.setWidget(self.editingPanelWidget)
         self.mainWindow.editingPanel.show()
 
 
