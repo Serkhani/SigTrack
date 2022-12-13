@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 from PySide2.QtWidgets import (QGraphicsView, QGraphicsScene, QVBoxLayout, QHBoxLayout, QWidget, QGraphicsTextItem, QGraphicsItem, QGraphicsRectItem, QToolBar, QUndoStack, QLineEdit, QLabel, QSizePolicy, QPushButton, QFrame, QMenuBar, QAction, QFileDialog, QMessageBox)
-from PySide2.QtCore import (Qt, Signal, QRectF, QCoreApplication)
-from PySide2.QtGui import (QPainterPath, QPainter, QIcon, QPixmap, QPen, QBrush, QImage, QFont, QKeySequence)
+from PySide2.QtCore import (Qt, Signal, QRectF, QPoint, QCoreApplication)
+from PySide2.QtGui import (QPainterPath, QPainter, QIcon, QPixmap, QColor, QPen, QBrush, QImage, QFont, QKeySequence)
 
 
 from DockWidgets.undo_redo_command import AddCommand#, DeleteCommand, MoveCommand
@@ -22,7 +22,8 @@ class ImageViewDockWidget(QGraphicsView):
 
 
         self.undoStack = QUndoStack()
-        self.painter = Painter()
+        self.painter = QPainter()
+        self.pixmap = QPixmap()
 
 #        setting up editing panel
         self.editingPanelWidget = EditingPanel(self)
@@ -50,15 +51,38 @@ class ImageViewDockWidget(QGraphicsView):
         self.setDragMode(QGraphicsView.NoDrag)
         self.rect = self.scene.sceneRect()
 
+#        for drawing shapes
+        self.begin, self.end = QPoint(), QPoint()
+
+    def mouseMoveEvent(self, event):
+        sc_pos = self.mapToScene(event.pos())
+        if self.drawRect:
+            if event.button() & Qt.LeftButton:
+                self.end = sc_pos
+#                self.end = event.pos()
+                print("scpos: ",sc_pos)
+                self.update()
+
+        print("move: ", self.begin, self.end)
+        QGraphicsView.mouseMoveEvent(self, event)
+
     def mousePressEvent(self, event):
         sc_pos = self.mapToScene(event.pos())
-        if self.drawCircle:
-            # painter = Painter()
-            pass
-
+        print("pressed event:",event.pos())
+        print("pressed sc_pos:", sc_pos)
+        if self.drawRect:
+            if event.button() & Qt.LeftButton:
+                self.begin = sc_pos
+                self.end = sc_pos
+#                self.begin = event.pos()
+#                self.end = event.pos()
+                self.update()
+                print("rect: ",self.begin, self.end)
+        else: print("no rect",self.begin, self.end)
         if self.panSelect:
+            print("hand drag")
             self.setDragMode(QGraphicsView.ScrollHandDrag)
-        if self.zoomSelect or self.drawRect:
+        if self.zoomSelect:# or self.drawRect:
             self.setDragMode(QGraphicsView.RubberBandDrag)
 
         self.afterLeftClick.emit(sc_pos.x(), sc_pos.y())
@@ -66,6 +90,7 @@ class ImageViewDockWidget(QGraphicsView):
         QGraphicsView.mousePressEvent(self, event)
 
     def mouseDoubleClickEvent(self, event):
+        print(event.pos())
         sc_pos = self.mapToScene(event.pos())
         if self.zoomSelect or self.panSelect:
             self.zoom_data = []
@@ -74,15 +99,26 @@ class ImageViewDockWidget(QGraphicsView):
         self.afterDoubleClick.emit(sc_pos.x(), sc_pos.y())
         QGraphicsView.mouseDoubleClickEvent(self, event)
 
-#    def paintEvent(self, event):
-
-#        QGraphicsView.paintEvent(self, event)
+    def paintEvent(self, event):
+#        self.painter = Painter()
+        painter = QPainter(self.pixmap)
+        painter.setBrush(QBrush(QColor(Qt.black)))
+        if not self.begin.isNull() and not self.end.isNull():
+            print("painting")
+            rect = QRectF(self.begin, self.end)
+            painter.drawRect(rect)
+        QGraphicsView.paintEvent(self, event)
 
     def mouseReleaseEvent(self, event):
         QGraphicsView.mouseReleaseEvent(self, event)
+        print(event.pos())
         sc_pos = self.mapToScene(event.pos())
-        if self.drawRect :
-            rect = QGraphicsRectItem(self.scene.selectionArea().boundingRect())
+        print("release scpos:",sc_pos)
+        print("release:",self.begin, self.end)
+        if self.drawRect:
+            print("rect: is a rectangle")
+            rectf = QRectF(self.begin, self.end)
+            rect = QGraphicsRectItem(rectf)
             rect.setFlag(QGraphicsItem.ItemIsMovable)
             addCommand = AddCommand(rect, self.scene)
             self.undoStack.push(addCommand)
@@ -96,6 +132,7 @@ class ImageViewDockWidget(QGraphicsView):
                 self.rect = self.zoom_data
         else:
             self.rect = self.scene.sceneRect()
+        self.begin, self.end = QPoint(), QPoint()
         self.setDragMode(QGraphicsView.NoDrag)
         self.afterLeftClickReleased.emit(sc_pos.x(), sc_pos.y())
 
@@ -162,8 +199,8 @@ class ImageViewDockWidget(QGraphicsView):
                 self.mainWindow.imageAction()
             img = QImage(imgPath)
             self.scene.clear()
-            pixmap = QPixmap.fromImage(img)
-            self.scene.addPixmap(pixmap)
-            self.setSceneRect(QRectF(pixmap.rect()))
+            self.pixmap = QPixmap.fromImage(img)
+            self.scene.addPixmap(self.pixmap)
+            self.setSceneRect(QRectF(self.pixmap.rect()))
             self.resizeEvent([])
             self.showNormal()

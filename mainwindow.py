@@ -159,19 +159,58 @@ class MainWindow(QMainWindow):
                 img = Image(src)
                 if img.has_exif:
                     try:
-                        self.images_dict[i] = self.getGPSInfo(img)
-                        self.images_dict[i]['altitude'] = img.gps_altitude
-                        self.images_dict[i]['timestamp'] = img.gps_timestamp
-                        self.images_dict[i]['img_direction'] = img.gps_img_direction
-                        self.images_dict[i]['datestamp'] = img.gps_datestamp
+                        assert img.make == 'DJI', AssertionError
+                    except AssertionError:
+                        print('assert')
+#                        if file is from NIKON
+                        self.errorHandling(img, i, imgfilePath)
                     except:
-                        msgBox = QMessageBox()
-                        msgBox.setText("some geo info missing from {}".format(i))
-                        msgBox.exec()
+#                        if file is neither DJI nor NIKON
+                        self.errorHandling(img, i, imgfilePath)
                     else:
-                        self.imagePaths.append(imgfilePath)
-                        self.map.addMarker(imgfilePath,self.images_dict[i])
+#                        if file is DJI
+                        try:
+                            self.images_dict[i] = self.getGPSInfo(img)
+                            self.images_dict[i]['altitude'] = img.gps_altitude
+                            self.images_dict[i]['dji'] = True
+                            self.images_dict[i]['timestamp'] = img.datetime.split(' ')[1]
+#                            self.images_dict[i]['img_direction'] = img.gps_img_direction
+#                            print(self.images_dict[i]['img_direction'])
+                            self.images_dict[i]['datestamp'] = img.datetime.split(' ')[0]
+                        except:
+                            msgBox = QMessageBox()
+                            msgBox.setText("some geo info missing from {}".format(i))
+                            msgBox.exec()
+                        else:
+                            self.imagePaths.append(imgfilePath)
+                            self.map.addMarker(imgfilePath,self.images_dict[i])
 
+
+                        self.imageAction(imgfilePath)
+
+
+
+
+
+
+
+
+
+    def errorHandling(self, img, i, imgfilePath):
+        try:
+            self.images_dict[i] = self.getGPSInfo(img)
+            self.images_dict[i]['altitude'] = img.gps_altitude
+            self.images_dict[i]['dji'] = False
+            self.images_dict[i]['timestamp'] = img.gps_timestamp
+            self.images_dict[i]['img_direction'] = img.gps_img_direction
+            self.images_dict[i]['datestamp'] = img.gps_datestamp
+        except:
+            msgBox = QMessageBox()
+            msgBox.setText("some geo info missing from {}".format(i))
+            msgBox.exec()
+        else:
+            self.imagePaths.append(imgfilePath)
+            self.map.addMarker(imgfilePath,self.images_dict[i])
 
 
     def importFolderLocalAction(self):
@@ -230,17 +269,31 @@ class MainWindow(QMainWindow):
                    img = Image(src)
                    if img.has_exif:
                        try:
-                           self.images_dict[i] = self.getGPSInfo(img)
-                           self.images_dict[i]['altitude'] = img.gps_altitude
-                           self.images_dict[i]['timestamp'] = img.gps_timestamp
-                           self.images_dict[i]['img_direction'] = img.gps_img_direction
-                           self.images_dict[i]['datestamp'] = img.gps_datestamp
+                           assert img.make == 'DJI', AssertionError
+                       except AssertionError:
+                           print('assert')
+   #                        if file is from NIKON
+                           self.errorHandling(img, i, imgfilePath)
                        except:
-                           msgBox = QMessageBox()
-                           msgBox.setText("some geo info missing from {}".format(i))
-                           msgBox.exec()
+   #                        if file is neither DJI nor NIKON
+                           self.errorHandling(img, i, imgfilePath)
                        else:
-                           self.imagePaths.append(imgfilePath)
+   #                        if file is DJI
+                           try:
+                               self.images_dict[i] = self.getGPSInfo(img)
+                               self.images_dict[i]['altitude'] = img.gps_altitude
+                               self.images_dict[i]['dji'] = True
+                               self.images_dict[i]['timestamp'] = img.datetime.split(' ')[1]
+   #                            self.images_dict[i]['img_direction'] = img.gps_img_direction
+   #                            print(self.images_dict[i]['img_direction'])
+                               self.images_dict[i]['datestamp'] = img.datetime.split(' ')[0]
+                           except:
+                               msgBox = QMessageBox()
+                               msgBox.setText("some geo info missing from {}".format(i))
+                               msgBox.exec()
+                           else:
+                               self.imagePaths.append(imgfilePath)
+                               self.map.addMarker(imgfilePath,self.images_dict[i])
 
 
 
