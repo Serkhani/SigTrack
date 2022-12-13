@@ -1,6 +1,7 @@
 import os
 from PySide2 import QtCore, QtQuickWidgets, QtPositioning
 from PySide2.QtCore import QObject, Slot, Signal
+import DockWidgets.rc_map
 
 class MarkerModel(QtCore.QAbstractListModel):
     PositionRole, SourceRole, TooltipRole, ImagePathRole = range(QtCore.Qt.UserRole, QtCore.Qt.UserRole + 4)
@@ -56,8 +57,9 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
         self.rootContext().setContextProperty('PyConsole', self.ice)
         self.rootContext().setContextProperty('ice', self.ice)
         self.ice.showImageSignal.connect(self.showImage)
-        qml_path = os.path.join(os.path.dirname(__file__), "map.qml")
-        self.setSource(QtCore.QUrl.fromLocalFile(qml_path))
+        self.setSource(QtCore.QUrl('qrc://:/map'))
+#        qml_path = os.path.join(os.path.dirname(__file__), "map.qml")
+#        self.setSource(QtCore.QUrl.fromLocalFile(qml_path))
 
     def showImage(self, imgPath):
 #        self.mainWindow.imageViewer.showImageOnView(imgPath)
