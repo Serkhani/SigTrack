@@ -19,12 +19,34 @@ Rectangle {
         }
     }
     property variant locationTC: QtPositioning.coordinate(7.9465, 1.0232)
+    property int zoomLevel: 6
     Map {
         id: map
         anchors.fill: parent
         plugin: osmPlugin
         center: locationTC
         zoomLevel: 6
+        Column {
+            anchors.right: parent.right
+            spacing: 10
+            Button {
+                text: '+'
+                onClicked: {
+                    map.zoomLevel += 1
+                }
+                width: 50
+                height: 15
+            }
+            Button {
+                text: '-'
+                onClicked: {
+                    map.zoomLevel -= 1
+                }
+                width: 50
+                height: 15
+            }
+        }
+
         MapItemView {
             model: markermodel
             delegate: MapQuickItem {

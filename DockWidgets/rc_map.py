@@ -6,7 +6,7 @@
 from PySide2 import QtCore
 
 qt_resource_data = b"\
-\x00\x00\x06w\
+\x00\x00\x08\x97\
 i\
 mport QtQuick 2.\
 15\x0d\x0aimport QtQui\
@@ -45,15 +45,49 @@ dress\x22\x0d\x0a        \
 nTC: QtPositioni\
 ng.coordinate(7.\
 9465, 1.0232)\x0d\x0a \
-   Map {\x0d\x0a      \
-  id: map\x0d\x0a     \
-   anchors.fill:\
- parent\x0d\x0a       \
- plugin: osmPlug\
-in\x0d\x0a        cent\
-er: locationTC\x0d\x0a\
-        zoomLeve\
-l: 6\x0d\x0a        Ma\
+   property int \
+zoomLevel: 6\x0d\x0a  \
+  Map {\x0d\x0a       \
+ id: map\x0d\x0a      \
+  anchors.fill: \
+parent\x0d\x0a        \
+plugin: osmPlugi\
+n\x0d\x0a        cente\
+r: locationTC\x0d\x0a \
+       zoomLevel\
+: 6\x0d\x0a        Col\
+umn {\x0d\x0a         \
+   anchors.right\
+: parent.right\x0d\x0a\
+            spac\
+ing: 10\x0d\x0a       \
+     Button {\x0d\x0a \
+               t\
+ext: '+'\x0d\x0a      \
+          onClic\
+ked: {\x0d\x0a        \
+            map.\
+zoomLevel += 1\x0d\x0a\
+                \
+}\x0d\x0a             \
+   width: 50\x0d\x0a  \
+              he\
+ight: 15\x0d\x0a      \
+      }\x0d\x0a       \
+     Button {\x0d\x0a \
+               t\
+ext: '-'\x0d\x0a      \
+          onClic\
+ked: {\x0d\x0a        \
+            map.\
+zoomLevel -= 1\x0d\x0a\
+                \
+}\x0d\x0a             \
+   width: 50\x0d\x0a  \
+              he\
+ight: 15\x0d\x0a      \
+      }\x0d\x0a       \
+ }\x0d\x0a\x0d\x0a        Ma\
 pItemView {\x0d\x0a   \
          model: \
 markermodel\x0d\x0a   \
@@ -135,8 +169,8 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x02\x00\x00\x00\x01\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
-\x00\x00\x01\x84\xf0\xe8:\xf6\
-\x00\x00\x00\x0c\x00\x00\x00\x00\x00\x01\x00\x00\x06{\
+\x00\x00\x01\x85'\x85iX\
+\x00\x00\x00\x0c\x00\x00\x00\x00\x00\x01\x00\x00\x08\x9b\
 \x00\x00\x01\x84\xbd\xc8K\xaf\
 "
 
