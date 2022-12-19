@@ -22,7 +22,7 @@ class ImageViewDockWidget(QGraphicsView):
 
 
         self.undoStack = QUndoStack()
-        self.painter = QPainter()
+        self.painter = Painter()
         self.pixmap = QPixmap()
 
 #        setting up editing panel
@@ -41,7 +41,6 @@ class ImageViewDockWidget(QGraphicsView):
         self.drawLine = False
         self.rotate_value = 0
         self.zoom_data = []
-#        size = 36
         self.scene = QGraphicsScene()
 
         self.setScene(self.scene)
@@ -50,37 +49,30 @@ class ImageViewDockWidget(QGraphicsView):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setDragMode(QGraphicsView.NoDrag)
         self.rect = self.scene.sceneRect()
-
+        self.rect_draw = None
 #        for drawing shapes
         self.begin, self.end = QPoint(), QPoint()
 
     def mouseMoveEvent(self, event):
         sc_pos = self.mapToScene(event.pos())
-        if self.drawRect:
-            if event.button() & Qt.LeftButton:
-                self.end = sc_pos
-#                self.end = event.pos()
-                print("scpos: ",sc_pos)
-                self.update()
-
-        print("move: ", self.begin, self.end)
+        if self.drawRect and self.rect_draw:
+            self.scene.removeItem(self.rect_draw)
+            self.end = sc_pos
+            rectf = QRectF(self.begin, self.end)
+            self.rect_draw.setRect(rectf)
+            self.scene.addItem(self.rect_draw)
         QGraphicsView.mouseMoveEvent(self, event)
 
     def mousePressEvent(self, event):
         sc_pos = self.mapToScene(event.pos())
-        print("pressed event:",event.pos())
-        print("pressed sc_pos:", sc_pos)
         if self.drawRect:
             if event.button() & Qt.LeftButton:
                 self.begin = sc_pos
-                self.end = sc_pos
-#                self.begin = event.pos()
-#                self.end = event.pos()
-                self.update()
-                print("rect: ",self.begin, self.end)
-        else: print("no rect",self.begin, self.end)
+                self.rect_draw = QGraphicsRectItem(QRectF(self.begin, self.begin))
+                self.rect_draw.setBrush(self.painter.brush)
+                self.rect_draw.setPen(self.painter.pen)
+                self.scene.addItem(self.rect_draw)
         if self.panSelect:
-            print("hand drag")
             self.setDragMode(QGraphicsView.ScrollHandDrag)
         if self.zoomSelect:# or self.drawRect:
             self.setDragMode(QGraphicsView.RubberBandDrag)
@@ -90,7 +82,6 @@ class ImageViewDockWidget(QGraphicsView):
         QGraphicsView.mousePressEvent(self, event)
 
     def mouseDoubleClickEvent(self, event):
-        print(event.pos())
         sc_pos = self.mapToScene(event.pos())
         if self.zoomSelect or self.panSelect:
             self.zoom_data = []
@@ -99,28 +90,14 @@ class ImageViewDockWidget(QGraphicsView):
         self.afterDoubleClick.emit(sc_pos.x(), sc_pos.y())
         QGraphicsView.mouseDoubleClickEvent(self, event)
 
-    def paintEvent(self, event):
-#        self.painter = Painter()
-        painter = QPainter(self.pixmap)
-        painter.setBrush(QBrush(QColor(Qt.black)))
-        if not self.begin.isNull() and not self.end.isNull():
-            print("painting")
-            rect = QRectF(self.begin, self.end)
-            painter.drawRect(rect)
-        QGraphicsView.paintEvent(self, event)
-
     def mouseReleaseEvent(self, event):
         QGraphicsView.mouseReleaseEvent(self, event)
-        print(event.pos())
         sc_pos = self.mapToScene(event.pos())
-        print("release scpos:",sc_pos)
-        print("release:",self.begin, self.end)
+        self.end = sc_pos
         if self.drawRect:
-            print("rect: is a rectangle")
-            rectf = QRectF(self.begin, self.end)
-            rect = QGraphicsRectItem(rectf)
-            rect.setFlag(QGraphicsItem.ItemIsMovable)
-            addCommand = AddCommand(rect, self.scene)
+            self.scene.removeItem(self.rect_draw)
+            self.rect_draw.setRect(QRectF(self.begin, self.end))
+            addCommand = AddCommand(self.rect_draw, self.scene)
             self.undoStack.push(addCommand)
         if self.zoomSelect:
             view_bb = self.sceneRect()
@@ -133,6 +110,7 @@ class ImageViewDockWidget(QGraphicsView):
         else:
             self.rect = self.scene.sceneRect()
         self.begin, self.end = QPoint(), QPoint()
+        self.rect_draw = None
         self.setDragMode(QGraphicsView.NoDrag)
         self.afterLeftClickReleased.emit(sc_pos.x(), sc_pos.y())
 
