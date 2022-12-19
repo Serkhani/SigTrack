@@ -1,6 +1,6 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QVBoxLayout, QHBoxLayout, QWidget, QGraphicsTextItem, QGraphicsItem, QGraphicsRectItem, QToolBar, QUndoStack, QLineEdit, QLabel, QSizePolicy, QPushButton, QFrame, QMenuBar, QAction, QFileDialog, QMessageBox)
-from PySide2.QtCore import (Qt, Signal, QRectF, QPoint, QCoreApplication)
+from PySide2.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsLineItem, QGraphicsEllipseItem, QVBoxLayout, QHBoxLayout, QWidget, QGraphicsTextItem, QGraphicsItem, QGraphicsRectItem, QToolBar, QUndoStack, QLineEdit, QLabel, QSizePolicy, QPushButton, QFrame, QMenuBar, QAction, QFileDialog, QMessageBox)
+from PySide2.QtCore import (Qt, Signal, QLineF, QRectF, QPoint, QCoreApplication)
 from PySide2.QtGui import (QPainterPath, QPainter, QIcon, QPixmap, QColor, QPen, QBrush, QImage, QFont, QKeySequence)
 
 
@@ -55,6 +55,13 @@ class ImageViewDockWidget(QGraphicsView):
 
     def mouseMoveEvent(self, event):
         sc_pos = self.mapToScene(event.pos())
+        if self.drawLine and self.preview:
+            self.scene.removeItem(self.preview)
+            self.end = sc_pos
+            line = QLineF(self.begin.x(),self.begin.y(),self.end.x(),self.end.y())
+            self.preview.setLine(line)
+            self.scene.addItem(self.preview)
+
         if (self.drawCircle or self.drawRect) and self.preview:
             self.scene.removeItem(self.preview)
             self.end = sc_pos
@@ -67,6 +74,11 @@ class ImageViewDockWidget(QGraphicsView):
         sc_pos = self.mapToScene(event.pos())
         if event.button() & Qt.LeftButton:
             self.begin = sc_pos
+            if self.drawLine:
+                self.preview = QGraphicsLineItem(QLineF(self.begin.x(),self.begin.y(),self.begin.x(),self.begin.y()))
+#                self.preview.setBrush(self.painter.brush)
+                self.preview.setPen(self.painter.pen)
+                self.scene.addItem(self.preview)
             if self.drawRect:
                 self.preview = QGraphicsRectItem(QRectF(self.begin, self.begin))
                 self.preview.setBrush(self.painter.brush)
@@ -99,9 +111,11 @@ class ImageViewDockWidget(QGraphicsView):
         QGraphicsView.mouseReleaseEvent(self, event)
         sc_pos = self.mapToScene(event.pos())
         self.end = sc_pos
-        if self.drawRect or self.drawCircle:
+        if self.drawRect or self.drawCircle or self.drawLine:
             self.scene.removeItem(self.preview)
-            self.preview.setRect(QRectF(self.begin, self.end))
+            if self.drawLine:
+                self.preview.setLine(QLineF(self.begin.x(), self.begin.y(), self.end.x(), self.end.y()))
+            else: self.preview.setRect(QRectF(self.begin, self.end))
             addCommand = AddCommand(self.preview, self.scene)
             self.undoStack.push(addCommand)
         if self.zoomSelect:
