@@ -1,10 +1,9 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtWidgets import (QDockWidget, QGraphicsView, QGraphicsScene, QVBoxLayout, QHBoxLayout, QWidget, QGraphicsTextItem, QGraphicsRectItem, QToolBar, QUndoStack, QSpinBox, QSlider,  QComboBox, QCheckBox, QLineEdit, QLabel, QSizePolicy, QPushButton, QFrame, QMenuBar, QMenu, QAction, QFileDialog, QColorDialog, QMessageBox)
-from PySide2.QtCore import (Qt, QRectF, QRect, QSize, QCoreApplication)
-from PySide2.QtGui import (QPainterPath, QPainter, QIcon, QPixmap, QImage, QFont, QKeySequence)
+from PySide2.QtWidgets import (QDockWidget, QGraphicsView, QVBoxLayout, QMessageBox, QHBoxLayout, QCheckBox, QSpinBox, QComboBox, QWidget, QLabel, QSlider, QToolBar, QPushButton, QColorDialog, QAction, QSizePolicy)
+from PySide2.QtCore import (Qt, QRectF, QCoreApplication)
+from PySide2.QtGui import (QIcon, QPixmap, QImage, QFont, QKeySequence)
 import Editing.icon_resources
 from Editing.colorComboBox import ColorComboBox
-import os.path
 
 class EditingPanelDockWidget(QDockWidget):
     def __init__(self, widget):
@@ -162,7 +161,7 @@ class EditingPanel(QWidget):
         self.opacitySlider = QSlider(Qt.Horizontal)
         self.opacitySlider.setSizePolicy(QSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed))
         self.opacitySlider.setMinimum(0)
-        self.opacitySlider.setMaximum(100)
+        self.opacitySlider.setMaximum(255)
         self.opacitySlider.setValue(100)
         self.opacitySlider.setTickInterval(25)
         self.opacitySlider.valueChanged.connect(self.opacitySliderValueChanged)
@@ -204,7 +203,12 @@ class EditingPanel(QWidget):
 
     def strokeColorPickerbutton(self):
         # color picker
-        pass
+        self.strokeColorDialog = QColorDialog()
+        self.strokeColorDialog.setCurrentColor(self.viewer.painter.pen.color())
+        if self.strokeColorDialog.exec_():
+            self.viewer.painter.setStrokeColor(self.strokeColorDialog.currentColor().name())
+            self.strokeColorComboBox.setEditText(self.tr('Custom'))
+
 
     def strokeWidthSpinBoxValueChanged(self):
         self.viewer.painter.setStrokeWidth(self.strokeWidthSpinBox.value())
@@ -223,14 +227,24 @@ class EditingPanel(QWidget):
         self.strokeWidthLabel.setVisible(isChecked)
         self.strokeWidthSpinBox.setVisible(isChecked)
         self.strokeColorPicker.setVisible(isChecked)
-        self.strokeStyleLabel.setVisible(isChecked)
-        self.strokeStyleComboBox.setVisible(isChecked)
+        self.strokeStyleLabel.setVisible(False)
+        self.strokeStyleComboBox.setVisible(False)
         self.strokeColorLabel.setVisible(isChecked)
         self.strokeColorComboBox.setVisible(isChecked)
+        self.strokeColorComboBoxValueChanged()
+        self.strokeWidthSpinBoxValueChanged()
+#        self.strokeStyleComboBoxValueChanged()
+
 
     def fillColorPickerbutton(self):
         # color picker
-        pass
+        self.fillColorDialog = QColorDialog()
+        self.fillColorDialog.setCurrentColor(self.viewer.painter.brush.color())
+        if self.fillColorDialog.exec_():
+            self.viewer.painter.setFillColor(self.fillColorDialog.currentColor().name())
+            self.fillColorComboBox.setEditText(self.tr('Custom'))
+            self.opacitySliderValueChanged()
+
 
     def fillStyleComboBoxValueChanged(self):
         # set brush style
@@ -247,11 +261,14 @@ class EditingPanel(QWidget):
         self.opacityLabel.setVisible(isChecked)
         self.opacitySlider.setVisible(isChecked)
         self.OpacityValue.setVisible(isChecked)
-        self.fillStyleLabel.setVisible(isChecked)
+        self.fillStyleLabel.setVisible(False)
         self.fillColorPicker.setVisible(isChecked)
-        self.fillStyleComboBox.setVisible(isChecked)
+        self.fillStyleComboBox.setVisible(False)
         self.fillColorLabel.setVisible(isChecked)
         self.fillColorComboBox.setVisible(isChecked)
+        self.fillColorComboBoxValueChanged()
+        self.opacitySliderValueChanged()
+#        self.fillStyleComboBoxValueChanged()
 
     def opacitySliderValueChanged(self):
         color = self.fillColorComboBox.currentData()
@@ -361,7 +378,7 @@ class EditingPanel(QWidget):
         self.drawFreeHand = False
         self.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
-        self.viewer.setDragMode(QGraphicsView.RubberBandDrag)
+#        self.viewer.setDragMode(QGraphicsView.RubberBandDrag)
 
     def zoom_out_button(self):
         self.viewer.panSelect = False

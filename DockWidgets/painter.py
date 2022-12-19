@@ -12,8 +12,6 @@ class Painter(QPainter):
         QPainter.__init__(self)
         self.brush = QBrush(QColor(Qt.black))
         self.pen = QPen()
-        self.pen.setBrush(self.brush)
-#        self.setPen(self.pen)
 
     def setStrokeWidth(self, width):
         self.pen.setWidth(width)
