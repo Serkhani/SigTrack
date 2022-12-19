@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtWidgets import (QGraphicsView, QGraphicsScene, QVBoxLayout, QHBoxLayout, QWidget, QGraphicsTextItem, QGraphicsItem, QGraphicsRectItem, QToolBar, QUndoStack, QLineEdit, QLabel, QSizePolicy, QPushButton, QFrame, QMenuBar, QAction, QFileDialog, QMessageBox)
+from PySide2.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QVBoxLayout, QHBoxLayout, QWidget, QGraphicsTextItem, QGraphicsItem, QGraphicsRectItem, QToolBar, QUndoStack, QLineEdit, QLabel, QSizePolicy, QPushButton, QFrame, QMenuBar, QAction, QFileDialog, QMessageBox)
 from PySide2.QtCore import (Qt, Signal, QRectF, QPoint, QCoreApplication)
 from PySide2.QtGui import (QPainterPath, QPainter, QIcon, QPixmap, QColor, QPen, QBrush, QImage, QFont, QKeySequence)
 
@@ -49,29 +49,34 @@ class ImageViewDockWidget(QGraphicsView):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setDragMode(QGraphicsView.NoDrag)
         self.rect = self.scene.sceneRect()
-        self.rect_draw = None
+        self.preview = None
 #        for drawing shapes
         self.begin, self.end = QPoint(), QPoint()
 
     def mouseMoveEvent(self, event):
         sc_pos = self.mapToScene(event.pos())
-        if self.drawRect and self.rect_draw:
-            self.scene.removeItem(self.rect_draw)
+        if (self.drawCircle or self.drawRect) and self.preview:
+            self.scene.removeItem(self.preview)
             self.end = sc_pos
             rectf = QRectF(self.begin, self.end)
-            self.rect_draw.setRect(rectf)
-            self.scene.addItem(self.rect_draw)
+            self.preview.setRect(rectf)
+            self.scene.addItem(self.preview)
         QGraphicsView.mouseMoveEvent(self, event)
 
     def mousePressEvent(self, event):
         sc_pos = self.mapToScene(event.pos())
-        if self.drawRect:
-            if event.button() & Qt.LeftButton:
-                self.begin = sc_pos
-                self.rect_draw = QGraphicsRectItem(QRectF(self.begin, self.begin))
-                self.rect_draw.setBrush(self.painter.brush)
-                self.rect_draw.setPen(self.painter.pen)
-                self.scene.addItem(self.rect_draw)
+        if event.button() & Qt.LeftButton:
+            self.begin = sc_pos
+            if self.drawRect:
+                self.preview = QGraphicsRectItem(QRectF(self.begin, self.begin))
+                self.preview.setBrush(self.painter.brush)
+                self.preview.setPen(self.painter.pen)
+                self.scene.addItem(self.preview)
+            if self.drawCircle:
+                self.preview = QGraphicsEllipseItem(QRectF(self.begin, self.begin))
+                self.preview.setBrush(self.painter.brush)
+                self.preview.setPen(self.painter.pen)
+                self.scene.addItem(self.preview)
         if self.panSelect:
             self.setDragMode(QGraphicsView.ScrollHandDrag)
         if self.zoomSelect:# or self.drawRect:
@@ -94,10 +99,10 @@ class ImageViewDockWidget(QGraphicsView):
         QGraphicsView.mouseReleaseEvent(self, event)
         sc_pos = self.mapToScene(event.pos())
         self.end = sc_pos
-        if self.drawRect:
-            self.scene.removeItem(self.rect_draw)
-            self.rect_draw.setRect(QRectF(self.begin, self.end))
-            addCommand = AddCommand(self.rect_draw, self.scene)
+        if self.drawRect or self.drawCircle:
+            self.scene.removeItem(self.preview)
+            self.preview.setRect(QRectF(self.begin, self.end))
+            addCommand = AddCommand(self.preview, self.scene)
             self.undoStack.push(addCommand)
         if self.zoomSelect:
             view_bb = self.sceneRect()
@@ -110,7 +115,7 @@ class ImageViewDockWidget(QGraphicsView):
         else:
             self.rect = self.scene.sceneRect()
         self.begin, self.end = QPoint(), QPoint()
-        self.rect_draw = None
+        self.preview = None
         self.setDragMode(QGraphicsView.NoDrag)
         self.afterLeftClickReleased.emit(sc_pos.x(), sc_pos.y())
 

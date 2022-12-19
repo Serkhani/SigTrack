@@ -329,7 +329,7 @@ class EditingPanel(QWidget):
         self.drawFreeHand = False
         self.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
-        self.viewer.setDragMode(QGraphicsView.RubberBandDrag)
+#        self.viewer.setDragMode(QGraphicsView.RubberBandDrag)
 
     def drawLine(self):
         self.viewer.panSelect = False
