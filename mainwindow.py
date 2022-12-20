@@ -155,7 +155,6 @@ class MainWindow(QMainWindow):
             self.mapAction()
         for imgfilePath in self.inputFilesList[0]:
             i = imgfilePath.split("/")[-1]
-            self.imageAction(imgfilePath)
             with open(imgfilePath, 'rb') as src:
                 img = Image(src)
                 if img.has_exif:
