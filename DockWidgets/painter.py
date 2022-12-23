@@ -27,3 +27,10 @@ class Painter(QPainter):
 
     def setFillStyle(self, style):
         self.brush.setStyle(style)
+
+    def setFillDefault(self):
+        self.brush = QBrush(QColor(Qt.black))
+
+    def setStrokeDefault(self):
+        self.pen = QPen()
+

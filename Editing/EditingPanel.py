@@ -43,6 +43,7 @@ class EditingPanel(QWidget):
         self.editingToolbar.addAction(self.rectAction)
         self.editingToolbar.addAction(self.circleAction)
         self.editingToolbar.addAction(self.lineAction)
+        self.editingToolbar.addAction(self.freeHandAction)
 
 
 
@@ -232,9 +233,12 @@ class EditingPanel(QWidget):
         self.strokeStyleComboBox.setVisible(False)
         self.strokeColorLabel.setVisible(isChecked)
         self.strokeColorComboBox.setVisible(isChecked)
-        self.strokeColorComboBoxValueChanged()
-        self.strokeWidthSpinBoxValueChanged()
-#        self.strokeStyleComboBoxValueChanged()
+        if isChecked:
+            self.strokeColorComboBoxValueChanged()
+            self.strokeWidthSpinBoxValueChanged()
+#           self.strokeStyleComboBoxValueChanged()
+        else: self.viewer.painter.setStrokeDefault()
+
 
 
     def fillColorPickerbutton(self):
@@ -267,9 +271,12 @@ class EditingPanel(QWidget):
         self.fillStyleComboBox.setVisible(False)
         self.fillColorLabel.setVisible(isChecked)
         self.fillColorComboBox.setVisible(isChecked)
-        self.fillColorComboBoxValueChanged()
-        self.opacitySliderValueChanged()
-#        self.fillStyleComboBoxValueChanged()
+        if isChecked:
+            self.fillColorComboBoxValueChanged()
+            self.opacitySliderValueChanged()
+            #self.fillStyleComboBoxValueChanged()
+        else: self.viewer.painter.setFillDefault()
+
 
     def opacitySliderValueChanged(self):
         color = self.fillColorComboBox.currentData()
@@ -347,7 +354,7 @@ class EditingPanel(QWidget):
     def drawFreeHand(self):
         self.viewer.panSelect = False
         self.viewer.drawRect = False
-        self.viewer.zoomSelect = True
+        self.viewer.zoomSelect = False
         self.viewer.drawCircle = False
         self.drawPolygon = False
         self.drawFreeHand = True
