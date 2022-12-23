@@ -37,6 +37,8 @@ class EditingPanel(QWidget):
         self.lineAction.triggered.connect(self.drawLine)
         self.polygonAction = QAction(QIcon(":/polygon"),"polygon")
         self.polygonAction.triggered.connect(self.drawPolygon)
+        self.textAction = QAction(QIcon(":/text"),"Text")
+        self.textAction.triggered.connect(self.addText)
 
         self.editingToolbar.addAction(self.undoAction)
         self.editingToolbar.addAction(self.redoAction)
@@ -44,6 +46,7 @@ class EditingPanel(QWidget):
         self.editingToolbar.addAction(self.circleAction)
         self.editingToolbar.addAction(self.lineAction)
         self.editingToolbar.addAction(self.freeHandAction)
+        self.editingToolbar.addAction(self.textAction)
 
 
 
@@ -271,6 +274,7 @@ class EditingPanel(QWidget):
         self.fillStyleComboBox.setVisible(False)
         self.fillColorLabel.setVisible(isChecked)
         self.fillColorComboBox.setVisible(isChecked)
+#        change painting style here: stroke or fill
         if isChecked:
             self.fillColorComboBoxValueChanged()
             self.opacitySliderValueChanged()
@@ -319,6 +323,7 @@ class EditingPanel(QWidget):
 
     def zoombutton(self):
         self.viewer.panSelect = False
+        self.viewer.addText = False
         self.viewer.drawRect = False
         self.viewer.zoomSelect = True
         self.viewer.drawCircle = False
@@ -330,6 +335,7 @@ class EditingPanel(QWidget):
 
     def drawCircle(self):
         self.viewer.panSelect = False
+        self.viewer.addText = False
         self.viewer.drawRect = False
         self.viewer.zoomSelect = False
         self.viewer.drawCircle = True
@@ -342,6 +348,7 @@ class EditingPanel(QWidget):
     def drawLine(self):
         self.viewer.panSelect = False
         self.viewer.drawRect = False
+        self.viewer.addText = False
         self.viewer.zoomSelect = False
         self.viewer.drawCircle = False
         self.viewer.drawPolygon = False
@@ -356,6 +363,7 @@ class EditingPanel(QWidget):
         self.viewer.drawRect = False
         self.viewer.zoomSelect = False
         self.viewer.drawCircle = False
+        self.viewer.addText = False
         self.viewer.drawPolygon = False
         self.viewer.drawFreeHand = True
         self.viewer.drawLine = False
@@ -367,7 +375,8 @@ class EditingPanel(QWidget):
     def drawPolygon(self):
         self.viewer.panSelect = False
         self.viewer.drawRect = False
-        self.viewer.zoomSelect = True
+        self.viewer.zoomSelect = False
+        self.viewer.addText = False
         self.viewer.drawCircle = False
         self.viewer.drawPolygon = True
         self.viewer.drawFreeHand = False
@@ -381,6 +390,7 @@ class EditingPanel(QWidget):
         self.viewer.panSelect = False
         self.viewer.drawCircle = False
         self.viewer.zoomSelect = False
+        self.viewer.addText = False
         self.viewer.drawRect = True
         self.viewer.drawPolygon = False
         self.viewer.drawFreeHand = False
@@ -392,6 +402,7 @@ class EditingPanel(QWidget):
         self.viewer.panSelect = False
         self.viewer.drawRect = False
         self.viewer.zoomSelect = False
+        self.viewer.addText = False
         self.viewer.drawCircle = False
         self.viewer.drawPolygon = False
         self.viewer.drawFreeHand = False
@@ -413,6 +424,7 @@ class EditingPanel(QWidget):
     def zoom_in_button(self):
         self.viewer.panSelect = False
         self.viewer.drawRect = False
+        self.viewer.addText = False
         self.viewer.zoomSelect = False
         self.viewer.drawCircle = False
         self.viewer.drawPolygon = False
@@ -437,6 +449,7 @@ class EditingPanel(QWidget):
         self.viewer.drawRect = False
         self.viewer.panSelect = False
         self.viewer.drawCircle = False
+        self.viewer.addText = False
         self.viewer.zoomSelect = False
         self.viewer.drawPolygon = False
         self.viewer.drawFreeHand = False
@@ -445,19 +458,21 @@ class EditingPanel(QWidget):
         self.viewer.setDragMode(QGraphicsView.NoDrag)
 
     def addText(self, pos, text):
-        imgText = self.viewer.scene.addText(text)
-        imgText.setPos(pos[0], pos[1])
+        self.viewer.drawRect = False
+        self.viewer.panSelect = False
+        self.viewer.drawCircle = False
+        self.viewer.addText = True
+        self.viewer.zoomSelect = False
+        self.viewer.drawPolygon = False
+        self.viewer.drawFreeHand = False
+        self.viewer.drawLine = False
 
-        # imgText = QGraphicsTextItem()
-        # imgText.setPos(pos[0], pos[1])
-        # imgText.setPlainText(text);
-
-        # self.scene.addItem(imgText)
 
     def panbutton(self):
         self.viewer.panSelect = True
         self.viewer.drawRect = False
         self.viewer.zoomSelect = False
+        self.viewer.addText = False
         self.viewer.drawPolygon = False
         self.viewer.drawFreeHand = False
         self.viewer.drawLine = False

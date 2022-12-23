@@ -38,6 +38,7 @@ class ImageViewDockWidget(QGraphicsView):
         self.drawCircle = False
         self.drawPolygon = False
         self.drawFreeHand = False
+        self.addText = False
         self.drawLine = False
         self.rotate_value = 0
         self.zoom_data = []
@@ -92,6 +93,14 @@ class ImageViewDockWidget(QGraphicsView):
                 self.preview.setPen(self.painter.pen)
                 self.preview.setBrush(self.painter.brush)
                 self.scene.addItem(self.preview)
+            elif self.addText:
+#                imgText = self.viewer.scene.addText(text)
+#                imgText.setPos(pos[0], pos[1])
+                imgText = QGraphicsTextItem()
+                imgText.setPos(sc_pos)
+                imgText.setPlainText('text')
+                self.scene.addItem(imgText)
+
             elif self.drawLine:
                 self.preview = QGraphicsLineItem(QLineF(self.begin.x(),self.begin.y(),self.begin.x(),self.begin.y()))
                 self.preview.setPen(self.painter.pen)

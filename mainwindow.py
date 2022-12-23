@@ -162,7 +162,6 @@ class MainWindow(QMainWindow):
                     try:
                         assert img.make == 'DJI', AssertionError
                     except AssertionError:
-#                        print('assert')
 #                        if file is from NIKON
                         self.errorHandling(img, i, imgfilePath)
                     except:
@@ -185,12 +184,6 @@ class MainWindow(QMainWindow):
                         else:
                             self.imagePaths.append(imgfilePath)
                             self.map.addMarker(imgfilePath,self.images_dict[i])
-
-
-
-
-
-
 
 
 

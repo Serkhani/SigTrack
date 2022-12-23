@@ -28,14 +28,16 @@ Rectangle {
         zoomLevel: 6
         Column {
             anchors.right: parent.right
-            spacing: 10
+            rightPadding: 5
+            topPadding: 5
+            spacing: 5
             Button {
                 text: '+'
                 onClicked: {
                     map.zoomLevel += 1
                 }
                 width: 50
-                height: 15
+                height: 30
             }
             Button {
                 text: '-'
@@ -43,7 +45,7 @@ Rectangle {
                     map.zoomLevel -= 1
                 }
                 width: 50
-                height: 15
+                height: 30
             }
         }
 

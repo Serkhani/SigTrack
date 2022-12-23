@@ -6,7 +6,7 @@
 from PySide2 import QtCore
 
 qt_resource_data = b"\
-\x00\x00\x08\x97\
+\x00\x00\x08\xce\
 i\
 mport QtQuick 2.\
 15\x0d\x0aimport QtQui\
@@ -59,93 +59,96 @@ r: locationTC\x0d\x0a \
 umn {\x0d\x0a         \
    anchors.right\
 : parent.right\x0d\x0a\
-            spac\
-ing: 10\x0d\x0a       \
-     Button {\x0d\x0a \
-               t\
-ext: '+'\x0d\x0a      \
-          onClic\
-ked: {\x0d\x0a        \
-            map.\
-zoomLevel += 1\x0d\x0a\
-                \
-}\x0d\x0a             \
-   width: 50\x0d\x0a  \
-              he\
-ight: 15\x0d\x0a      \
-      }\x0d\x0a       \
-     Button {\x0d\x0a \
-               t\
-ext: '-'\x0d\x0a      \
-          onClic\
-ked: {\x0d\x0a        \
-            map.\
-zoomLevel -= 1\x0d\x0a\
-                \
-}\x0d\x0a             \
-   width: 50\x0d\x0a  \
-              he\
-ight: 15\x0d\x0a      \
-      }\x0d\x0a       \
- }\x0d\x0a\x0d\x0a        Ma\
-pItemView {\x0d\x0a   \
-         model: \
-markermodel\x0d\x0a   \
-         delegat\
-e: MapQuickItem \
-{\x0d\x0a             \
-   coordinate: m\
-odel.position_ma\
-rker\x0d\x0a          \
-      anchorPoin\
-t.x: image.width\
-\x0d\x0a              \
-  anchorPoint.y:\
- image.height\x0d\x0a \
-               s\
-ourceItem: Image\
- {\x0d\x0a            \
-        id: imag\
-e\x0d\x0a             \
-       source: m\
-odel.source_mark\
-er\x0d\x0a            \
-    }\x0d\x0a         \
-       MouseArea\
- {\x0d\x0a            \
-        id: mark\
-erMouseArea\x0d\x0a   \
-                \
- objectName: \x22bu\
-ttonMouseArea\x22\x0d\x0a\
-                \
-    anchors.fill\
-: parent\x0d\x0a      \
-              ho\
-verEnabled: true\
-\x0d\x0a              \
-      onClicked:\
- {\x0d\x0a            \
-            App.\
-showImage(model.\
-imgPath)\x0d\x0a      \
-              }\x0d\
+            righ\
+tPadding: 5\x0d\x0a   \
+         topPadd\
+ing: 5\x0d\x0a        \
+    spacing: 5\x0d\x0a\
+            Butt\
+on {\x0d\x0a          \
+      text: '+'\x0d\
 \x0a               \
- }\x0d\x0a\x0d\x0a          \
-      ToolTip {\x0d\
-\x0a               \
-     parent: ima\
-ge\x0d\x0a            \
-        visible:\
- markerMouseArea\
-.containsMouse\x0d\x0a\
+ onClicked: {\x0d\x0a \
                 \
-    text: qsTr(m\
-odel.tooltip)\x0d\x0a \
-               }\
-\x0d\x0a            }\x0d\
-\x0a        }\x0d\x0a    \
-}\x0d\x0a}\x0d\x0a\
+   map.zoomLevel\
+ += 1\x0d\x0a         \
+       }\x0d\x0a      \
+          width:\
+ 50\x0d\x0a           \
+     height: 30\x0d\
+\x0a            }\x0d\x0a\
+            Butt\
+on {\x0d\x0a          \
+      text: '-'\x0d\
+\x0a               \
+ onClicked: {\x0d\x0a \
+                \
+   map.zoomLevel\
+ -= 1\x0d\x0a         \
+       }\x0d\x0a      \
+          width:\
+ 50\x0d\x0a           \
+     height: 30\x0d\
+\x0a            }\x0d\x0a\
+        }\x0d\x0a\x0d\x0a   \
+     MapItemView\
+ {\x0d\x0a            \
+model: markermod\
+el\x0d\x0a            \
+delegate: MapQui\
+ckItem {\x0d\x0a      \
+          coordi\
+nate: model.posi\
+tion_marker\x0d\x0a   \
+             anc\
+horPoint.x: imag\
+e.width\x0d\x0a       \
+         anchorP\
+oint.y: image.he\
+ight\x0d\x0a          \
+      sourceItem\
+: Image {\x0d\x0a     \
+               i\
+d: image\x0d\x0a      \
+              so\
+urce: model.sour\
+ce_marker\x0d\x0a     \
+           }\x0d\x0a  \
+              Mo\
+useArea {\x0d\x0a     \
+               i\
+d: markerMouseAr\
+ea\x0d\x0a            \
+        objectNa\
+me: \x22buttonMouse\
+Area\x22\x0d\x0a         \
+           ancho\
+rs.fill: parent\x0d\
+\x0a               \
+     hoverEnable\
+d: true\x0d\x0a       \
+             onC\
+licked: {\x0d\x0a     \
+                \
+   App.showImage\
+(model.imgPath)\x0d\
+\x0a               \
+     }\x0d\x0a        \
+        }\x0d\x0a\x0d\x0a   \
+             Too\
+lTip {\x0d\x0a        \
+            pare\
+nt: image\x0d\x0a     \
+               v\
+isible: markerMo\
+useArea.contains\
+Mouse\x0d\x0a         \
+           text:\
+ qsTr(model.tool\
+tip)\x0d\x0a          \
+      }\x0d\x0a       \
+     }\x0d\x0a        \
+}\x0d\x0a    }\x0d\x0a}\x0d\x0a\
 \x00\x00\x00>\
 f\
 unction showImag\
@@ -169,8 +172,8 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x02\x00\x00\x00\x01\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
-\x00\x00\x01\x85'\x85iX\
-\x00\x00\x00\x0c\x00\x00\x00\x00\x00\x01\x00\x00\x08\x9b\
+\x00\x00\x01\x85A\x01'\xbb\
+\x00\x00\x00\x0c\x00\x00\x00\x00\x00\x01\x00\x00\x08\xd2\
 \x00\x00\x01\x84\xbd\xc8K\xaf\
 "
 
