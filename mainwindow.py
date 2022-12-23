@@ -155,13 +155,14 @@ class MainWindow(QMainWindow):
             self.mapAction()
         for imgfilePath in self.inputFilesList[0]:
             i = imgfilePath.split("/")[-1]
+            self.imageAction(imgfilePath)
             with open(imgfilePath, 'rb') as src:
                 img = Image(src)
                 if img.has_exif:
                     try:
                         assert img.make == 'DJI', AssertionError
                     except AssertionError:
-                        print('assert')
+#                        print('assert')
 #                        if file is from NIKON
                         self.errorHandling(img, i, imgfilePath)
                     except:
@@ -201,7 +202,7 @@ class MainWindow(QMainWindow):
             self.images_dict[i]['altitude'] = img.gps_altitude
             self.images_dict[i]['dji'] = False
             self.images_dict[i]['timestamp'] = img.gps_timestamp
-            self.images_dict[i]['img_direction'] = img.gps_img_direction
+#            self.images_dict[i]['img_direction'] = img.gps_img_direction
             self.images_dict[i]['datestamp'] = img.gps_datestamp
         except:
             msgBox = QMessageBox()
@@ -230,8 +231,8 @@ class MainWindow(QMainWindow):
            self.importImages(imgPath)
            if self.images_dict:
                for img, dict_ in self.images_dict.items():
-                   print("dict:", dict_)
-                   print(img)
+#                   print("dict:", dict_)
+#                   print(img)
                    self.map.addMarker(imgPath+os.sep+img,dict_)
 
     def getGPSInfo(self, img):
@@ -252,10 +253,10 @@ class MainWindow(QMainWindow):
        hrs = sec / 3600.0
        deg = float(dms[0]) + hrs
        if ref.upper() == 'W':
-           print("west")
+#           print("west")
            deg = deg * -1
        if ref.upper() == 'S':
-           print("south")
+#           print("south")
            deg = deg * -1
        return deg
 
@@ -270,7 +271,7 @@ class MainWindow(QMainWindow):
                        try:
                            assert img.make == 'DJI', AssertionError
                        except AssertionError:
-                           print('assert')
+#                           print('assert')
    #                        if file is from NIKON
                            self.errorHandling(img, i, imgfilePath)
                        except:
