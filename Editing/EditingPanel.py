@@ -322,8 +322,8 @@ class EditingPanel(QWidget):
         self.viewer.drawRect = False
         self.viewer.zoomSelect = True
         self.viewer.drawCircle = False
-        self.drawPolygon = False
-        self.drawFreeHand = False
+        self.viewer.drawPolygon = False
+        self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.RubberBandDrag)
@@ -333,8 +333,8 @@ class EditingPanel(QWidget):
         self.viewer.drawRect = False
         self.viewer.zoomSelect = False
         self.viewer.drawCircle = True
-        self.drawPolygon = False
-        self.drawFreeHand = False
+        self.viewer.drawPolygon = False
+        self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
 #        self.viewer.setDragMode(QGraphicsView.RubberBandDrag)
@@ -344,8 +344,8 @@ class EditingPanel(QWidget):
         self.viewer.drawRect = False
         self.viewer.zoomSelect = False
         self.viewer.drawCircle = False
-        self.drawPolygon = False
-        self.drawFreeHand = False
+        self.viewer.drawPolygon = False
+        self.viewer.drawFreeHand = False
         self.viewer.drawLine = True
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
@@ -356,8 +356,8 @@ class EditingPanel(QWidget):
         self.viewer.drawRect = False
         self.viewer.zoomSelect = False
         self.viewer.drawCircle = False
-        self.drawPolygon = False
-        self.drawFreeHand = True
+        self.viewer.drawPolygon = False
+        self.viewer.drawFreeHand = True
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
@@ -369,8 +369,8 @@ class EditingPanel(QWidget):
         self.viewer.drawRect = False
         self.viewer.zoomSelect = True
         self.viewer.drawCircle = False
-        self.drawPolygon = True
-        self.drawFreeHand = False
+        self.viewer.drawPolygon = True
+        self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
@@ -382,8 +382,8 @@ class EditingPanel(QWidget):
         self.viewer.drawCircle = False
         self.viewer.zoomSelect = False
         self.viewer.drawRect = True
-        self.drawPolygon = False
-        self.drawFreeHand = False
+        self.viewer.drawPolygon = False
+        self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
 #        self.viewer.setDragMode(QGraphicsView.RubberBandDrag)
@@ -393,8 +393,8 @@ class EditingPanel(QWidget):
         self.viewer.drawRect = False
         self.viewer.zoomSelect = False
         self.viewer.drawCircle = False
-        self.drawPolygon = False
-        self.drawFreeHand = False
+        self.viewer.drawPolygon = False
+        self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.ArrowCursor)
         sceneRect = self.viewer.mapToScene(self.viewer.viewport().contentsRect()).boundingRect()
@@ -415,8 +415,8 @@ class EditingPanel(QWidget):
         self.viewer.drawRect = False
         self.viewer.zoomSelect = False
         self.viewer.drawCircle = False
-        self.drawPolygon = False
-        self.drawFreeHand = False
+        self.viewer.drawPolygon = False
+        self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.ArrowCursor)
         sceneRect = self.viewer.mapToScene(self.viewer.viewport().contentsRect()).boundingRect()
@@ -438,8 +438,8 @@ class EditingPanel(QWidget):
         self.viewer.panSelect = False
         self.viewer.drawCircle = False
         self.viewer.zoomSelect = False
-        self.drawPolygon = False
-        self.drawFreeHand = False
+        self.viewer.drawPolygon = False
+        self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.ArrowCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
@@ -458,8 +458,8 @@ class EditingPanel(QWidget):
         self.viewer.panSelect = True
         self.viewer.drawRect = False
         self.viewer.zoomSelect = False
-        self.drawPolygon = False
-        self.drawFreeHand = False
+        self.viewer.drawPolygon = False
+        self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.OpenHandCursor)
         self.viewer.setDragMode(QGraphicsView.ScrollHandDrag)

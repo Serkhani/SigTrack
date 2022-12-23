@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsLineItem, QGraphicsEllipseItem, QVBoxLayout, QHBoxLayout, QWidget, QGraphicsTextItem, QGraphicsItem, QGraphicsRectItem, QToolBar, QUndoStack, QLineEdit, QLabel, QSizePolicy, QPushButton, QFrame, QMenuBar, QAction, QFileDialog, QMessageBox)
+from PySide2.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsLineItem, QGraphicsPathItem, QGraphicsEllipseItem, QVBoxLayout, QHBoxLayout, QWidget, QGraphicsTextItem, QGraphicsItem, QGraphicsRectItem, QToolBar, QUndoStack, QLineEdit, QLabel, QSizePolicy, QPushButton, QFrame, QMenuBar, QAction, QFileDialog, QMessageBox)
 from PySide2.QtCore import (Qt, Signal, QLineF, QRectF, QPoint, QCoreApplication)
 from PySide2.QtGui import (QPainterPath, QPainter, QIcon, QPixmap, QColor, QPen, QBrush, QImage, QFont, QKeySequence)
 
@@ -128,12 +128,13 @@ class ImageViewDockWidget(QGraphicsView):
         QGraphicsView.mouseReleaseEvent(self, event)
         sc_pos = self.mapToScene(event.pos())
         self.end = sc_pos
-        if self.drawRect or self.drawCircle or self.drawLine or self.drawFreeHand:
+        if (self.drawRect or self.drawCircle or self.drawLine or self.drawFreeHand) and self.preview:
             self.scene.removeItem(self.preview)
             if self.drawLine:
                 self.preview.setLine(QLineF(self.begin.x(), self.begin.y(), self.end.x(), self.end.y()))
             elif self.drawFreeHand:
-                self.preview.setPath(self.path.lineTo(self.end))
+                self.path.lineTo(self.end)
+                self.preview.setPath(self.path)
             else: self.preview.setRect(QRectF(self.begin, self.end))
             addCommand = AddCommand(self.preview, self.scene)
             self.undoStack.push(addCommand)
