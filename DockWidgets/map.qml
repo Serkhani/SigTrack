@@ -32,20 +32,38 @@ Rectangle {
             topPadding: 5
             spacing: 5
             Button {
-                text: '+'
+                contentItem: Text {
+                    text: '+'
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 24
+                    color: "white"
+                }
                 onClicked: {
                     map.zoomLevel += 1
                 }
                 width: 50
                 height: 30
+                background: Rectangle {
+                    color: "#8572a8"
+                }
             }
             Button {
-                text: '-'
+                contentItem: Text {
+                    text: '-'
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.pointSize: 24
+                    color: "white"
+                }
                 onClicked: {
                     map.zoomLevel -= 1
                 }
                 width: 50
                 height: 30
+                background: Rectangle {
+                    color: "#8572a8"
+                }
             }
         }
 
