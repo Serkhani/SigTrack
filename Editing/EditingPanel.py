@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtWidgets import (QDockWidget, QGraphicsView, QVBoxLayout, QMessageBox, QHBoxLayout, QCheckBox, QSpinBox, QComboBox, QWidget, QLabel, QSlider, QToolBar, QPushButton, QColorDialog, QAction, QSizePolicy)
+from PySide2.QtWidgets import (QDockWidget, QGraphicsView, QVBoxLayout, QButtonGroup, QMessageBox, QHBoxLayout, QCheckBox, QSpinBox, QComboBox, QWidget, QLabel, QSlider, QToolBar, QPushButton, QColorDialog, QAction, QSizePolicy)
 from PySide2.QtCore import (Qt, QRectF, QCoreApplication)
 from PySide2.QtGui import (QIcon, QPixmap, QImage, QFont, QKeySequence)
 import Editing.icon_resources
@@ -38,7 +38,7 @@ class EditingPanel(QWidget):
         self.polygonAction = QAction(QIcon(":/polygon"),"polygon")
         self.polygonAction.triggered.connect(self.drawPolygon)
         self.textAction = QAction(QIcon(":/text"),"Text")
-        self.textAction.triggered.connect(self.addText)
+        self.textAction.triggered.connect(self.addTextbutton)
 
         self.editingToolbar.addAction(self.undoAction)
         self.editingToolbar.addAction(self.redoAction)
@@ -205,6 +205,93 @@ class EditingPanel(QWidget):
         VBlayout.addLayout(HBToolViewPropsLayout)
 
 #        self.setLayout(VBlayout)
+
+#        Font
+        self.fontLabel = QLabel(self)
+        self.fontLabel.setText(self.tr('Font'))
+        VBToolPropertiesLayout.addWidget(self.fontLabel)
+
+        # Bold
+        self.fontBoldCheckBox = QCheckBox("Bold", self)
+        self.fontBoldCheckBox.stateChanged.connect(self.fontBoldCheckBoxClicked)
+        VBToolPropertiesLayout.addWidget(self.fontBoldCheckBox)
+
+        # PointSize slider
+        pointSizeLayout = QHBoxLayout(self)
+        # label
+        self.pointSizeLabel = QLabel(self)
+        self.pointSizeLabel.setText(self.tr('Point Size'))
+        pointSizeLayout.addWidget(self.pointSizeLabel)
+        # Slider
+        self.pointSizeSlider = QSlider(Qt.Horizontal)
+        self.pointSizeSlider.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed))
+        self.pointSizeSlider.setMinimum(0)
+        self.pointSizeSlider.setMaximum(100)
+        self.pointSizeSlider.setValue(24)
+        self.pointSizeSlider.setTickInterval(25)
+        self.pointSizeSlider.valueChanged.connect(self.pointSizeSliderValueChanged)
+        pointSizeLayout.addWidget(self.pointSizeSlider)
+        # pointSizeValue
+        self.pointSizeValue = QLabel(self)
+        self.pointSizeValue.setText(self.tr(str(self.pointSizeSlider.value())))
+        pointSizeLayout.addWidget(self.pointSizeValue)
+        VBToolPropertiesLayout.addLayout(pointSizeLayout)
+
+#        Alignment
+        alignmentLayout = QHBoxLayout(self)
+        # label
+        self.alignmentLabel = QLabel(self)
+        self.alignmentLabel.setText(self.tr('Alignment'))
+        VBToolPropertiesLayout.addWidget(self.alignmentLabel)
+        buttonGroup = QButtonGroup()
+
+        self.alignLeft = QPushButton(self)
+        self.alignLeft.setIcon(QIcon(':alignLeft'))
+        self.alignLeft.clicked.connect(self.alignLeftButton)
+        self.alignLeft.setToolTip(self.tr('Align Left'))
+        buttonGroup.addButton(self.alignLeft)
+        alignmentLayout.addWidget(self.alignLeft)
+
+        self.alignRight = QPushButton(self)
+        self.alignRight.setIcon(QIcon(':alignRight'))
+        self.alignRight.clicked.connect(self.alignRightButton)
+        self.alignRight.setToolTip(self.tr('Align Right'))
+        buttonGroup.addButton(self.alignRight)
+        alignmentLayout.addWidget(self.alignRight)
+
+        self.alignJustify = QPushButton(self)
+        self.alignJustify.setIcon(QIcon(':alignJustify'))
+        self.alignJustify.clicked.connect(self.alignJustifyButton)
+        self.alignJustify.setToolTip(self.tr('Justify'))
+        buttonGroup.addButton(self.alignJustify)
+        alignmentLayout.addWidget(self.alignJustify)
+
+        self.alignCenter = QPushButton(self)
+        self.alignCenter.setIcon(QIcon(':alignCenter'))
+        self.alignCenter.clicked.connect(self.alignCenterButton)
+        self.alignCenter.setToolTip(self.tr('Align Center'))
+        buttonGroup.addButton(self.alignCenter)
+        alignmentLayout.addWidget(self.alignCenter)
+        VBToolPropertiesLayout.addLayout(alignmentLayout)
+
+    def alignLeftButton(self):
+        pass
+
+    def alignRightButton(self):
+        pass
+
+    def alignJustifyButton(self):
+        pass
+
+    def alignCenterButton(self):
+        pass
+
+    def fontBoldCheckBoxClicked(self):
+        self.viewer.painter.setFontBold(self.fontBoldCheckBox.isChecked())
+
+    def pointSizeSliderValueChanged(self):
+        self.viewer.painter.setFontPointSize(self.pointSizeSlider.value())
+        self.pointSizeValue.setText(self.tr(str(self.pointSizeSlider.value())))
 
     def strokeColorPickerbutton(self):
         # color picker
@@ -457,7 +544,7 @@ class EditingPanel(QWidget):
         self.viewer.setCursor(Qt.ArrowCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
 
-    def addText(self, pos, text):
+    def addTextbutton(self):
         self.viewer.drawRect = False
         self.viewer.panSelect = False
         self.viewer.drawCircle = False
@@ -497,4 +584,5 @@ class EditingPanel(QWidget):
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('ViewWindow', message)
+
 

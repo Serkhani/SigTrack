@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 from PySide2.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsLineItem, QGraphicsPathItem, QGraphicsEllipseItem, QVBoxLayout, QHBoxLayout, QWidget, QGraphicsTextItem, QGraphicsItem, QGraphicsRectItem, QToolBar, QUndoStack, QLineEdit, QLabel, QSizePolicy, QPushButton, QFrame, QMenuBar, QAction, QFileDialog, QMessageBox)
 from PySide2.QtCore import (Qt, Signal, QLineF, QRectF, QPoint, QCoreApplication)
-from PySide2.QtGui import (QPainterPath, QPainter, QIcon, QPixmap, QColor, QPen, QBrush, QImage, QFont, QKeySequence)
+from PySide2.QtGui import (QPainterPath, QPainterPathStroker, QPainter, QIcon, QPixmap, QColor, QPen, QBrush, QImage, QFont)
 
 
 from DockWidgets.undo_redo_command import AddCommand#, DeleteCommand, MoveCommand
@@ -19,7 +19,7 @@ class ImageViewDockWidget(QGraphicsView):
         self.mainWindow = mainWindow
         self.setWindowTitle('ImageView')
         self.scene = QGraphicsScene()
-
+#        self.setRenderHint(QPainter.Antialiasing)
 
         self.undoStack = QUndoStack()
         self.painter = Painter()
@@ -61,9 +61,9 @@ class ImageViewDockWidget(QGraphicsView):
             self.scene.removeItem(self.preview)
             # Add a line to the path from the previous point to the current position
             self.path.lineTo(sc_pos)
-
+            stroker = QPainterPathStroker()
             # Create a line item from the path and add it to the scene
-            self.preview.setPath(self.path)
+            self.preview.setPath(stroker.createStroke(self.path))
             self.scene.addItem(self.preview)
 
         if self.drawLine and self.preview:
@@ -89,7 +89,8 @@ class ImageViewDockWidget(QGraphicsView):
             if self.drawFreeHand:
                 self.path = QPainterPath()
                 self.path.moveTo(sc_pos)
-                self.preview = QGraphicsPathItem(self.path)
+                stroker = QPainterPathStroker()
+                self.preview = QGraphicsPathItem(stroker.createStroke(self.path))
                 self.preview.setPen(self.painter.pen)
                 self.preview.setBrush(self.painter.brush)
                 self.scene.addItem(self.preview)
@@ -97,9 +98,14 @@ class ImageViewDockWidget(QGraphicsView):
 #                imgText = self.viewer.scene.addText(text)
 #                imgText.setPos(pos[0], pos[1])
                 imgText = QGraphicsTextItem()
-                imgText.setPos(sc_pos)
                 imgText.setPlainText('text')
+                imgText.setPos(sc_pos)
+                imgText.setFlag(QGraphicsItem.ItemIsMovable)
+                imgText.setFont(self.painter.font)
+                imgText.setTextInteractionFlags(Qt.TextEditorInteraction)
+#                imgText.setPlainText('text')
                 self.scene.addItem(imgText)
+                self.addText = False
 
             elif self.drawLine:
                 self.preview = QGraphicsLineItem(QLineF(self.begin.x(),self.begin.y(),self.begin.x(),self.begin.y()))
@@ -143,7 +149,8 @@ class ImageViewDockWidget(QGraphicsView):
                 self.preview.setLine(QLineF(self.begin.x(), self.begin.y(), self.end.x(), self.end.y()))
             elif self.drawFreeHand:
                 self.path.lineTo(self.end)
-                self.preview.setPath(self.path)
+                stroker = QPainterPathStroker()
+                self.preview.setPath(stroker.createStroke(self.path))
             else: self.preview.setRect(QRectF(self.begin, self.end))
             addCommand = AddCommand(self.preview, self.scene)
             self.undoStack.push(addCommand)
@@ -177,21 +184,22 @@ class ImageViewDockWidget(QGraphicsView):
             if sceneRect.width()>=30 or sceneRect.height() >= 30:
                 self.scale(1.1,1.1)
 
-    def keyPressEvent(self, e):
-        if e.key() == Qt.Key_Escape:
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
             if self.mainWindow.isFullScreen():
                 self.mainWindow.showMaximized()
                 return
 
-        if e.key() == Qt.Key_F11:
+        if event.key() == Qt.Key_F11:
             if self.mainWindow.isFullScreen():
                 self.mainWindow.showMaximized()
             else:
                 self.mainWindow.showFullScreen()
 
-        if e.key() == Qt.Key_Escape:
+        if event.key() == Qt.Key_Escape:
             self.mainWindow.close()
         self.rect = self.scene.sceneRect()
+        QGraphicsView.keyPressEvent(self, event)
 
 
     # noinspection PyMethodMayBeStatic

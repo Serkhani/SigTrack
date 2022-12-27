@@ -4,7 +4,7 @@
 # from qgis.PyQt.QtGui import (QPainterPath, QPainter, QIcon, QPixmap, QImage, QFont, QKeySequence)
 
 from PySide2.QtCore import Qt
-from PySide2.QtGui import (QPainter, QBrush, QPen, QColor)
+from PySide2.QtGui import (QPainter, QBrush, QPen, QFont, QColor)
 
 
 class Painter(QPainter):
@@ -12,6 +12,16 @@ class Painter(QPainter):
         QPainter.__init__(self)
         self.brush = QBrush(QColor(Qt.black))
         self.pen = QPen()
+        self.font = QFont()
+
+    def setFontFamily(self, family):
+        self.font.setFamily(family)
+
+    def setFontBold(self, condition):
+        self.font.setBold(condition)
+
+    def setFontPointSize(self, size):
+        self.font.setPointSize(size)
 
     def setStrokeWidth(self, width):
         self.pen.setWidth(width)
