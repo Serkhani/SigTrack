@@ -13,6 +13,7 @@ class Painter(QPainter):
         self.brush = QBrush(QColor(Qt.black))
         self.pen = QPen()
         self.font = QFont()
+        self.font.setPointSize(50)
 
     def setFontFamily(self, family):
         self.font.setFamily(family)

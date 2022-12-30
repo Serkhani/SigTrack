@@ -227,7 +227,7 @@ class EditingPanel(QWidget):
         self.pointSizeSlider.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed))
         self.pointSizeSlider.setMinimum(0)
         self.pointSizeSlider.setMaximum(100)
-        self.pointSizeSlider.setValue(24)
+        self.pointSizeSlider.setValue(50)
         self.pointSizeSlider.setTickInterval(25)
         self.pointSizeSlider.valueChanged.connect(self.pointSizeSliderValueChanged)
         pointSizeLayout.addWidget(self.pointSizeSlider)
@@ -430,7 +430,7 @@ class EditingPanel(QWidget):
         self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
-#        self.viewer.setDragMode(QGraphicsView.RubberBandDrag)
+        self.viewer.setDragMode(QGraphicsView.NoDrag)
 
     def drawLine(self):
         self.viewer.panSelect = False
@@ -483,7 +483,7 @@ class EditingPanel(QWidget):
         self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
-#        self.viewer.setDragMode(QGraphicsView.RubberBandDrag)
+        self.viewer.setDragMode(QGraphicsView.NoDrag)
 
     def zoom_out_button(self):
         self.viewer.panSelect = False
@@ -553,6 +553,7 @@ class EditingPanel(QWidget):
         self.viewer.drawPolygon = False
         self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
+        self.viewer.addTextItem()
 
 
     def panbutton(self):

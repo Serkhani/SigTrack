@@ -6,6 +6,7 @@ from PySide2.QtGui import (QPainterPath, QPainterPathStroker, QPainter, QIcon, Q
 
 from DockWidgets.undo_redo_command import AddCommand#, DeleteCommand, MoveCommand
 from DockWidgets.painter import Painter
+from DockWidgets.textItem import TextItem
 from Editing.EditingPanel import EditingPanel, EditingPanelDockWidget
 
 class ImageViewDockWidget(QGraphicsView):
@@ -19,7 +20,6 @@ class ImageViewDockWidget(QGraphicsView):
         self.mainWindow = mainWindow
         self.setWindowTitle('ImageView')
         self.scene = QGraphicsScene()
-#        self.setRenderHint(QPainter.Antialiasing)
 
         self.undoStack = QUndoStack()
         self.painter = Painter()
@@ -94,18 +94,7 @@ class ImageViewDockWidget(QGraphicsView):
                 self.preview.setPen(self.painter.pen)
                 self.preview.setBrush(self.painter.brush)
                 self.scene.addItem(self.preview)
-            elif self.addText:
-#                imgText = self.viewer.scene.addText(text)
-#                imgText.setPos(pos[0], pos[1])
-                imgText = QGraphicsTextItem()
-                imgText.setPlainText('text')
-                imgText.setPos(sc_pos)
-                imgText.setFlag(QGraphicsItem.ItemIsMovable)
-                imgText.setFont(self.painter.font)
-                imgText.setTextInteractionFlags(Qt.TextEditorInteraction)
-#                imgText.setPlainText('text')
-                self.scene.addItem(imgText)
-                self.addText = False
+
 
             elif self.drawLine:
                 self.preview = QGraphicsLineItem(QLineF(self.begin.x(),self.begin.y(),self.begin.x(),self.begin.y()))
@@ -140,13 +129,15 @@ class ImageViewDockWidget(QGraphicsView):
         QGraphicsView.mouseDoubleClickEvent(self, event)
 
     def mouseReleaseEvent(self, event):
-        QGraphicsView.mouseReleaseEvent(self, event)
         sc_pos = self.mapToScene(event.pos())
         self.end = sc_pos
-        if (self.drawRect or self.drawCircle or self.drawLine or self.drawFreeHand) and self.preview:
+        if (self.drawRect or self.addText or self.drawCircle or self.drawLine or self.drawFreeHand) and self.preview:
             self.scene.removeItem(self.preview)
             if self.drawLine:
                 self.preview.setLine(QLineF(self.begin.x(), self.begin.y(), self.end.x(), self.end.y()))
+            elif self.addText:
+                self.addText = False
+
             elif self.drawFreeHand:
                 self.path.lineTo(self.end)
                 stroker = QPainterPathStroker()
@@ -168,6 +159,7 @@ class ImageViewDockWidget(QGraphicsView):
         self.preview = None
         self.setDragMode(QGraphicsView.NoDrag)
         self.afterLeftClickReleased.emit(sc_pos.x(), sc_pos.y())
+        QGraphicsView.mouseReleaseEvent(self, event)
 
     def resizeEvent(self, event):
         self.fitInView(self.scene.sceneRect(), Qt.KeepAspectRatio)
@@ -224,6 +216,11 @@ class ImageViewDockWidget(QGraphicsView):
         self.mainWindow.editingPanel.setWidget(self.editingPanelWidget)
         self.mainWindow.editingPanel.show()
 
+    def addTextItem(self):
+        self.preview = TextItem(self)
+        self.scene.addItem(self.preview)
+        addCommand = AddCommand(self.preview, self.scene)
+        self.undoStack.push(addCommand)
 
     def showImageOnView(self, imgPath):
         self.imgPath = imgPath
