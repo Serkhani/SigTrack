@@ -31,13 +31,13 @@ class EditingPanel(QWidget):
         self.rectAction.triggered.connect(self.drawRect)
         self.circleAction = QAction(QIcon(":/circle"),"circle")
         self.circleAction.triggered.connect(self.drawCircle)
-        self.freeHandAction = QAction(QIcon(":freeHand"),"freeHand")
+        self.freeHandAction = QAction(QIcon(":freehand"),"freeHand")
         self.freeHandAction.triggered.connect(self.drawFreeHand)
         self.lineAction = QAction(QIcon(":/line"),"line")
         self.lineAction.triggered.connect(self.drawLine)
         self.polygonAction = QAction(QIcon(":/polygon"),"polygon")
         self.polygonAction.triggered.connect(self.drawPolygon)
-        self.textAction = QAction(QIcon(":/text"),"Text")
+        self.textAction = QAction(QIcon(":/addText"),"Text")
         self.textAction.triggered.connect(self.addTextbutton)
 
         self.editingToolbar.addAction(self.undoAction)
@@ -63,7 +63,7 @@ class EditingPanel(QWidget):
         self.zoom_out.clicked.connect(self.zoom_out_button)
 
         self.zoom = QPushButton(self)
-        self.zoom.setIcon(QIcon(':zoom_selected'))
+        self.zoom.setIcon(QIcon(':zoomSelected'))
         self.zoom.clicked.connect(self.zoombutton)
 
         self.pan = QPushButton(self)
@@ -209,11 +209,13 @@ class EditingPanel(QWidget):
 #        Font
         self.fontLabel = QLabel(self)
         self.fontLabel.setText(self.tr('Font'))
+        self.fontLabel.setVisible(False)
         VBToolPropertiesLayout.addWidget(self.fontLabel)
 
         # Bold
         self.fontBoldCheckBox = QCheckBox("Bold", self)
         self.fontBoldCheckBox.stateChanged.connect(self.fontBoldCheckBoxClicked)
+        self.fontBoldCheckBox.setVisible(False)
         VBToolPropertiesLayout.addWidget(self.fontBoldCheckBox)
 
         # PointSize slider
@@ -221,6 +223,7 @@ class EditingPanel(QWidget):
         # label
         self.pointSizeLabel = QLabel(self)
         self.pointSizeLabel.setText(self.tr('Point Size'))
+        self.pointSizeLabel.setVisible(False)
         pointSizeLayout.addWidget(self.pointSizeLabel)
         # Slider
         self.pointSizeSlider = QSlider(Qt.Horizontal)
@@ -229,12 +232,14 @@ class EditingPanel(QWidget):
         self.pointSizeSlider.setMaximum(100)
         self.pointSizeSlider.setValue(50)
         self.pointSizeSlider.setTickInterval(25)
+        self.pointSizeSlider.setVisible(False)
         self.pointSizeSlider.valueChanged.connect(self.pointSizeSliderValueChanged)
         pointSizeLayout.addWidget(self.pointSizeSlider)
         # pointSizeValue
         self.pointSizeValue = QLabel(self)
         self.pointSizeValue.setText(self.tr(str(self.pointSizeSlider.value())))
         pointSizeLayout.addWidget(self.pointSizeValue)
+        self.pointSizeValue.setVisible(False)
         VBToolPropertiesLayout.addLayout(pointSizeLayout)
 
 #        Alignment
@@ -242,6 +247,7 @@ class EditingPanel(QWidget):
         # label
         self.alignmentLabel = QLabel(self)
         self.alignmentLabel.setText(self.tr('Alignment'))
+        self.alignmentLabel.setVisible(False)
         VBToolPropertiesLayout.addWidget(self.alignmentLabel)
         buttonGroup = QButtonGroup()
 
@@ -249,6 +255,7 @@ class EditingPanel(QWidget):
         self.alignLeft.setIcon(QIcon(':alignLeft'))
         self.alignLeft.clicked.connect(self.alignLeftButton)
         self.alignLeft.setToolTip(self.tr('Align Left'))
+        self.alignLeft.setVisible(False)
         buttonGroup.addButton(self.alignLeft)
         alignmentLayout.addWidget(self.alignLeft)
 
@@ -256,6 +263,7 @@ class EditingPanel(QWidget):
         self.alignRight.setIcon(QIcon(':alignRight'))
         self.alignRight.clicked.connect(self.alignRightButton)
         self.alignRight.setToolTip(self.tr('Align Right'))
+        self.alignRight.setVisible(False)
         buttonGroup.addButton(self.alignRight)
         alignmentLayout.addWidget(self.alignRight)
 
@@ -263,6 +271,7 @@ class EditingPanel(QWidget):
         self.alignJustify.setIcon(QIcon(':alignJustify'))
         self.alignJustify.clicked.connect(self.alignJustifyButton)
         self.alignJustify.setToolTip(self.tr('Justify'))
+        self.alignJustify.setVisible(False)
         buttonGroup.addButton(self.alignJustify)
         alignmentLayout.addWidget(self.alignJustify)
 
@@ -272,19 +281,20 @@ class EditingPanel(QWidget):
         self.alignCenter.setToolTip(self.tr('Align Center'))
         buttonGroup.addButton(self.alignCenter)
         alignmentLayout.addWidget(self.alignCenter)
+        self.alignCenter.setVisible(False)
         VBToolPropertiesLayout.addLayout(alignmentLayout)
 
     def alignLeftButton(self):
-        pass
+        self.viewer.preview.updateGeometry(Qt.AlignLeft)
 
     def alignRightButton(self):
-        pass
+        self.viewer.preview.updateGeometry(Qt.AlignRight)
 
     def alignJustifyButton(self):
-        pass
+        self.viewer.preview.updateGeometry(Qt.AlignJustify)
 
     def alignCenterButton(self):
-        pass
+        self.viewer.preview.updateGeometry(Qt.AlignHCenter)
 
     def fontBoldCheckBoxClicked(self):
         self.viewer.painter.setFontBold(self.fontBoldCheckBox.isChecked())
@@ -394,6 +404,20 @@ class EditingPanel(QWidget):
         buttonY.setFont(font)
         msgBox.exec_()
 
+    def updateForText(self, condition):
+#        self.alignCenter.setVisible(condition)
+#        self.alignLeft.setVisible(condition)
+#        self.alignRight.setVisible(condition)
+#        self.alignJustify.setVisible(condition)
+        self.pointSizeValue.setVisible(condition)
+#        self.alignmentLabel.setVisible(condition)
+        self.pointSizeSlider.setVisible(condition)
+        self.pointSizeLabel.setVisible(condition)
+        self.fontBoldCheckBox.setVisible(condition)
+        self.fontLabel.setVisible(condition)
+        self.fillCheckBox.setCheckState(Qt.Unchecked)
+
+
     def updateWindow(self):
         self.viewer.scene.clear()
         self.drawSelf.getImage = QImage(self.viewer.imgPath)
@@ -419,6 +443,7 @@ class EditingPanel(QWidget):
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.RubberBandDrag)
+        self.updateForText(self.viewer.addText)
 
     def drawCircle(self):
         self.viewer.panSelect = False
@@ -431,6 +456,7 @@ class EditingPanel(QWidget):
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
+        self.updateForText(self.viewer.addText)
 
     def drawLine(self):
         self.viewer.panSelect = False
@@ -443,7 +469,7 @@ class EditingPanel(QWidget):
         self.viewer.drawLine = True
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
-
+        self.updateForText(self.viewer.addText)
 
     def drawFreeHand(self):
         self.viewer.panSelect = False
@@ -456,7 +482,7 @@ class EditingPanel(QWidget):
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
-
+        self.updateForText(self.viewer.addText)
 
 
     def drawPolygon(self):
@@ -470,7 +496,7 @@ class EditingPanel(QWidget):
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
-
+        self.updateForText(self.viewer.addText)
 
 
     def drawRect(self):
@@ -484,6 +510,7 @@ class EditingPanel(QWidget):
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
+        self.updateForText(self.viewer.addText)
 
     def zoom_out_button(self):
         self.viewer.panSelect = False
@@ -507,6 +534,7 @@ class EditingPanel(QWidget):
         # rect = QRectF(x-10,y-10,w+20,h+20)
         # self.viewer.fitInView(rect, Qt.KeepAspectRatio)
         # self.viewer.rect = rect
+        self.updateForText(self.viewer.addText)
 
     def zoom_in_button(self):
         self.viewer.panSelect = False
@@ -528,6 +556,7 @@ class EditingPanel(QWidget):
         #     self.viewer.fitInView(rect, Qt.KeepAspectRatio)
         #     self.viewer.rect = rect
         # else: return
+        self.updateForText(self.viewer.addText)
 
     def extentbutton(self):
         self.viewer.zoom_data = []
@@ -543,6 +572,7 @@ class EditingPanel(QWidget):
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.ArrowCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
+        self.updateForText(self.viewer.addText)
 
     def addTextbutton(self):
         self.viewer.drawRect = False
@@ -553,8 +583,10 @@ class EditingPanel(QWidget):
         self.viewer.drawPolygon = False
         self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
+        self.viewer.setCursor(Qt.ArrowCursor)
+#        self.fillCheckBox.setCheckState(Qt.Checked)
         self.viewer.addTextItem()
-
+        self.updateForText(self.viewer.addText)
 
     def panbutton(self):
         self.viewer.panSelect = True
@@ -566,6 +598,7 @@ class EditingPanel(QWidget):
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.OpenHandCursor)
         self.viewer.setDragMode(QGraphicsView.ScrollHandDrag)
+        self.updateForText(self.viewer.addText)
 
     def closeEvent(self, event):
         self.viewer.undoStack.clear()

@@ -17,7 +17,7 @@ class AddCommand(QtWidgets.QUndoCommand):
         self.scene.update()
 
     def tr(self, message):
-        return QCoreApplication.translate('PhotoLinker', message)
+        return QCoreApplication.translate('SigTrack', message)
 
 
 class DeleteCommand(QtWidgets.QUndoCommand):
@@ -36,7 +36,7 @@ class DeleteCommand(QtWidgets.QUndoCommand):
             self.scene.removeItem(i)
     
     def tr(self, message):
-        return QCoreApplication.translate('PhotoLinker', message)
+        return QCoreApplication.translate('SigTrack', message)
 
 
 class MoveCommand(QtWidgets.QUndoCommand):
@@ -54,4 +54,4 @@ class MoveCommand(QtWidgets.QUndoCommand):
         self.item.setPos(self.newPos)
     
     def tr(self, message):
-        return QCoreApplication.translate('PhotoLinker', message)
+        return QCoreApplication.translate('SigTrack', message)
