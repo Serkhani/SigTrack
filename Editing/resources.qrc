@@ -13,5 +13,8 @@
         <file alias="zoomSelected">icons/zoom_selected.svg</file>
         <file alias="zoomIn">icons/zoom-in.svg</file>
         <file alias="zoomOut">icons/zoom-out.svg</file>
+        <file alias="addText">icons/add_text.png</file>
+        <file alias="freehand">icons/drawfreehand.png</file>
+        <file alias="line">icons/drawLine.png</file>
     </qresource>
 </RCC>
