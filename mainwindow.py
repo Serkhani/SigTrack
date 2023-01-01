@@ -4,9 +4,10 @@ from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
 from DockWidgets.MapViewDockWidget import MapWidget
 from DockWidgets.dockWidget import DockWidget
+import Editing.icon_resources
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QMessageBox, QDockWidget
 from PySide2.QtCore import Qt
-from PySide2.QtGui import QFont
+from PySide2.QtGui import QFont, QIcon
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     PySide2-uic form.ui -o ui_form.py, or
@@ -141,7 +142,13 @@ class MainWindow(QMainWindow):
         pass
     def saveAction(self):
         #save file being edited
-        pass
+        options = QFileDialog.Options()
+        options |= QFileDialog.ReadOnly
+        file_name, _ = QFileDialog.getSaveFileName(self, "Save Image", "image.jpg", "Images (*.png, *.jpg, *.xpm, *.bmp);; All Files(*)", options=options)
+        if file_name:
+            pixmap = self.imageViewer.grab()
+            pixmap.save(file_name)
+
     def importNetworkAction(self):
         #import files from network
         pass
@@ -293,6 +300,8 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon(":/sigtrack"))
     widget = MainWindow()
+    widget.setWindowTitle("SigTrack")
     widget.show()
     sys.exit(app.exec_())
