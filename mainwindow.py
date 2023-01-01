@@ -144,10 +144,11 @@ class MainWindow(QMainWindow):
         #save file being edited
         options = QFileDialog.Options()
         options |= QFileDialog.ReadOnly
-        file_name, _ = QFileDialog.getSaveFileName(self, "Save Image", "image.jpg", "Images (*.png, *.jpg, *.xpm, *.bmp);; All Files(*)", options=options)
-        if file_name:
-            pixmap = self.imageViewer.grab()
-            pixmap.save(file_name)
+        if self.imageViewer.imgPath:
+            file_name, _ = QFileDialog.getSaveFileName(self, "Save Image", f'edit_{self.imageViewer.imgPath.split("/")[-1]}', "Images (*.png *.jpg *.xpm *.bmp)", options=options)
+            if file_name:
+                pixmap = self.imageViewer.grab()
+                pixmap.save(file_name)
 
     def importNetworkAction(self):
         #import files from network
