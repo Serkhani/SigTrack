@@ -2,6 +2,7 @@
 import sys, os
 from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
+from DockWidgets.VideoViewDockWidget import VideoViewDockWidget
 from DockWidgets.MapViewDockWidget import MapWidget
 from DockWidgets.dockWidget import DockWidget
 import Editing.icon_resources
@@ -52,17 +53,34 @@ class MainWindow(QMainWindow):
         self.editingPanel.hide()
         self.imageViewer = ImageViewDockWidget(self)
 #        various functions
-    def videoAction(self):
+    def videoAction(self, filePath=""):
         #add video dockwidget to central widget area
         #increment dockCount
         self.dockCount += 1
         #hide the label when there are views
         self.ui.label.hide()
+        videoFile = "C:\\Users\\LENOVO\\Desktop\\Tracking Vessel.ts"
+        print(videoFile)
+        # creating the videoplayer
+        videoPlayer = VideoViewDockWidget(videoFile)
         #create dockwidget
         dockWidget = DockWidget(self)
-        dockWidget.setWidget(self.imageViewer)
+        
+        # if not filePath:
+        #     label = QLabel()
+        #     label.setText("No Video")
+        #     label.setAlignment(Qt.AlignCenter)
+        #     font = QFont()
+        #     font.setPointSize(20)
+        #     font.setBold(True)
+        #     font.setItalic(True)
+        #     label.setFont(font)
+        #     dockWidget.setWidget(label)
+        # else:
+        dockWidget.setWidget(videoPlayer)
         dockWidget.setWindowTitle('VideoView')
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
+        videoPlayer.play()
 
     def imageAction(self, imgPath=""):
         #add image dockwidget to central widget area
