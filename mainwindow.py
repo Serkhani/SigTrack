@@ -61,28 +61,29 @@ class MainWindow(QMainWindow):
         self.dockCount += 1
         #hide the label when there are views
         self.ui.label.hide()
-        videoFile = "C:\\Users\\LENOVO\\Desktop\\Tracking Vessel.ts"
-        print(videoFile)
-        # creating the videoplayer
-        videoPlayer = VideoViewDockWidget(videoFile)
+        # videoFile = "C:\\Users\\LENOVO\\Desktop\\Tracking Vessel.ts"
+        # print(videoFile)
         #create dockwidget
         dockWidget = DockWidget(self)
         
-        # if not filePath:
-        #     label = QLabel()
-        #     label.setText("No Video")
-        #     label.setAlignment(Qt.AlignCenter)
-        #     font = QFont()
-        #     font.setPointSize(20)
-        #     font.setBold(True)
-        #     font.setItalic(True)
-        #     label.setFont(font)
-        #     dockWidget.setWidget(label)
-        # else:
-        dockWidget.setWidget(videoPlayer)
+        if not filePath:
+            label = QLabel()
+            label.setText("No Video")
+            label.setAlignment(Qt.AlignCenter)
+            font = QFont()
+            font.setPointSize(20)
+            font.setBold(True)
+            font.setItalic(True)
+            label.setFont(font)
+            dockWidget.setWidget(label)
+        else:
+            # creating the videoplayer
+            videoPlayer = VideoViewDockWidget(filePath)
+            dockWidget.setWidget(videoPlayer)
+
+       
         dockWidget.setWindowTitle('VideoView')
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
-        videoPlayer.play()
 
     def imageAction(self, imgPath=""):
         #add image dockwidget to central widget area
@@ -167,7 +168,16 @@ class MainWindow(QMainWindow):
                 pixmap = self.imageViewer.grab()
                 pixmap.save(file_name)
 
-    def importVidFileLocalAction(self): pass
+    def importVidFileLocalAction(self):
+        self.inputFilesList = QFileDialog.getOpenFileNames(
+        self, caption="Select image(s)",
+        dir="C:\\Users\\LENOVO\\Desktop",#\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
+        filter="Video (*.mp4 *.ts *.mov)")
+        if not self.findChild(MapWidget):
+            self.mapAction()
+        for vidfilePath in self.inputFilesList[0]:
+            print(vidfilePath)
+            self.videoAction(filePath=vidfilePath)
     def importVidFolderLocalAction(self): pass
     def importVidNetworkAction(self): pass
     
