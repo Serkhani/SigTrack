@@ -30,11 +30,13 @@ class MainWindow(QMainWindow):
         self.images_dict = {}
         self.imagePaths = []
 #        setting up function callbacks for menu actions
-        self.ui.actionFile_s.triggered.connect(self.importFileLocalAction)
-        self.ui.actionFolder.triggered.connect(self.importFolderLocalAction)
-        self.ui.actionNetwork.triggered.connect(self.importNetworkAction)
+        self.ui.actionImgFile.triggered.connect(self.importImgFileLocalAction)
+        self.ui.actionImgFolder.triggered.connect(self.importImgFolderLocalAction)
+        self.ui.actionImgNetwork.triggered.connect(self.importImgNetworkAction)
+        self.ui.actionVidFile.triggered.connect(self.importVidFileLocalAction)
+        self.ui.actionVidFolder.triggered.connect(self.importVidFolderLocalAction)
+        self.ui.actionVidNetwork.triggered.connect(self.importVidNetworkAction)
         self.ui.actionSave.triggered.connect(self.saveAction)
-        self.ui.actionSave_As.triggered.connect(self.saveAsAction)
         self.ui.actionUndo.triggered.connect(self.undoAction)
         self.ui.actionRedo.triggered.connect(self.redoAction)
         self.ui.actionZoom_In.triggered.connect(self.zoomInAction)
@@ -154,10 +156,7 @@ class MainWindow(QMainWindow):
     def undoAction(self):
         #undo an edited action
         pass
-
-    def saveAsAction(self):
-        #create a file with current image state
-        pass
+    
     def saveAction(self):
         #save file being edited
         options = QFileDialog.Options()
@@ -168,14 +167,19 @@ class MainWindow(QMainWindow):
                 pixmap = self.imageViewer.grab()
                 pixmap.save(file_name)
 
-    def importNetworkAction(self):
+    def importVidFileLocalAction(self): pass
+    def importVidFolderLocalAction(self): pass
+    def importVidNetworkAction(self): pass
+    
+
+    def importImgNetworkAction(self):
         #import files from network
         pass
-    def importFileLocalAction(self):
+    def importImgFileLocalAction(self):
         #function used to gather selected images in a directory
         self.inputFilesList = QFileDialog.getOpenFileNames(
         self, caption="Select image(s)",
-        dir="C:\\Users\\LENOVO\\Desktop\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
+        dir="C:\\Users\\LENOVO\\Desktop",#\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
         filter="Image (*.jpg)")
         if not self.findChild(MapWidget):
             self.mapAction()
@@ -232,12 +236,12 @@ class MainWindow(QMainWindow):
             self.map.addMarker(imgfilePath,self.images_dict[i])
 
 
-    def importFolderLocalAction(self):
+    def importImgFolderLocalAction(self):
         #function used to gather all images from a specified directory
         self.inputFolderPath = QFileDialog.getExistingDirectory(
         self, caption="Select input folder",
         #dir=os.path.expanduser("~")
-        dir="C:\\Users\\LENOVO\\Desktop\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images"
+        dir="C:\\Users\\LENOVO\\Desktop"#\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images"
         )
         if not self.findChild(MapWidget):
             self.mapAction()
@@ -250,8 +254,6 @@ class MainWindow(QMainWindow):
            self.importImages(imgPath)
            if self.images_dict:
                for img, dict_ in self.images_dict.items():
-#                   print("dict:", dict_)
-#                   print(img)
                    self.map.addMarker(imgPath+os.sep+img,dict_)
 
     def getGPSInfo(self, img):

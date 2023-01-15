@@ -44,6 +44,7 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
+        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -78,19 +79,39 @@
      <property name="title">
       <string>Import</string>
      </property>
-     <widget class="QMenu" name="menuLocal">
+     <widget class="QMenu" name="menuVideo">
       <property name="title">
-       <string>Local</string>
+       <string>Video</string>
       </property>
-      <addaction name="actionFile_s"/>
-      <addaction name="actionFolder"/>
+      <widget class="QMenu" name="menuVidLocal">
+       <property name="title">
+        <string>Local</string>
+       </property>
+       <addaction name="actionVidFile"/>
+       <addaction name="actionVidFolder"/>
+      </widget>
+      <addaction name="menuVidLocal"/>
+      <addaction name="actionVidNetwork"/>
      </widget>
-     <addaction name="menuLocal"/>
-     <addaction name="actionNetwork"/>
+     <widget class="QMenu" name="menuImage">
+      <property name="title">
+       <string>Image</string>
+      </property>
+      <widget class="QMenu" name="menuImgLocal">
+       <property name="title">
+        <string>Local</string>
+       </property>
+       <addaction name="actionImgFile"/>
+       <addaction name="actionImgFolder"/>
+      </widget>
+      <addaction name="menuImgLocal"/>
+      <addaction name="actionImgNetwork"/>
+     </widget>
+     <addaction name="menuVideo"/>
+     <addaction name="menuImage"/>
     </widget>
     <addaction name="menuImport"/>
     <addaction name="actionSave"/>
-    <addaction name="actionSave_As"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -259,6 +280,53 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+L</string>
+   </property>
+  </action>
+  <action name="actionImgNetwork">
+   <property name="text">
+    <string>Network</string>
+   </property>
+  </action>
+  <action name="actionVidFile">
+   <property name="text">
+    <string>File(s)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F</string>
+   </property>
+  </action>
+  <action name="actionVidFolder">
+   <property name="text">
+    <string>Folder</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+L</string>
+   </property>
+  </action>
+  <action name="actionFile_s_3">
+   <property name="text">
+    <string>File(s)</string>
+   </property>
+  </action>
+  <action name="actionVidNetwork">
+   <property name="text">
+    <string>Network</string>
+   </property>
+  </action>
+  <action name="actionImgFile">
+   <property name="text">
+    <string>File(s)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+F</string>
+   </property>
+  </action>
+  <action name="actionImgFolder">
+   <property name="text">
+    <string>Folder</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Ø</string>
    </property>
   </action>
  </widget>
