@@ -7,7 +7,7 @@ from DockWidgets.MapViewDockWidget import MapWidget
 from DockWidgets.dockWidget import DockWidget
 import Editing.icon_resources
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QMessageBox, QDockWidget
-from PySide2.QtCore import Qt
+from PySide2.QtCore import Qt, QThread
 from PySide2.QtGui import QFont, QIcon
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -78,7 +78,7 @@ class MainWindow(QMainWindow):
             dockWidget.setWidget(label)
         else:
             # creating the videoplayer
-            videoPlayer = VideoViewDockWidget(filePath)
+            videoPlayer = VideoViewDockWidget(filePath, self)
             dockWidget.setWidget(videoPlayer)
 
        
@@ -122,7 +122,8 @@ class MainWindow(QMainWindow):
         dockWidget.setWindowTitle('MapView')
         #creating map widget
 #        dockWidget.setWidget(self.mapView.webView)
-        dockWidget.setWidget(self.map)
+        mapView = MapWidget(self)
+        dockWidget.setWidget(mapView)
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def getDockIndex(self):
@@ -331,6 +332,9 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    # threadcount = QThread.idealThreadCount()
+    # use all available cores and parallel rendering
+    # app.setMaxThreads(threadcount)
     app.setWindowIcon(QIcon(":/sigtrack"))
     widget = MainWindow()
     widget.setWindowTitle("SigTrack")

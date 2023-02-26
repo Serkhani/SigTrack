@@ -73,3 +73,5 @@ Thumbs.db
 
 SigTrack.zip
 build/
+dist/
+output.bin
