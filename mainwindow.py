@@ -1,14 +1,15 @@
 # This Python file uses the following encoding: utf-8
 import sys, os
+from time import sleep
 from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
 from DockWidgets.VideoViewDockWidget import VideoViewDockWidget
 from DockWidgets.MapViewDockWidget import MapWidget
 from DockWidgets.dockWidget import DockWidget
 import Editing.icon_resources
-from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QMessageBox, QDockWidget
+from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QMessageBox, QDockWidget, QSplashScreen
 from PySide2.QtCore import Qt, QThread
-from PySide2.QtGui import QFont, QIcon
+from PySide2.QtGui import QFont, QIcon, QPixmap, QTransform
 # Important:
 # You need to run the following command to generate the ui_form.py file
 #     PySide2-uic form.ui -o ui_form.py, or
@@ -332,11 +333,43 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon(":/sigtrack"))
     # threadcount = QThread.idealThreadCount()
     # use all available cores and parallel rendering
     # app.setMaxThreads(threadcount)
-    app.setWindowIcon(QIcon(":/sigtrack"))
+
+        # ======FOR SPLASH SCREEN======
+
+    # Load the image for the splash screen
+    pixmap = QPixmap(':/sigtrack')
+    
+    # Rotate and scale the image until it can't be seen
+    angle = 100
+    scale = 0.0
+
+    # Create the splash screen and show it
+    splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
+    transform = QTransform().rotate(angle).scale(scale, scale)
+    rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
+    splash.setPixmap(rotated)
+    splash.show()
+    
+    while scale < 1.0:
+        app.processEvents()
+        angle -= 1
+        scale += 0.01
+        transform = QTransform().rotate(angle).scale(scale, scale)
+        rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
+        splash.setPixmap(rotated)
+
+    sleep(2)
+
+        # ======SPLASH SCREEN ENDED======
+
     widget = MainWindow()
     widget.setWindowTitle("SigTrack")
     widget.show()
+    
+    # Close the splash screen and continue with the main application
+    splash.close()
     sys.exit(app.exec_())
