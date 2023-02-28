@@ -3,7 +3,7 @@ from math import cos, tan, log, pi
 from PySide2 import QtCore, QtQuickWidgets, QtPositioning
 from PySide2.QtCore import QObject, Slot, Signal, QPointF
 from PySide2.QtGui import QImage, QPixmap
-import DockWidgets.rc_map
+import DockWidgets.mapview.rc_map
 
 class MarkerModel(QtCore.QAbstractListModel):
     PositionRole, SourceRole, TooltipRole, ImagePathRole = range(QtCore.Qt.UserRole, QtCore.Qt.UserRole + 4)

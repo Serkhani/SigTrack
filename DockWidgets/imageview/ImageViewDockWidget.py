@@ -1,13 +1,13 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsLineItem, QGraphicsPathItem, QGraphicsEllipseItem, QVBoxLayout, QHBoxLayout, QWidget, QGraphicsTextItem, QGraphicsItem, QGraphicsRectItem, QToolBar, QUndoStack, QLineEdit, QLabel, QSizePolicy, QPushButton, QFrame, QMenuBar, QAction, QFileDialog, QMessageBox)
+from PySide2.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsLineItem, QGraphicsPathItem, QGraphicsEllipseItem, QGraphicsRectItem, QUndoStack)
 from PySide2.QtCore import (Qt, Signal, QLineF, QRectF, QPoint, QCoreApplication)
 from PySide2.QtGui import (QPainterPath, QPainterPathStroker, QPixmap, QImage)
 
 
-from DockWidgets.undo_redo_command import AddCommand#, DeleteCommand, MoveCommand
-from DockWidgets.painter import Painter
-from DockWidgets.textItem import TextItem
-from Editing.EditingPanel import EditingPanel, EditingPanelDockWidget
+from DockWidgets.imageview.undo_redo_command import AddCommand#, DeleteCommand, MoveCommand
+from DockWidgets.imageview.painter import Painter
+from DockWidgets.imageview.textItem import TextItem
+from Editing.EditingPanel import EditingPanel
 
 class ImageViewDockWidget(QGraphicsView):
     afterLeftClick = Signal(float, float)

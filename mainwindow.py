@@ -2,9 +2,9 @@
 import sys, os
 from time import sleep
 from constants import _DOCK_OPTS, _DOCK_POSITIONS
-from DockWidgets.ImageViewDockWidget import ImageViewDockWidget
-from DockWidgets.VideoViewDockWidget import VideoViewDockWidget
-from DockWidgets.MapViewDockWidget import MapWidget
+from DockWidgets.imageview.ImageViewDockWidget import ImageViewDockWidget
+from DockWidgets.videoview.VideoViewDockWidget import VideoViewDockWidget
+from DockWidgets.mapview.MapViewDockWidget import MapWidget
 from DockWidgets.dockWidget import DockWidget
 import Editing.icon_resources
 from PySide2.QtWidgets import QApplication, QMainWindow, QFileDialog, QLabel, QMessageBox, QDockWidget, QSplashScreen

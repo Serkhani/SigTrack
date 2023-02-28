@@ -2,7 +2,7 @@
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import QGraphicsTextItem, QGraphicsItem
 from PySide2.QtGui import QTextBlockFormat, QTextCursor
-from DockWidgets.undo_redo_command import DeleteCommand
+from DockWidgets.imageview.undo_redo_command import DeleteCommand
 
 class TextItem(QGraphicsTextItem):
     itemType = QGraphicsTextItem().type()
