@@ -8,6 +8,8 @@ from klvdata.element import UnknownElement
 from klvdata.streamparser import StreamParser
 import platform, subprocess, os
 
+import DockWidgets.videoview.rc_vid_icons
+
 class VideoViewDockWidget(QWidget):
     def __init__(self, filePath: str, mainWindow):
         super().__init__()
