@@ -16,6 +16,7 @@
         <file alias="addText">icons/add_text.png</file>
         <file alias="freehand">icons/drawfreehand.png</file>
         <file alias="line">icons/drawLine.png</file>
+        <file alias="watermark">icons/watermark.JPG</file>
         <file alias="sigtrack">icons/Sigtrack.jpg</file>
     </qresource>
 </RCC>
