@@ -61,6 +61,7 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
         self.ice.showImageSignal.connect(self.showImage)
         self.setSource(QtCore.QUrl('qrc://:/map'))
         self.mainWindow.map = self
+        self.droneMarker = None
 #        qml_path = os.path.join(os.path.dirname(__file__), "map.qml")
 #        self.setSource(QtCore.QUrl.fromLocalFile(qml_path))
     def focusInEvent(self, event):
@@ -79,17 +80,25 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
         else: tooltip ="<b>sender: <\b> @soldierName<br><b>lat: <\b> {lat}<br><b>long: <\b> {long_}<br><b>altitude: <\b> {alt}<br><b>time taken: <\b> {ttHr}:{ttMn}:{ttS}<br><b>date: <\b> {date}<br><b>file: <\b> {file}<br>".format(lat=imgData['lat'], long_=imgData['long'], alt=imgData['altitude'], ttHr=int(imgData['timestamp'][0]), ttMn=int(imgData['timestamp'][1]), ttS=int(imgData['timestamp'][2]),date=imgData['datestamp'], file=imgPath.split('/')[-1])
         self.model.appendMarker({"position": coord , "source": source, "imgPath": imgPath, "imgTooltip": tooltip})
 
+    def updateDronePosition(self, lat_, long_):
+        if self.droneMarker is not None:
+            # update the position of the existing drone marker
+            self.droneMarker["position"] = QtPositioning.QGeoCoordinate(float(lat_), float(long_))
+            # emit dataChanged signal for the updated marker
+            index = self.model.index(self.model.rowCount() - 1)
+            self.model.dataChanged.emit(index, index, [MarkerModel.PositionRole])
+        else:
+            # add drone marker with initial position
+            self.addDrone(lat_, long_)
+
+
     def addDrone(self, lat_, long_):
         coord = QtPositioning.QGeoCoordinate(float(lat_), float(long_))
         imgPath = 'qrc://:/drone'
         tooltip = "data"
-        droneUrl = QtCore.QUrl(imgPath)#"http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png")
-        # pixmap = QPixmap(imgPath)
-        # pixmap.load(droneUrl.toString())
-        # img = pixmap.toImage()
-        # droneImg = img.scaled(20,20,QtCore.Qt.KeepAspectRatio)
-        # droneImg = QtCore.QUrl('qrc://:/drone')
-        self.model.appendMarker({"position": coord , "source": droneUrl, "imgPath": imgPath, "imgTooltip": tooltip})
+        droneUrl = QtCore.QUrl(imgPath)
+        self.droneMarker = {"position": coord , "source": droneUrl, "imgPath": imgPath, "imgTooltip": tooltip}
+        self.model.appendMarker(self.droneMarker)
 
     def map_geocoordinate(self, lat_, long_):
         x = (long_ +180) / 360 *self.width()

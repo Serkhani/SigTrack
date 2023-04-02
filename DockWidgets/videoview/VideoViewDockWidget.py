@@ -14,7 +14,8 @@ import subprocess
 import os
 
 import DockWidgets.videoview.rc_vid_icons
-from klv_data.FmvKlvReader import _seconds_to_time, _seconds_to_time_frac
+from klv_data.FmvKlvReader import _seconds_to_time, _seconds_to_time_frac, _time_to_seconds
+from pprint  import pprint
 
 
 class VideoViewDockWidget(QWidget):
@@ -45,14 +46,16 @@ class VideoViewDockWidget(QWidget):
         self.timeSlider = QSlider(Qt.Horizontal)
         # self.timeSlider.setRange(0, 0)
         self.timeSlider.sliderMoved.connect(self.setPosition)
+        # self.timeSlider.sliderPressed.connect(pprint)
+        # self.timeSlider.sliderReleased.connect(pprint)
+        # self.timeSlider.valueChanged.connect(self.setPosition)
+        # self.timeSlider.sliderReleased.connect(self.setPosition)
+        # self.timeSlider.mousePressEvent = self.slider_pressed
         self.timestampLabel = QLabel('--:-- / --:--')
-        self.timer = QTimer()
-        self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.updateTime)
         self.fmvBtn = QPushButton("FMV", self)
         self.fmvBtn.clicked.connect(self.fmv)
         self.metadata = None
-        # self.mediaPlayer.positionChanged.connect(self.on_position_changed)
+        self.mediaPlayer.positionChanged.connect(self.updateTime)
         self.islocal = True
         self.isStreaming = not self.islocal
         self.pass_time = 250
@@ -68,7 +71,7 @@ class VideoViewDockWidget(QWidget):
             self.mediaPlayer.setMedia(media_content)
             self.playBtn.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaPlay))
-            self.timestampLabel.setText('--:-- / --:--')
+            # self.timestampLabel.setText('--:-- / --:--')
 
     # def setupMediaPlayer(self):
     #     self.mediaPlayer = QMediaPlayer(self)
@@ -98,7 +101,15 @@ class VideoViewDockWidget(QWidget):
         vbox.addLayout(hbox1,1)
         vbox.addLayout(hbox2,1)
         self.setLayout(vbox)
-
+    
+    # def slider_pressed(self, event):
+    #     "To handle the time slider track click event"
+    #     # Calculate the position of the click on the track
+    #     position = self.timeSlider.minimum() + ((self.timeSlider.maximum() - self.timeSlider.minimum()) * event.pos().x()) // self.timeSlider.width()
+    #     # Set the value of the slider to that position
+    #     print(position)
+    #     # self.timeSlider.setValue(position)    
+    #     self.setPosition(position*0.01*self.mediaPlayer.duration())
 
     def fmv(self):
         # info = getVideoLocationInfo(self.filePath)
@@ -123,7 +134,7 @@ class VideoViewDockWidget(QWidget):
         #                 # self.mainWindow.mapAction()
         #         except ValueError as e:
         #             print("value Error")
-        #         self.mainWindow.map.addDrone(frameCenterLat, frameCenterLong)
+        #         
         # except:
         #     self.showMessage(f"some geo info missing from {i}")
         if self.filePath:
@@ -146,7 +157,7 @@ class VideoViewDockWidget(QWidget):
             self.mediaPlayer.play()
             self.playBtn.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaPause))
-            self.timer.start()
+            # self.timer.start()
         self.timeSlider.setRange(0, self.mediaPlayer.duration() / 1000)
         
 
@@ -156,7 +167,7 @@ class VideoViewDockWidget(QWidget):
         self.mediaPlayer.stop()
         self.playBtn.setIcon(
             self.style().standardIcon(QStyle.SP_MediaPlay))
-        self.timer.stop()
+        
         self.timeSlider.setValue(0)
 
     def setPosition(self, position):
@@ -169,7 +180,6 @@ class VideoViewDockWidget(QWidget):
             return
         current_time = self.mediaPlayer.position() / 1000
         duration = self.mediaPlayer.duration() / 1000
-        print("duration: ", duration)
         current_time_str = '{:02d}:{:02d}'.format(
             int(current_time // 60), int(current_time % 60))
         duration_str = '{:02d}:{:02d}'.format(
@@ -181,7 +191,7 @@ class VideoViewDockWidget(QWidget):
             self.mediaPlayer.stop()
             self.playBtn.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaPlay))
-            self.timer.stop()
+            
             self.timeSlider.setValue(0)
 
     def extract_metadata(self, video_path):
@@ -210,6 +220,7 @@ class VideoViewDockWidget(QWidget):
         @param progress: Slide video duration current value
         """
         progress_in_seconds = progress / 1000
+        # print(f"progress_in_seconds: {progress_in_seconds}")
         if self.playerState == QMediaPlayer.PausedState:
             self.updateDurationInfo(progress_in_seconds, True)
         else:
@@ -223,7 +234,7 @@ class VideoViewDockWidget(QWidget):
         """
         duration = self.mediaPlayer.duration()
         self.currentInfo = currentInfo
-        print(f"currentInfo: {currentInfo}")
+        # print(f"currentInfo: {currentInfo}")
         if currentInfo or duration:
             totalTime = _seconds_to_time(duration)
             currentTime = _seconds_to_time(currentInfo)
@@ -234,10 +245,25 @@ class VideoViewDockWidget(QWidget):
             elif self.islocal:
                 nextTime = currentInfo + self.pass_time / 1000
                 nextTimeInfo = _seconds_to_time_frac(nextTime)
-                print(f"nextTimeInfo: {nextTimeInfo}")
-                metadata = next(self.metadata)
-                print(metadata)
-                # self.callMetadataSync(currentTimeInfo, nextTimeInfo)
+                # print(f"nextTimeInfo: {nextTimeInfo}")
+                while  True:
+                    metadata = next(self.metadata)
+                    print(f"metadata[2][-1].split(' ')[-1]: {metadata[2][-1]}")
+                    pprint(metadata)
+                    mt = metadata[2][-1].split(' ')[-1]
+                    precisiontime = _time_to_seconds(mt.split('+')[0]) 
+                    if precisiontime >= currentInfo:
+                        print("="*15)
+                        break
+                    else: print("*"*15)
+                frameCenterLat = metadata[23][-1]
+                frameCenterLong = metadata[24][-1]
+                # Offset_Corner_Latitude_Point_3 = metadata[30][-1]
+                # Offset_Corner_Longitude_Point_3 = metadata[30][-1]
+                # frameCenterAlt = data[15][-1]
+                #drone motion and stuff
+                # self.mainWindow.map.updateDronePosition(Offset_Corner_Latitude_Point_3, Offset_Corner_Longitude_Point_3)
+                self.mainWindow.map.updateDronePosition(frameCenterLat, frameCenterLong)
             else:
                 self.get_metadata_from_buffer(currentTimeInfo)
         else:
