@@ -253,17 +253,41 @@ class VideoViewDockWidget(QWidget):
                     mt = metadata[2][-1].split(' ')[-1]
                     precisiontime = _time_to_seconds(mt.split('+')[0]) 
                     if precisiontime >= currentInfo:
-                        print("="*15)
                         break
-                    else: print("*"*15)
-                frameCenterLat = metadata[23][-1]
-                frameCenterLong = metadata[24][-1]
+                #use this: (23, ('Frame Center Latitude', '5.499739123275376')),
+                # (24, ('Frame Center Longitude', '-0.002616830171376705')),
+                # (25, ('Frame Center Elevation', '-0.2716105897612806')),
+                # (26, ('Offset Corner Latitude Point 1', '-0.033804589983825184')),
+                # (27, ('Offset Corner Longitude Point 1', '-0.02761543626209296')),
+                # (28, ('Offset Corner Latitude Point 2', '-0.0629146702475051')),
+                # (29, ('Offset Corner Longitude Point 2', '-0.043397320474868')),
+                # (30, ('Offset Corner Latitude Point 3', '0.04748298593096713')),
+                # (31, ('Offset Corner Longitude Point 3', '0.007132175664540552')),
+                # (32, ('Offset Corner Latitude Point 4', '0.04887462996307261')),
+                # (33, ('Offset Corner Longitude Point 4', '0.009961241492965484')),
+                    #to create a dictionary 
+                droneData = {
+                    'Sensor Latitude': metadata[13][-1],
+                	'Sensor Longitude': metadata[14][-1],
+                    'Frame Center Latitude': metadata[23][-1],
+                    'Frame Center Longitude': metadata[24][-1],
+                    'Frame Center Elevation': metadata[25][-1],
+                    'Offset Corner Latitude Point 1': metadata[26][-1],
+                    'Offset Corner Longitude Point 1': metadata[27][-1],
+                    'Offset Corner Latitude Point 2': metadata[28][-1],
+                    'Offset Corner Longitude Point 2': metadata[29][-1],
+                    'Offset Corner Latitude Point 3': metadata[30][-1],
+                    'Offset Corner Longitude Point 3': metadata[31][-1],
+                    'Offset Corner Latitude Point 4': metadata[32][-1],
+                    'Offset Corner Longitude Point 4': metadata[33][-1]
+                    }
+                
                 # Offset_Corner_Latitude_Point_3 = metadata[30][-1]
                 # Offset_Corner_Longitude_Point_3 = metadata[30][-1]
                 # frameCenterAlt = data[15][-1]
                 #drone motion and stuff
                 # self.mainWindow.map.updateDronePosition(Offset_Corner_Latitude_Point_3, Offset_Corner_Longitude_Point_3)
-                self.mainWindow.map.updateDronePosition(frameCenterLat, frameCenterLong)
+                self.mainWindow.map.updateDronePosition(droneData)
             else:
                 self.get_metadata_from_buffer(currentTimeInfo)
         else:
