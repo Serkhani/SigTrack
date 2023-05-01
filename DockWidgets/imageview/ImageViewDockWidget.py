@@ -32,6 +32,7 @@ class ImageViewDockWidget(QGraphicsView):
         self.setScene(self.scene)
         self.imgPath = None
 
+        self.watermark = False
         self.panSelect = False
         self.zoomSelect = False
         self.drawRect = False
@@ -218,6 +219,9 @@ class ImageViewDockWidget(QGraphicsView):
         self.scene.addItem(self.preview)
         addCommand = AddCommand(self.preview, self.scene)
         self.undoStack.push(addCommand)
+
+    def watermarkbutton(self):
+        pass
 
     def showImageOnView(self, imgPath):
         self.imgPath = imgPath
