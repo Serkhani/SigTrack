@@ -3,6 +3,7 @@ from math import cos, tan, log, pi
 from PySide2 import QtCore, QtQuickWidgets, QtPositioning
 from PySide2.QtCore import QObject, Slot, Signal, QPointF
 from PySide2.QtGui import QImage, QPixmap
+from exif import Image
 import DockWidgets.mapview.rc_map
 # class MarkerModel(QtCore.QAbstractListModel):
 #     # Define additional roles for the corner circles and circle center markers
@@ -47,7 +48,7 @@ import DockWidgets.mapview.rc_map
 #         elif role == MarkerModel.CircleCenterRole:
 #             return marker.get('corner_circle') == 'center'
 
-class MarkerModel(QtCore.QAbstractListModel):
+class MarkerModel(QtCore.QAbstractListModel, QObject):
     PositionRole, SourceRole, TooltipRole, ImagePathRole = range(QtCore.Qt.UserRole, QtCore.Qt.UserRole + 4)
 
     def __init__(self, parent=None):
@@ -76,6 +77,7 @@ class MarkerModel(QtCore.QAbstractListModel):
         self.beginInsertRows(QtCore.QModelIndex(), self.rowCount(), self.rowCount())
         self._markers.append(marker)
         self.endInsertRows()
+
 
 class iceController(QObject):
     showImageSignal = Signal(str)
@@ -120,12 +122,19 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
 #        self.mainWindow.imageViewer.showImageOnView(imgPath)
         self.mainWindow.imageAction(imgPath)
 
-    def addMarker(self, imgPath, imgData):
+    def addMarker(self, imgPath, imgData: dict):
+        # coord = QtPositioning.QGeoCoordinate(imgData['lat'], imgData['long'])
         coord = QtPositioning.QGeoCoordinate(imgData['lat'], imgData['long'])
         source = QtCore.QUrl("http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png")
-        if imgData['dji']:
-            tooltip ="<b>sender: <\b> @soldierName<br><b>lat: <\b> {lat}<br><b>long: <\b> {long_}<br><b>altitude: <\b> {alt}<br><b>time taken: <\b> {timestamp}br><b>date: <\b> {date}<br><b>file: <\b> {file}<br>".format(lat=imgData['lat'], long_=imgData['long'], alt=imgData['altitude'], timestamp=imgData['timestamp'],date=imgData['datestamp'], file=imgPath.split('/')[-1])
-        else: tooltip ="<b>sender: <\b> @soldierName<br><b>lat: <\b> {lat}<br><b>long: <\b> {long_}<br><b>altitude: <\b> {alt}<br><b>time taken: <\b> {ttHr}:{ttMn}:{ttS}<br><b>date: <\b> {date}<br><b>file: <\b> {file}<br>".format(lat=imgData['lat'], long_=imgData['long'], alt=imgData['altitude'], ttHr=int(imgData['timestamp'][0]), ttMn=int(imgData['timestamp'][1]), ttS=int(imgData['timestamp'][2]),date=imgData['datestamp'], file=imgPath.split('/')[-1])
+        tooltip ="<b>sender: </b> @soldierName<br>"
+        exifData = imgData.get('info', Image)
+        for property in exifData.get_all():
+            print(f'property: {property}')
+            try:
+                tooltip += f'<b>{property}:</b> {exifData[property]}<br>'
+            except: 
+                tooltip += f'<b>{property}:</b> Unable to read<br>'
+
         self.model.appendMarker({"position": coord , "source": source, "imgPath": imgPath, "imgTooltip": tooltip})
 
     def updateDronePosition(self, droneData: dict):

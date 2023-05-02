@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 import sys, os
+from pprint import pprint
 from time import sleep
 from constants import _DOCK_OPTS, _DOCK_POSITIONS
 from DockWidgets.imageview.ImageViewDockWidget import ImageViewDockWidget
@@ -135,7 +136,6 @@ class MainWindow(QMainWindow):
             return 3
         else: return 1
 
-
     def panAction(self):
         #pan the view
         pass
@@ -180,154 +180,110 @@ class MainWindow(QMainWindow):
         for vidfilePath in self.inputFilesList[0]:
             print(vidfilePath)
             self.videoAction(filePath=vidfilePath)
+    
     def importVidFolderLocalAction(self): pass
+    
     def importVidNetworkAction(self): pass
     
-
     def importImgNetworkAction(self):
         #import files from network
         pass
+    
     def importImgFileLocalAction(self):
         #function used to gather selected images in a directory
         self.inputFilesList = QFileDialog.getOpenFileNames(
         self, caption="Select image(s)",
         dir="C:\\Users\\LENOVO\\Desktop",#\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
         filter="Image (*.jpg)")
-        if not self.findChild(MapWidget):
-            self.mapAction()
-        for imgfilePath in self.inputFilesList[0]:
-            i = imgfilePath.split("/")[-1]
-#            self.imageAction(imgfilePath)
-            with open(imgfilePath, 'rb') as src:
-                img = Image(src)
-                if img.has_exif:
-                    try:
-                        assert img.make == 'DJI', AssertionError
-                    except AssertionError:
-#                        if file is from NIKON
-                        self.errorHandling(img, i, imgfilePath)
-                    except:
-#                        if file is neither DJI nor NIKON
-                        self.errorHandling(img, i, imgfilePath)
-                    else:
-#                        if file is DJI
-                        try:
-                            self.images_dict[i] = self.getGPSInfo(img)
-                            self.images_dict[i]['altitude'] = img.gps_altitude
-                            self.images_dict[i]['dji'] = True
-                            self.images_dict[i]['timestamp'] = img.datetime.split(' ')[1]
-#                            self.images_dict[i]['img_direction'] = img.gps_img_direction
-#                            print(self.images_dict[i]['img_direction'])
-                            self.images_dict[i]['datestamp'] = img.datetime.split(' ')[0]
-                        except:
-                            msgBox = QMessageBox()
-                            msgBox.setText("some geo info missing from {}".format(i))
-                            msgBox.exec()
-                        else:
-                            self.imagePaths.append(imgfilePath)
-                            self.map.addMarker(imgfilePath,self.images_dict[i])
+        if self.inputFilesList[0]:
+            if not self.findChild(MapWidget):
+                self.mapAction()
 
+            for imgfilePath in self.inputFilesList[0]:
+                self.importImage(imgfilePath)
+                # with open(imgfilePath, 'rb') as src:
+                #     img = Image(src)
+                #     if img.has_exif:
+                #         is_dms = img.get('gps_latitude')
+                #         if is_dms:
+                #             self.images_dict[imgfilePath] = self.getGPSInfo(img)
+                #         else:
+                #             self.images_dict[imgfilePath] = {
+                #                 'lat': img.get('latitude'),
+                #                 'long': img.get('longitude'),
+                #             }
+                #         self.images_dict[imgfilePath]['info'] = img
+                #         self.imagePaths.append(imgfilePath)                
+                #         self.map.addMarker(imgfilePath, self.images_dict[imgfilePath])
+                #     else:
+                #         msgBox = QMessageBox()
+                #         msgBox.setText(f"No exif information present in {imgfilePath}")
+                #         msgBox.exec_()
 
-
-
-
-    def errorHandling(self, img, i, imgfilePath):
-        try:
-            self.images_dict[i] = self.getGPSInfo(img)
-            self.images_dict[i]['altitude'] = img.gps_altitude
-            self.images_dict[i]['dji'] = False
-            self.images_dict[i]['timestamp'] = img.gps_timestamp
-#            self.images_dict[i]['img_direction'] = img.gps_img_direction
-            self.images_dict[i]['datestamp'] = img.gps_datestamp
-        except:
-            msgBox = QMessageBox()
-            msgBox.setText("some geo info missing from {}".format(i))
-            msgBox.exec()
-        else:
-            self.imagePaths.append(imgfilePath)
-            self.map.addMarker(imgfilePath,self.images_dict[i])
-
-
-    def importImgFolderLocalAction(self):
-        #function used to gather all images from a specified directory
-        self.inputFolderPath = QFileDialog.getExistingDirectory(
-        self, caption="Select input folder",
-        #dir=os.path.expanduser("~")
-        dir="C:\\Users\\LENOVO\\Desktop"#\\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images"
-        )
-        if not self.findChild(MapWidget):
-            self.mapAction()
-        self.import_folder_path()
-
-    def import_folder_path(self):
-        # adds the markers to the mapView
-        if self.inputFolderPath:
-           imgPath = os.path.normpath(self.inputFolderPath)
-           self.importImages(imgPath)
-           if self.images_dict:
-               for img, dict_ in self.images_dict.items():
-                   self.map.addMarker(imgPath+os.sep+img,dict_)
-
-    def getGPSInfo(self, img):
-       #return a dictionary with long, lat, ..... ie: NOT YET... orientation, date_time
+    def getGPSInfo(self, img: dict) -> dict:
+       """return a dictionary with long, lat
+       img: exif Image object. Contains all the image data
+       """
        gpsInfo = {
-           'gps_long': img.gps_longitude,
-           'gps_lat': img.gps_latitude,
-           'gps_lat_ref': img.gps_latitude_ref,
-           'gps_long_ref': img.gps_longitude_ref
+           'gps_long': img.get('gps_longitude', None),
+           'gps_lat': img.get('gps_latitude', None),
+           'gps_lat_ref': img.get('gps_latitude_ref', None),
+           'gps_long_ref': img.get('gps_longitude_ref', None)
            }
        long_ = self.dms2dd(gpsInfo['gps_long'], gpsInfo['gps_long_ref'])
        lat = self.dms2dd(gpsInfo['gps_lat'], gpsInfo['gps_lat_ref'])
        return  {'lat': lat, 'long': long_}
 
-    def dms2dd(self, dms, ref):
-       # conversion function to convert dms to long and lat
+    def dms2dd(self, dms, ref: str):
+       """converts dms to long and lat
+       """
        sec = (dms[1] * 60.0 )+ float(dms[2])
        hrs = sec / 3600.0
        deg = float(dms[0]) + hrs
-       if ref.upper() == 'W':
-#           print("west")
-           deg = deg * -1
-       if ref.upper() == 'S':
-#           print("south")
-           deg = deg * -1
+       if ref.upper() == 'W' or ref.upper() == 'S':
+           deg *= -1
        return deg
-
-    def importImages(self, path):
-       # function that imports the images in the directory
-       for i in os.listdir(path):
-           imgfilePath = path+os.sep+i
-           if i.split(".")[-1] in PHOTO_EXTENSIONS:
-               with open(imgfilePath, 'rb') as src:
-                   img = Image(src)
-                   if img.has_exif:
-                       try:
-                           assert img.make == 'DJI', AssertionError
-                       except AssertionError:
-#                           print('assert')
-   #                        if file is from NIKON
-                           self.errorHandling(img, i, imgfilePath)
-                       except:
-   #                        if file is neither DJI nor NIKON
-                           self.errorHandling(img, i, imgfilePath)
-                       else:
-   #                        if file is DJI
-                           try:
-                               self.images_dict[i] = self.getGPSInfo(img)
-                               self.images_dict[i]['altitude'] = img.gps_altitude
-                               self.images_dict[i]['dji'] = True
-                               self.images_dict[i]['timestamp'] = img.datetime.split(' ')[1]
-   #                            self.images_dict[i]['img_direction'] = img.gps_img_direction
-   #                            print(self.images_dict[i]['img_direction'])
-                               self.images_dict[i]['datestamp'] = img.datetime.split(' ')[0]
-                           except:
-                               msgBox = QMessageBox()
-                               msgBox.setText("some geo info missing from {}".format(i))
-                               msgBox.exec()
-                           else:
-                               self.imagePaths.append(imgfilePath)
-                               self.map.addMarker(imgfilePath,self.images_dict[i])
-
+    
+    def importImgFolderLocalAction(self) -> None:
+        """function used to gather all images from a specified directory
+        """
+        self.inputFolderPath = QFileDialog.getExistingDirectory(
+        self, caption="Select input folder",
+        #dir=os.path.expanduser("~")
+        dir="C:\\Users\\LENOVO\\Desktop\\Image Support Type"
+        )
+        # print(self.inputFolderPath): C:/Users/USER/Desktop/Image Support Type
+        # adds the markers to the mapView
+        if self.inputFolderPath:#check if a path has been selected
+            if not self.findChild(MapWidget):#check if a map view is not open
+                self.mapAction()#add map view if not open
+            imgFolderPath = os.path.normpath(self.inputFolderPath)
+            # print(f"imgFolderPath: {imgFolderPath}"): C:\Users\USER\Desktop\Image Support Type
+            for imgName in os.listdir(imgFolderPath): #taking each image from the folder
+                self.importImage(imgFolderPath+os.sep+imgName) #importing each image
+                
+    def importImage(self, imgfilePath: str):
+        """imports the specific image
+        imgfilePath: absolute path to the image file
+        """       
+        with open(imgfilePath, 'rb') as src: #opening and reading each file
+            img = Image(src)#extracting exif data
+            if img.has_exif: #if exif data is present
+                is_dms = img.get('gps_latitude')
+                if is_dms:
+                    self.images_dict[imgfilePath] = self.getGPSInfo(img)
+                else:
+                    self.images_dict[imgfilePath] = {
+                        'lat': img.get('latitude'),
+                        'long': img.get('longitude'),
+                    }
+                self.images_dict[imgfilePath]['info'] = img
+                self.imagePaths.append(imgfilePath) #add image file path to the list of imported images              
+                self.map.addMarker(imgfilePath, self.images_dict[imgfilePath])# add marker to the map
+            else:
+                msgBox = QMessageBox()
+                msgBox.setText(f"No exif information present in {imgfilePath.split(os.sep)[-1]}")
+                msgBox.exec_()
 
 
 
@@ -373,3 +329,49 @@ if __name__ == "__main__":
     # Close the splash screen and continue with the main application
     splash.close()
     sys.exit(app.exec_())
+
+
+                    # self.images_dict[imgfilePath] = self.getGPSInfo(img)
+#                     self.images_dict[imgfilePath]['altitude'] = img.get('gps_altitude', None)
+#                     self.images_dict[imgfilePath]['dji'] = True
+#                     self.images_dict[imgfilePath]['timestamp'] = img.get('datetime', '').split(' ')[1]
+# #                            self.images_dict[i]['img_direction'] = img.gps_img_direction
+# #                            print(self.images_dict[i]['img_direction'])
+#                     self.images_dict[imgfilePath]['datestamp'] = img.get('datetime', '').split(' ')[0]
+#                 else:
+#                     self.imagePaths.append(imgfilePath)
+#                     self.map.addMarker(imgfilePath,self.images_dict[imgfilePath])
+
+#         for imgfilePath in self.inputFilesList[0]:
+#             i = imgfilePath.split("/")[-1]
+# #            self.imageAction(imgfilePath)
+#             with open(imgfilePath, 'rb') as src:
+#                 img = Image(src)
+#                 if img.has_exif:
+#                     try:
+#                         assert img.make == 'DJI', AssertionError
+#                     except AssertionError:
+# #                        if file is from NIKON
+#                         self.errorHandling(img, i, imgfilePath)
+#                     except:
+# #                        if file is neither DJI nor NIKON
+#                         self.errorHandling(img, i, imgfilePath)
+#                     else:
+# #                        if file is DJI
+#                         try:
+#                             self.images_dict[i] = self.getGPSInfo(img)
+#                             self.images_dict[i]['altitude'] = img.get('gps_altitude', None)
+#                             self.images_dict[i]['dji'] = True
+#                             self.images_dict[i]['timestamp'] = img.get('datetime', '').split(' ')[1]
+# #                            self.images_dict[i]['img_direction'] = img.gps_img_direction
+# #                            print(self.images_dict[i]['img_direction'])
+#                             self.images_dict[i]['datestamp'] = img.get('datetime', '').split(' ')[0]
+#                         except:
+#                             msgBox = QMessageBox()
+#                             msgBox.setText("some geo info missing from {}".format(i))
+#                             msgBox.exec()
+#                         else:
+#                             self.imagePaths.append(imgfilePath)
+#                             self.map.addMarker(imgfilePath,self.images_dict[i])
+
+
