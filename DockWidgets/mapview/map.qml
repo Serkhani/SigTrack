@@ -122,7 +122,7 @@ Rectangle {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 1
-                        line.color: '#4c98e073'
+                        line.color: '#1b98e073'
                         path: model.linePoints[0]
                     }
                 }
@@ -131,7 +131,7 @@ Rectangle {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 2
-                        line.color: '#4c98e073'
+                        line.color: '#1b98e073'
                         path: model.linePoints[1]
                     }
                 }
@@ -140,7 +140,7 @@ Rectangle {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 2
-                        line.color: '#4c98e073'
+                        line.color: '#1b98e073'
                         path: model.linePoints[2]
                     }
                 }
@@ -157,10 +157,23 @@ Rectangle {
                 MapItemView {
                     model: fmvmodel
                     delegate: MapPolyline {
+                        id: framecenterline
                         line.width: 3
-                        // line.color: '#4c98e073'
+                        // line.color: '#1b98e073'
                         line.color: "red"
                         path: model.linePoints[4]
+                         MouseArea {
+                            id: frame_center_line_mousearea
+                            objectName: "buttonMouseArea"
+                            anchors.fill: parent
+                            hoverEnabled: true
+                        }
+
+                        ToolTip {
+                            parent: framecenterline
+                            visible: frame_center_line_mousearea.containsMouse
+                            text: qsTr('Frame Center')
+                        }
                     }
                 }
 
