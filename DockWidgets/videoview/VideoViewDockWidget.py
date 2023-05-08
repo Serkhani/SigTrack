@@ -269,6 +269,7 @@ class VideoViewDockWidget(QWidget):
                 droneData = {
                     'Sensor Latitude': metadata[13][-1],
                 	'Sensor Longitude': metadata[14][-1],
+                    'Platform Heading Angle': metadata[5][-1],
                     'Frame Center Latitude': metadata[23][-1],
                     'Frame Center Longitude': metadata[24][-1],
                     'Frame Center Elevation': metadata[25][-1],
