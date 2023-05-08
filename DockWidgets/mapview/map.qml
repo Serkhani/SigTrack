@@ -106,6 +106,56 @@ Rectangle {
                         path: model.dronePath
                     }
                 }
+
+
+                MapItemView {
+                    model: fmvmodel
+                    delegate: MapPolygon {
+                        color: '#1b98e073'
+                        border.color: 'blue'
+                        border.width: 2
+                        path: model.polygonPoints
+                    }
+                }
+
+                MapItemView {
+                    model: fmvmodel
+                    delegate: MapPolyline {
+                        line.width: 1
+                        line.color: '#4c98e073'
+                        path: model.linePoints[0]
+                    }
+                }
+
+                MapItemView {
+                    model: fmvmodel
+                    delegate: MapPolyline {
+                        line.width: 2
+                        line.color: '#4c98e073'
+                        path: model.linePoints[1]
+                    }
+                }
+
+                MapItemView {
+                    model: fmvmodel
+                    delegate: MapPolyline {
+                        line.width: 2
+                        line.color: '#4c98e073'
+                        path: model.linePoints[2]
+                    }
+                }
+
+                MapItemView {
+                    model: fmvmodel
+                    delegate: MapPolyline {
+                        line.width: 2
+                        line.color: '#4c98e073'
+                        path: model.linePoints[3]
+                    }
+                }
+
+                
+
                 MapItemView {
                     model: dronemodel
                     delegate: MapQuickItem {
@@ -114,6 +164,11 @@ Rectangle {
                         anchorPoint.y: droneImg.height/2
                         sourceItem: Image {
                             id: droneImg
+                            transform: Rotation{
+                                origin.x: droneImg.width/2
+                                origin.y: droneImg.height/2
+                                angle: model.heading
+                            }
                             source: model.droneIcon
                         }
                     }
