@@ -67,9 +67,9 @@ Rectangle {
                     }
                 }
             }
-// group of items that will show on the map
+            // group of items that will show on the map
             MapItemGroup {
-// marker added to the map
+                // marker added to the map
                 MapItemView {
                     model: markermodel
                     delegate: MapQuickItem {
@@ -98,7 +98,7 @@ Rectangle {
                     }
                 }
 
-// path traversed by the drone
+                // path traversed by the drone
                 MapItemView {
                     model: dronemodel
                     delegate: MapPolyline {
@@ -108,7 +108,7 @@ Rectangle {
                     }
                 }
 
-// polygon that shows where the drone is viewing
+                // polygon that shows where the drone is viewing
                 MapItemView {
                     model: fmvmodel
                     delegate: MapPolygon {
@@ -118,7 +118,7 @@ Rectangle {
                         path: model.polygonPoints
                     }
                 }
-// next four lines for the drone's view
+                // next four lines for the drone's view
                 MapItemView {
                     model: fmvmodel
                     delegate: MapPolyline {
@@ -154,7 +154,7 @@ Rectangle {
                         path: model.linePoints[3]
                     }
                 }
-// frame center line
+                // frame center line
                 MapItemView {
                     model: fmvmodel
                     delegate: MapPolyline {
@@ -163,7 +163,7 @@ Rectangle {
                         // line.color: 'blue'
                         line.color: "red"
                         path: model.linePoints[4]
-                         MouseArea {
+                        MouseArea {
                             id: frame_center_line_mousearea
                             objectName: "buttonMouseArea"
                             anchors.fill: parent
@@ -178,7 +178,7 @@ Rectangle {
                     }
                 }
 
-// drone marker
+                // drone marker
                 MapItemView {
                     model: dronemodel
                     delegate: MapQuickItem {
@@ -187,7 +187,7 @@ Rectangle {
                         anchorPoint.y: droneImg.height/2
                         sourceItem: Image {
                             id: droneImg
-                            transform: Rotation{
+                            transform: Rotation {
                                 origin.x: droneImg.width/2
                                 origin.y: droneImg.height/2
                                 angle: model.heading
