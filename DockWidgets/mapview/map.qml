@@ -71,8 +71,8 @@ Rectangle {
             model: markermodel
             delegate: MapQuickItem {
                 coordinate: model.position_marker
-                anchorPoint.x: image.width
-                anchorPoint.y: image.height
+                anchorPoint.x: image.width/2
+                anchorPoint.y: image.height/2
                 sourceItem: Image {
                     id: image
                     source: model.source_marker
@@ -91,6 +91,24 @@ Rectangle {
                     parent: image
                     visible: markerMouseArea.containsMouse
                     text: qsTr(model.tooltip)
+                }
+            }
+        }
+        MapItemView {
+            model: dronemodel
+            delegate: MapQuickItem{
+                coordinate: model.dronePosition
+                anchorPoint.x: droneImg.width/2
+                anchorPoint.y: droneImg.height/2
+                sourceItem: Image {
+                    id: droneImg
+                    source: model.droneIcon
+                MapPolyline {
+                    id: dronePath
+                    path: model.dronePath
+                    // color: "#FF0000"
+                    width: 2
+                }
                 }
             }
         }

@@ -1,64 +1,121 @@
-import os
 from math import cos, tan, log, pi
-from PySide2 import QtCore, QtQuickWidgets, QtPositioning
-from PySide2.QtCore import QObject, Slot, Signal, QPointF
-from PySide2.QtGui import QImage, QPixmap
+from PySide2 import QtQuickWidgets, QtPositioning, QtCore
+from PySide2.QtCore import QObject, Slot, Signal, QPointF, QAbstractListModel, QModelIndex, Qt, QUrl
+from PySide2.QtGui import QIcon
 from exif import Image
 import DockWidgets.mapview.rc_map
-# class MarkerModel(QtCore.QAbstractListModel):
-#     # Define additional roles for the corner circles and circle center markers
-#     PositionRole = QtCore.Qt.UserRole + 1
-#     SourceRole = QtCore.Qt.UserRole + 2
-#     TooltipRole = QtCore.Qt.UserRole + 3
-#     CornerCircleRole = QtCore.Qt.UserRole + 4
-#     CircleCenterRole = QtCore.Qt.UserRole + 5
 
-#     def __init__(self, parent=None):
-#         super(MarkerModel, self).__init__(parent)
-#         self._markers = []
-#         self._corner_circles = []
-#         self._circle_center = None
 
-#     def appendMarker(self, marker):
-#         if 'corner_circle' in marker:
-#             if marker['corner_circle'] == 'center':
-#                 self._circle_center = marker
-#             else:
-#                 self._corner_circles.append(marker)
-#         else:
-#             self.beginInsertRows(QtCore.QModelIndex(), len(self._markers), len(self._markers))
-#             self._markers.append(marker)
-#             self.endInsertRows()
+class DroneModel(QAbstractListModel):
+    IconRole, PositionRole, PathRole = range(Qt.UserRole, Qt.UserRole + 3)
 
-#     def rowCount(self, parent=QtCore.QModelIndex()):
-#         return len(self._markers)
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._drone_position = QtPositioning.QGeoCoordinate()
+        self._drone_path = []
 
-#     def data(self, index, role=QtCore.Qt.DisplayRole):
-#         if not index.isValid() or index.row() >= len(self._markers):
-#             return None
-#         marker = self._markers[index.row()]
-#         if role == MarkerModel.PositionRole:
-#             return marker['position']
-#         elif role == MarkerModel.SourceRole:
-#             return marker['source']
-#         elif role == MarkerModel.TooltipRole:
-#             return marker['imgTooltip']
-#         elif role == MarkerModel.CornerCircleRole:
-#             return marker.get('corner_circle') == 'corner'
-#         elif role == MarkerModel.CircleCenterRole:
-#             return marker.get('corner_circle') == 'center'
+    def rowCount(self, parent=QModelIndex()):
+        return 1
 
-class MarkerModel(QtCore.QAbstractListModel, QObject):
-    PositionRole, SourceRole, TooltipRole, ImagePathRole = range(QtCore.Qt.UserRole, QtCore.Qt.UserRole + 4)
+    def data(self, index, role=Qt.DisplayRole):
+        if 0 <= index.row() < self.rowCount():
+            if role == DroneModel.PositionRole:
+                return self._drone_position
+            elif role == DroneModel.IconRole or role == Qt.DecorationRole:
+                return QUrl('qrc://:/drone')
+            elif role == DroneModel.PathRole:
+                return self._drone_path
+        return QtCore.QVariant()
+
+
+    def roleNames(self):
+        return {
+            DroneModel.IconRole: b"droneIcon",
+            DroneModel.PositionRole: b"dronePosition",
+            DroneModel.PathRole: b"dronePath",
+        }
+
+    # def setData(self, index, value, role)-> bool:
+    #     if not index.isValid() or index.row() != 0 or role not in [DroneModel.IconRole, DroneModel.PositionRole, DroneModel.PathRole]:
+    #         return False
+
+    #     # if role == DroneModel.IconRole:
+    #     #     return False
+    #     elif role == DroneModel.PositionRole:
+    #         self._drone_position = value
+    #     elif role == DroneModel.PathRole:
+    #         self._drone_path = value
+    #     else:
+    #         return False
+
+    #     self.dataChanged.emit(index, index, [role])
+    #     return True
+
+    def updateData(self, drone_position, drone_path):
+        self._drone_position = QtPositioning.QGeoCoordinate(drone_position[0], drone_position[1])
+        self._drone_path = [QtPositioning.QGeoCoordinate(lat, lon) for lat, lon in drone_path]
+        self.dataChanged.emit(self.index(0), self.index(self.rowCount() - 1), [DroneModel.PositionRole, DroneModel.PathRole])
+
+
+class FMVModel(QAbstractListModel):
+    PolygonRole, LineRole = range(Qt.UserRole, Qt.UserRole + 2)
+    
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._line_points = []
+        self._polygon_points = []
+
+    def roleNames(self):
+        return {
+            FMVModel.PolygonRole: b"polygonPoints",
+            FMVModel.LineRole: b"linePoints"
+        }
+
+    def data(self, index, role=Qt.DisplayRole):
+        row = index.row()
+        if role == Qt.DisplayRole:
+            if row == 0:
+                return "Polygon"
+            elif row == 1:
+                return "Line"
+        if role == Qt.DecorationRole:
+            return None
+        elif role == FMVModel.PolygonRole:
+            return self._polygon_points
+        elif role == FMVModel.LineRole:
+            return self._line_points
+
+    def setData(self, index, value, role):
+        if not index.isValid() or index.row() != 0 or role != FMVModel.PolygonRole:
+            return False
+
+        if role == FMVModel.PolygonRole:
+            self._polygon_points = value
+        elif role == FMVModel.LineRole:
+            self._line_points = value
+        else:
+            return False
+        self.dataChanged.emit(index, index, [role])
+        return True
+    
+    def updateData(self, polygon_points, line_points):
+        self._polygon_points = [QtPositioning.QGeoCoordinate(lat, lon) for lat, lon in polygon_points]
+        self._line_points = [QtPositioning.QGeoCoordinate(lat, lon) for lat, lon in line_points]
+        self.dataChanged.emit(self.index(0), self.index(self.rowCount() - 1), [FMVModel.PolygonRole, FMVModel.LineRole])
+
+
+class MarkerModel(QAbstractListModel):
+    PositionRole, SourceRole, TooltipRole, ImagePathRole = range(
+        Qt.UserRole, Qt.UserRole + 4)
 
     def __init__(self, parent=None):
         super(MarkerModel, self).__init__(parent)
         self._markers = []
 
-    def rowCount(self, parent=QtCore.QModelIndex()):
+    def rowCount(self, parent=QModelIndex()):
         return len(self._markers)
 
-    def data(self, index, role=QtCore.Qt.DisplayRole):
+    def data(self, index, role=Qt.DisplayRole):
         if 0 <= index.row() < self.rowCount():
             if role == MarkerModel.PositionRole:
                 return self._markers[index.row()]["position"]
@@ -74,13 +131,14 @@ class MarkerModel(QtCore.QAbstractListModel, QObject):
         return {MarkerModel.PositionRole: b"position_marker", MarkerModel.SourceRole: b"source_marker", MarkerModel.TooltipRole: b"tooltip", MarkerModel.ImagePathRole: b"imgPath"}
 
     def appendMarker(self, marker):
-        self.beginInsertRows(QtCore.QModelIndex(), self.rowCount(), self.rowCount())
+        self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
         self._markers.append(marker)
         self.endInsertRows()
 
 
 class iceController(QObject):
     showImageSignal = Signal(str)
+
     def __init__(self):
         QObject.__init__(self)
 
@@ -95,181 +153,135 @@ class iceController(QObject):
 
 class MapWidget(QtQuickWidgets.QQuickWidget):
     def __init__(self, mainWindow, parent=None):
-        super(MapWidget, self).__init__(parent,resizeMode=QtQuickWidgets.QQuickWidget.SizeRootObjectToView)
+        super(MapWidget, self).__init__(parent, resizeMode=QtQuickWidgets.QQuickWidget.SizeRootObjectToView)
         self.mainWindow = mainWindow
-        self.model = MarkerModel(self)
-        self.rootContext().setContextProperty("markermodel", self.model)
+        self.markermodel = MarkerModel(self)
+        self.dronemodel = DroneModel(self)
+        self.fmvmodel = FMVModel(self)
+        self.rootContext().setContextProperty("dronemodel", self.dronemodel)
+        self.rootContext().setContextProperty("fmvmodel", self.fmvmodel)
+        self.rootContext().setContextProperty("markermodel", self.markermodel)
         self.ice = iceController()
         self.rootContext().setContextProperty('PyConsole', self.ice)
         self.rootContext().setContextProperty('ice', self.ice)
         self.ice.showImageSignal.connect(self.showImage)
-        self.setSource(QtCore.QUrl('qrc://:/map'))
+        self.setSource(QUrl('qrc://:/map'))
+        # self.setSource(QUrl.fromLocalFile('Dockwidgets/mapview/map.qml'))
         self.mainWindow.map = self
-        self.droneMarker = None
+
+        
+
         self.circleCenterMarker = None
-        self.corner1 = None
-        self.corner2 = None
-        self.corner3 = None
-        self.corner4 = None        
-        self.cornerCircleMarkers = []
-#        qml_path = os.path.join(os.path.dirname(__file__), "map.qml")
-#        self.setSource(QtCore.QUrl.fromLocalFile(qml_path))
+
     def focusInEvent(self, event):
+        """
+        set the map in focus as the current map
+        """
         self.mainWindow.map = self
         QtQuickWidgets.QQuickWidget.focusInEvent(self, event)
 
     def showImage(self, imgPath):
-#        self.mainWindow.imageViewer.showImageOnView(imgPath)
+        """
+        call the imageAction.. This will add the image to an image viewer
+        """
         self.mainWindow.imageAction(imgPath)
 
     def addMarker(self, imgPath, imgData: dict):
-        # coord = QtPositioning.QGeoCoordinate(imgData['lat'], imgData['long'])
+        """
+        Adds a marker for any imported image
+        """
         coord = QtPositioning.QGeoCoordinate(imgData['lat'], imgData['long'])
-        source = QtCore.QUrl("http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png")
-        tooltip ="<b>sender: </b> @soldierName<br>"
+        source = QUrl(
+            "http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png")
+        tooltip = "<b>sender: </b> @soldierName<br>"
         exifData = imgData.get('info', Image)
         for property in exifData.get_all():
-            print(f'property: {property}')
             try:
+                if property == 'flash':
+                    continue
                 tooltip += f'<b>{property}:</b> {exifData[property]}<br>'
-            except: 
+            except:
                 tooltip += f'<b>{property}:</b> Unable to read<br>'
 
-        self.model.appendMarker({"position": coord , "source": source, "imgPath": imgPath, "imgTooltip": tooltip})
+        self.markermodel.appendMarker(
+            {"position": coord, "source": source, "imgPath": imgPath, "imgTooltip": tooltip})
 
     def updateDronePosition(self, droneData: dict):
-        if self.droneMarker is not None:
-            # update the position of the existing drone marker
-            self.droneMarker["position"] = QtPositioning.QGeoCoordinate(float(droneData['Sensor Latitude']), float(droneData['Sensor Longitude']))
-            # emit dataChanged signal for the updated marker
-            index = self.model.index(0)
-            # index = self.model.index(self.model.rowCount() - 1)
-            self.model.dataChanged.emit(index, index, [MarkerModel.PositionRole])
+        """
+        drone is updated like a marker, wll change soon
+        """
+        if self.dronemodel is not None:
+        #     self.dronemodel["position"] = QtPositioning.QGeoCoordinate(
+        #         float(droneData['Sensor Latitude']), float(droneData['Sensor Longitude']))
+        #     index = self.markermodel.index(0)
+        #     self.markermodel.dataChanged.emit(
+        #         index, index, [MarkerModel.PositionRole])
 
-            corner1 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 1']), float(droneData['Offset Corner Longitude Point 1']))
-            corner2 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 2']), float(droneData['Offset Corner Longitude Point 2']))
-            corner3 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 3']), float(droneData['Offset Corner Longitude Point 3']))
-            corner4 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 4']), float(droneData['Offset Corner Longitude Point 4']))
-            # Compute center coordinate of the drone
-            center = QtPositioning.QGeoCoordinate(float(droneData['Frame Center Latitude']), float(droneData['Frame Center Longitude']))
-            # self.corner1["position"] = corner1
-            # # emit dataChanged signal for the updated marker
-            # index = self.model.index(1)
-            # # index = self.model.index(self.model.rowCount() - 1)
-            # self.model.dataChanged.emit(index, index, [MarkerModel.PositionRole])
+            corner1 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 1']), float(
+                droneData['Offset Corner Longitude Point 1']))
+        #     corner2 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 2']), float(
+        #         droneData['Offset Corner Longitude Point 2']))
+        #     corner3 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 3']), float(
+        #         droneData['Offset Corner Longitude Point 3']))
+        #     corner4 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 4']), float(
+        #         droneData['Offset Corner Longitude Point 4']))
+        #     center = QtPositioning.QGeoCoordinate(float(
+        #         droneData['Frame Center Latitude']), float(droneData['Frame Center Longitude']))
 
-            # self.corner2["position"] = corner2# emit dataChanged signal for the updated marker
-            # index = self.model.index(2)
-            # # index = self.model.index(self.model.rowCount() - 1)
-            # self.model.dataChanged.emit(index, index, [MarkerModel.PositionRole])
-
-            # self.corner3["position"] = corner3# emit dataChanged signal for the updated marker
-            # index = self.model.index(3)
-            # # index = self.model.index(self.model.rowCount() - 1)
-            # self.model.dataChanged.emit(index, index, [MarkerModel.PositionRole])
-
-            # self.corner4["position"] = corner4 # emit dataChanged signal for the updated marker
-            # index = self.model.index(4)
-            # # index = self.model.index(self.model.rowCount() - 1)
-            # self.model.dataChanged.emit(index, index, [MarkerModel.PositionRole])
-   
-            self.circleCenterMarker["position"] = center# emit dataChanged signal for the updated marker
-            index = self.model.index(1)
-            # index = self.model.index(self.model.rowCount() - 1)
-            self.model.dataChanged.emit(index, index, [MarkerModel.PositionRole])
+        #     # emit dataChanged signal for the updated marker
+        #     self.circleCenterMarker["position"] = center
+        #     index = self.markermodel.index(1)
+        #     self.markermodel.dataChanged.emit(
+        #         index, index, [MarkerModel.PositionRole])
 
         else:
-            # add drone marker with initial position
             self.addDrone(droneData)
 
-    # def updateDronePosition(self, droneData: dict):
-    #     # update drone position
-    #     droneCoord = QtPositioning.QGeoCoordinate(float(droneData['Sensor Latitude']), float(droneData['Sensor Longitude']))
-    #     if self.droneMarker:
-    #         # update the position of the existing drone marker
-    #         self.droneMarker["position"] = droneCoord
-    #         # emit dataChanged signal for the updated marker
-    #         index = self.model.index(0)
-    #         self.model.dataChanged.emit(index, index, [MarkerModel.PositionRole])
-    #     else:
-    #         # add drone marker with initial position
-    #         self.addDrone(droneData)
-
-    #     # update corner circle position
-    #     corner1 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 1']), float(droneData['Offset Corner Longitude Point 1']))
-    #     corner2 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 2']), float(droneData['Offset Corner Longitude Point 2']))
-    #     corner3 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 3']), float(droneData['Offset Corner Longitude Point 3']))
-    #     corner4 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 4']), float(droneData['Offset Corner Longitude Point 4']))
-
-    #     cornerCircleMarkers = [corner1, corner2, corner3, corner4]
-    #     for circleCorner, i in  self.cornerCircleMarkers, range(1,5):
-    #         # update the position of the existing corner circle marker
-    #         circleCorner["position"] = cornerCircleMarkers[i-1]
-    #         # emit dataChanged signal for the updated marker
-    #         index = self.model.index(i)
-    #         self.model.dataChanged.emit(index, index, [MarkerModel.PositionRole])
-    #     # update circle center position
-    #     circleCenterCoord = QtPositioning.QGeoCoordinate(float(droneData['Frame Center Latitude']), float(droneData['Frame Center Longitude']))
-    #     if self.circleCenterMarker is not None:
-    #         # update the position of the existing circle center marker
-    #         self.circleCenterMarker["position"] = circleCenterCoord
-    #         # emit dataChanged signal for the updated marker
-    #         index = self.model.index(self.model.rowCount() - 1)
-    #         self.model.dataChanged.emit(index, index, [MarkerModel.PositionRole])
-        
-
-
-
-    # def addDrone(self, droneData: dict):
-    #     coord = QtPositioning.QGeoCoordinate(float(droneData['Sensor Latitude']), float(droneData['Sensor Longitude']))
-    #     droneImgPath = 'qrc://:/drone'
-    #     cornerCircleImgPath = 'qrc://:/ccircle'
-    #     circleCenterImgPath = 'qrc://:/circlec'
-    #     tooltip = "data"
-    #     droneUrl = QtCore.QUrl(droneImgPath)
-    #     cornerCircleUrl = QtCore.QUrl(cornerCircleImgPath)
-    #     circleCenterUrl = QtCore.QUrl(circleCenterImgPath)
-    #     self.droneMarker = {"position": coord , "source": droneUrl, "imgPath": droneImgPath, "imgTooltip": tooltip}
-    #     self.model.appendMarker(self.droneMarker)
-
     def addDrone(self, droneData: dict):
-        # Extract corner coordinates of the drone
-        corner1 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 1']), float(droneData['Offset Corner Longitude Point 1']))
-        corner2 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 2']), float(droneData['Offset Corner Longitude Point 2']))
-        corner3 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 3']), float(droneData['Offset Corner Longitude Point 3']))
-        corner4 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 4']), float(droneData['Offset Corner Longitude Point 4']))
-        # Compute center coordinate of the drone
-        center = QtPositioning.QGeoCoordinate(float(droneData['Frame Center Latitude']), float(droneData['Frame Center Longitude']))
-        
-        droneCoord = QtPositioning.QGeoCoordinate(float(droneData['Sensor Latitude']), float(droneData['Sensor Longitude']))
+    #     """
+    #     drone is added like a marker, wll change soon
+    #     """
+    #     corner1 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 1']), float(
+    #         droneData['Offset Corner Longitude Point 1']))
+    #     corner2 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 2']), float(
+    #         droneData['Offset Corner Longitude Point 2']))
+    #     corner3 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 3']), float(
+    #         droneData['Offset Corner Longitude Point 3']))
+    #     corner4 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 4']), float(
+    #         droneData['Offset Corner Longitude Point 4']))
+    #     center = QtPositioning.QGeoCoordinate(float(
+    #         droneData['Frame Center Latitude']), float(droneData['Frame Center Longitude']))
+
+        droneCoord = QtPositioning.QGeoCoordinate(
+            float(droneData['Sensor Latitude']), float(droneData['Sensor Longitude']))
         droneImgPath = 'qrc://:/drone'
-        tooltip = "drone"
-        droneUrl = QtCore.QUrl(droneImgPath)
+        # tooltip = "drone"
+        droneUrl = QUrl(droneImgPath)
+        # Check if the model already exists, otherwise create a new one
+        if not hasattr(self, 'dronemodel'):
+            self.dronemodel = DroneModel()
 
-        # Add drone marker
-        self.droneMarker = {"position": droneCoord , "source": droneUrl, "imgPath": droneImgPath, "imgTooltip": tooltip}
-        self.model.appendMarker(self.droneMarker)
+        # Update the data in the model
+        self.dronemodel.updateData(droneCoord, [])
 
-        # Add corner circle marker
-        cornerCircleImgPath = 'qrc://:/ccircle'
-        cornerCircleUrl = QtCore.QUrl(cornerCircleImgPath)
-        # self.corner1 = {"position": corner1, "source": cornerCircleUrl, "imgPath": cornerCircleImgPath, "imgTooltip": "Corner Circle"}
-        # self.model.appendMarker(self.corner1)
-        # self.corner2 = {"position": corner2, "source": cornerCircleUrl, "imgPath": cornerCircleImgPath, "imgTooltip": "Corner Circle"}
-        # self.model.appendMarker(self.corner2)
-        # self.corner3 = {"position": corner3, "source": cornerCircleUrl, "imgPath": cornerCircleImgPath, "imgTooltip": "Corner Circle"}
-        # self.model.appendMarker(self.corner3)
-        # self.corner4 = {"position": corner4, "source": cornerCircleUrl, "imgPath": cornerCircleImgPath, "imgTooltip": "Corner Circle"}
-        # self.model.appendMarker(self.corner4)
-        # Add circle center marker
-        circleCenterImgPath = 'qrc://:/circlec'
-        circleCenterUrl = QtCore.QUrl(circleCenterImgPath)
-        self.circleCenterMarker = {"position": center, "source": circleCenterUrl, "imgPath": circleCenterImgPath, "imgTooltip": "Circle Center"}
-        self.model.appendMarker(self.circleCenterMarker)
+        # Add the new row to the model
+        self.dronemodel.beginInsertRows(QModelIndex(), 0, 0)
+        self.dronemodel.endInsertRows()
+    #     # self.dronemodel = {"position": droneCoord, "source": droneUrl,
+    #     #                     "imgPath": droneImgPath, "imgTooltip": tooltip}
+    #     # self.markermodel.appendMarker(self.dronemodel)
+    #     cornerCircleImgPath = 'qrc://:/ccircle'
+    #     cornerCircleUrl = QUrl(cornerCircleImgPath)
+    #     circleCenterImgPath = 'qrc://:/circlec'
+    #     circleCenterUrl = QUrl(circleCenterImgPath)
+    #     self.circleCenterMarker = {"position": center, "source": circleCenterUrl,
+    #                                "imgPath": circleCenterImgPath, "imgTooltip": "Circle Center"}
+    #     self.markermodel.appendMarker(self.circleCenterMarker)
 
-
-
-    def map_geocoordinate(self, lat_, long_):
-        x = (long_ +180) / 360 *self.width()
-        y = (1 - log(tan(lat_ * pi/180) + 1 /cos(lat_*pi/180))/pi)/2 *self.height()
-        return QPointF(x, y)
+    #     # self.fmvmodel.setData(self.fmvmodel.index(0),[corner1, corner2, corner3, corner4], self.fmvmodel.PolygonRole)#for polyon
+    #     # self.fmvmodel.setData(self.fmvmodel.index(1),[], self.fmvmodel.DroneRole)#for drone
+    #     # self.fmvmodel.setData(self.fmvmodel.index(2),[], self.fmvmodel.LineRole)#for line
+    #     self.dronemodel.beginInsertRows(QModelIndex(), self.dronemodel.rowCount(), self.dronemodel.rowCount())
+    #     self.dronemodel.setData(self.dronemodel.index(0), droneCoord, DroneModel.PositionRole)
+    #     self.dronemodel.setData(self.dronemodel.index(0), [], DroneModel.PathRole)
+    #     self.dronemodel.endInsertRows()
