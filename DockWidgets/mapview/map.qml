@@ -26,6 +26,7 @@ Rectangle {
             plugin: osmPlugin
             center: locationTC
             zoomLevel: 6
+            // zoom in and out buttons
             Column {
                 anchors.right: parent.right
                 rightPadding: 5
@@ -66,9 +67,9 @@ Rectangle {
                     }
                 }
             }
-
+// group of items that will show on the map
             MapItemGroup {
-
+// marker added to the map
                 MapItemView {
                     model: markermodel
                     delegate: MapQuickItem {
@@ -97,7 +98,7 @@ Rectangle {
                     }
                 }
 
-
+// path traversed by the drone
                 MapItemView {
                     model: dronemodel
                     delegate: MapPolyline {
@@ -107,22 +108,22 @@ Rectangle {
                     }
                 }
 
-
+// polygon that shows where the drone is viewing
                 MapItemView {
                     model: fmvmodel
                     delegate: MapPolygon {
-                        color: '#1b98e073'
+                        color: '#4c98e073'
                         border.color: 'blue'
                         border.width: 2
                         path: model.polygonPoints
                     }
                 }
-
+// next four lines for the drone's view
                 MapItemView {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 1
-                        line.color: '#1b98e073'
+                        line.color: 'blue'
                         path: model.linePoints[0]
                     }
                 }
@@ -131,7 +132,7 @@ Rectangle {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 2
-                        line.color: '#1b98e073'
+                        line.color: 'blue'
                         path: model.linePoints[1]
                     }
                 }
@@ -140,7 +141,7 @@ Rectangle {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 2
-                        line.color: '#1b98e073'
+                        line.color: 'blue'
                         path: model.linePoints[2]
                     }
                 }
@@ -149,17 +150,17 @@ Rectangle {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 2
-                        line.color: '#3f98e073'
+                        line.color: 'blue'
                         path: model.linePoints[3]
                     }
                 }
-
+// frame center line
                 MapItemView {
                     model: fmvmodel
                     delegate: MapPolyline {
                         id: framecenterline
                         line.width: 3
-                        // line.color: '#1b98e073'
+                        // line.color: 'blue'
                         line.color: "red"
                         path: model.linePoints[4]
                          MouseArea {
@@ -177,7 +178,7 @@ Rectangle {
                     }
                 }
 
-
+// drone marker
                 MapItemView {
                     model: dronemodel
                     delegate: MapQuickItem {
