@@ -1,123 +1,11 @@
-from math import cos, tan, log, pi
-from PySide2 import QtQuickWidgets, QtPositioning, QtCore, QtLocation
-from PySide2.QtCore import QObject, Slot, Signal, QPointF, QAbstractListModel, QModelIndex, Qt, QUrl
-from PySide2.QtGui import QIcon
+from DockWidgets.mapview.models.MarkerModel import MarkerModel
+from DockWidgets.mapview.models.DroneModel import DroneModel
+from DockWidgets.mapview.models.FMVModel import FMVModel
+from PySide2.QtQuickWidgets import QQuickWidget
+from PySide2.QtPositioning import QGeoCoordinate
+from PySide2.QtCore import QObject, Slot, Signal, QUrl
 from exif import Image
 import DockWidgets.mapview.rc_map
-
-
-class DroneModel(QAbstractListModel):
-    IconRole, PositionRole, PathRole, HeadingRole = range(
-        Qt.UserRole, Qt.UserRole + 4)
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self._drone_position = QtPositioning.QGeoCoordinate()
-        self._drone_path = []
-        self._heading = 0
-
-    def rowCount(self, parent=QModelIndex()):
-        return 1
-
-    def data(self, index, role=Qt.DisplayRole):
-        if 0 <= index.row() < self.rowCount():
-            if role == DroneModel.PositionRole:
-                return self._drone_position
-            elif role == DroneModel.IconRole or role == Qt.DecorationRole:
-                return QUrl('qrc://:/drone')
-            elif role == DroneModel.PathRole:
-                return self._drone_path
-            elif role == DroneModel.HeadingRole:
-                return self._heading
-        return QtCore.QVariant()
-
-    def roleNames(self):
-        return {
-            DroneModel.IconRole: b"droneIcon",
-            DroneModel.PositionRole: b"dronePosition",
-            DroneModel.PathRole: b"dronePath",
-            DroneModel.HeadingRole: b"heading",
-        }
-
-    def updateData(self, drone_position: QtPositioning.QGeoCoordinate, heading):
-        """
-        Updates the drone position as well as the path
-        """
-        self._drone_position = drone_position
-        self._drone_path.append(drone_position)
-        self._heading = heading
-        self.dataChanged.emit(self.index(0), self.index(self.rowCount(
-        ) - 1), [DroneModel.IconRole, DroneModel.PositionRole, DroneModel.PathRole, DroneModel.HeadingRole])
-
-
-class FMVModel(QAbstractListModel):
-    PolygonRole, LineRole = range(Qt.UserRole, Qt.UserRole + 2)
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self._line_points = []
-        self._polygon_points = []
-
-    def roleNames(self):
-        return {
-            FMVModel.PolygonRole: b"polygonPoints",
-            FMVModel.LineRole: b"linePoints"
-        }
-
-    def rowCount(self, parent=QModelIndex()):
-        return 1
-
-    def data(self, index, role=Qt.DisplayRole):
-        row = index.row()
-        if role == Qt.DisplayRole:
-            if row == 0:
-                return "Polygon"
-            elif row == 1:
-                return "Line"
-        if role == Qt.DecorationRole:
-            return None
-        elif role == FMVModel.PolygonRole:
-            return self._polygon_points
-        elif role == FMVModel.LineRole:
-            return self._line_points
-
-    def updateData(self, polygon_points: list[QtPositioning.QGeoCoordinate], line_points: list[list[QtPositioning.QGeoCoordinate, QtPositioning.QGeoCoordinate]]):
-        self._polygon_points = polygon_points
-        self._line_points = line_points
-        self.dataChanged.emit(self.index(0), self.index(
-            self.rowCount() - 1), [FMVModel.PolygonRole, FMVModel.LineRole])
-
-
-class MarkerModel(QAbstractListModel):
-    PositionRole, SourceRole, TooltipRole, ImagePathRole = range(
-        Qt.UserRole, Qt.UserRole + 4)
-
-    def __init__(self, parent=None):
-        super(MarkerModel, self).__init__(parent)
-        self._markers = []
-
-    def rowCount(self, parent=QModelIndex()):
-        return len(self._markers)
-
-    def data(self, index, role=Qt.DisplayRole):
-        if 0 <= index.row() < self.rowCount():
-            if role == MarkerModel.PositionRole:
-                return self._markers[index.row()]["position"]
-            elif role == MarkerModel.SourceRole:
-                return self._markers[index.row()]["source"]
-            elif role == MarkerModel.TooltipRole:
-                return self._markers[index.row()]["imgTooltip"]
-            elif role == MarkerModel.ImagePathRole:
-                return self._markers[index.row()]["imgPath"]
-        return QtCore.QVariant()
-
-    def roleNames(self):
-        return {MarkerModel.PositionRole: b"position_marker", MarkerModel.SourceRole: b"source_marker", MarkerModel.TooltipRole: b"tooltip", MarkerModel.ImagePathRole: b"imgPath"}
-
-    def appendMarker(self, marker):
-        self.beginInsertRows(QModelIndex(), self.rowCount(), self.rowCount())
-        self._markers.append(marker)
-        self.endInsertRows()
 
 
 class iceController(QObject):
@@ -135,10 +23,10 @@ class iceController(QObject):
         print(s)
 
 
-class MapWidget(QtQuickWidgets.QQuickWidget):
+class MapWidget(QQuickWidget):
     def __init__(self, mainWindow, parent=None):
         super(MapWidget, self).__init__(
-            parent, resizeMode=QtQuickWidgets.QQuickWidget.SizeRootObjectToView)
+            parent, resizeMode=QQuickWidget.SizeRootObjectToView)
         self.mainWindow = mainWindow
         self.markermodel = MarkerModel(self)
         self.dronemodel = DroneModel(self)
@@ -153,8 +41,6 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
         self.setSource(QUrl('qrc://:/map'))
         # self.setSource(QUrl.fromLocalFile('Dockwidgets/mapview/map.qml'))
         self.mainWindow.map = self
-        # self.polyline = QtPositioning.QGeoPath()
-
         self.circleCenterMarker = None
 
     def focusInEvent(self, event):
@@ -162,7 +48,7 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
         set the map in focus as the current map
         """
         self.mainWindow.map = self
-        QtQuickWidgets.QQuickWidget.focusInEvent(self, event)
+        QQuickWidget.focusInEvent(self, event)
 
     def showImage(self, imgPath):
         """
@@ -174,7 +60,7 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
         """
         Adds a marker for any imported image
         """
-        coord = QtPositioning.QGeoCoordinate(imgData['lat'], imgData['long'])
+        coord = QGeoCoordinate(imgData['lat'], imgData['long'])
         source = QUrl(
             "http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png")
         tooltip = "<b>sender: </b> @soldierName<br>"
@@ -194,29 +80,29 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
         """
         drone is updated like a marker, wll change soon
         """
-        droneCoord = QtPositioning.QGeoCoordinate(
+        droneCoord = QGeoCoordinate(
             float(droneData['Sensor Latitude']), float(droneData['Sensor Longitude']))
 
         heading = float(droneData['Platform Heading Angle'])
         # Update the data in the model
         self.dronemodel.updateData(droneCoord, heading)
 
-        #     self.dronemodel["position"] = QtPositioning.QGeoCoordinate(
+        #     self.dronemodel["position"] = QGeoCoordinate(
         #         float(droneData['Sensor Latitude']), float(droneData['Sensor Longitude']))
         #     index = self.markermodel.index(0)
         #     self.markermodel.dataChanged.emit(
         #         index, index, [MarkerModel.PositionRole])
         fraCenLat = float(droneData['Frame Center Latitude'])
         fraCenLong = float(droneData['Frame Center Longitude'])
-        corner1 = QtPositioning.QGeoCoordinate(float(
+        corner1 = QGeoCoordinate(float(
             droneData['Offset Corner Latitude Point 1'])+fraCenLat, float(droneData['Frame Center Longitude'])+fraCenLong)
-        corner2 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 2'])+fraCenLat, float(
+        corner2 = QGeoCoordinate(float(droneData['Offset Corner Latitude Point 2'])+fraCenLat, float(
             droneData['Offset Corner Longitude Point 2'])+fraCenLong)
-        corner3 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 3'])+fraCenLat, float(
+        corner3 = QGeoCoordinate(float(droneData['Offset Corner Latitude Point 3'])+fraCenLat, float(
             droneData['Offset Corner Longitude Point 3'])+fraCenLong)
-        corner4 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 4'])+fraCenLat, float(
+        corner4 = QGeoCoordinate(float(droneData['Offset Corner Latitude Point 4'])+fraCenLat, float(
             droneData['Offset Corner Longitude Point 4'])+fraCenLong)
-        center = QtPositioning.QGeoCoordinate(fraCenLat, fraCenLong)
+        center = QGeoCoordinate(fraCenLat, fraCenLong)
         # self.polyline.addCoordinate(droneCoord)
         self.fmvmodel.updateData(
             polygon_points=[corner1, corner2, corner3, corner4],
@@ -242,18 +128,18 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
     #     """
     #     drone is added like a marker, wll change soon
     #     """
-    #     droneCoord = QtPositioning.QGeoCoordinate(
+    #     droneCoord = QGeoCoordinate(
     #         float(droneData['Sensor Latitude']), float(droneData['Sensor Longitude']))
     #     self.dronemodel.setProperty("coordinate", droneCoord)
-    #     corner1 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 1']), float(
+    #     corner1 = QGeoCoordinate(float(droneData['Offset Corner Latitude Point 1']), float(
     #         droneData['Offset Corner Longitude Point 1']))
-    #     corner2 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 2']), float(
+    #     corner2 = QGeoCoordinate(float(droneData['Offset Corner Latitude Point 2']), float(
     #         droneData['Offset Corner Longitude Point 2']))
-    #     corner3 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 3']), float(
+    #     corner3 = QGeoCoordinate(float(droneData['Offset Corner Latitude Point 3']), float(
     #         droneData['Offset Corner Longitude Point 3']))
-    #     corner4 = QtPositioning.QGeoCoordinate(float(droneData['Offset Corner Latitude Point 4']), float(
+    #     corner4 = QGeoCoordinate(float(droneData['Offset Corner Latitude Point 4']), float(
     #         droneData['Offset Corner Longitude Point 4']))
-    #     center = QtPositioning.QGeoCoordinate(float(
+    #     center = QGeoCoordinate(float(
     #         droneData['Frame Center Latitude']), float(droneData['Frame Center Longitude']))
 
         # # Add the new row to the model
