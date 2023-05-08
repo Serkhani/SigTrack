@@ -225,6 +225,7 @@ class MapWidget(QtQuickWidgets.QQuickWidget):
                 [corner3, droneCoord],
                 [corner2, droneCoord],
                 [corner1, droneCoord],
+                [center, droneCoord]
             ]
             )
 

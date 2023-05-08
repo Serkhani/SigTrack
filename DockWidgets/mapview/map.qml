@@ -149,12 +149,21 @@ Rectangle {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 2
-                        line.color: '#4c98e073'
+                        line.color: '#3f98e073'
                         path: model.linePoints[3]
                     }
                 }
 
-                
+                MapItemView {
+                    model: fmvmodel
+                    delegate: MapPolyline {
+                        line.width: 3
+                        // line.color: '#4c98e073'
+                        line.color: "red"
+                        path: model.linePoints[4]
+                    }
+                }
+
 
                 MapItemView {
                     model: dronemodel
