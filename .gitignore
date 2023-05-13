@@ -75,3 +75,4 @@ SigTrack.zip
 build/
 dist/
 output.bin
+.vscode
