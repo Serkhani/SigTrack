@@ -198,4 +198,22 @@ Rectangle {
                 }
             }
         }
+
+        ComboBox {
+            id: mapTypeComboBox
+            function setMapType(index)
+            {
+                map.activeMapType = map.supportedMapTypes[index]
+                }
+            model: [
+                "Street Map"
+                , "Cycle Map"
+                , "Transit Map"
+                , "Night Transit Map"
+                , "Terrain Map"
+                , "Hiking Map"
+            ]
+            currentIndex: 0
+            onCurrentIndexChanged: setMapType(currentIndex)
+        }
     }
