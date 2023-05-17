@@ -15,7 +15,7 @@ Rectangle {
         }
         PluginParameter {
             name: "osm.mapping.providersrepository.address"
-            value: "http://maps-redirect.qt.io/osm/5.6/"
+            value: "http://maps-redirect.qt.io/osm/5.8/"
         }
     }
     property variant locationTC: QtPositioning.coordinate(7.9465, 1.0232)
@@ -34,7 +34,7 @@ Rectangle {
                 spacing: 5
                 Button {
                     contentItem: Text {
-                        text: '+'
+                        text: "+"
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: 24
@@ -51,7 +51,7 @@ Rectangle {
                 }
                 Button {
                     contentItem: Text {
-                        text: '-'
+                        text: "-"
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         font.pointSize: 24
@@ -75,7 +75,7 @@ Rectangle {
                     delegate: MapQuickItem {
                         coordinate: model.position_marker
                         anchorPoint.x: image.width/2
-                        anchorPoint.y: image.height/2
+                        anchorPoint.y: image.height
                         sourceItem: Image {
                             id: image
                             source: model.source_marker
@@ -94,6 +94,9 @@ Rectangle {
                             parent: image
                             visible: markerMouseArea.containsMouse
                             text: qsTr(model.tooltip)
+                            width: contentWidth + 16
+                            height: contentHeight + 16
+
                         }
                     }
                 }
@@ -103,7 +106,7 @@ Rectangle {
                     model: dronemodel
                     delegate: MapPolyline {
                         line.width: 3
-                        line.color: 'blue'
+                        line.color: "blue"
                         path: model.dronePath
                     }
                 }
@@ -112,18 +115,18 @@ Rectangle {
                 MapItemView {
                     model: fmvmodel
                     delegate: MapPolygon {
-                        color: '#4c98e073'
-                        border.color: 'blue'
+                        color: "#4c98e073"
+                        border.color: "blue"
                         border.width: 2
                         path: model.polygonPoints
                     }
                 }
-                // next four lines for the drone's view
+                // next four lines for the drone"s view
                 MapItemView {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 1
-                        line.color: 'blue'
+                        line.color: "blue"
                         path: model.linePoints[0]
                     }
                 }
@@ -132,7 +135,7 @@ Rectangle {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 2
-                        line.color: 'blue'
+                        line.color: "blue"
                         path: model.linePoints[1]
                     }
                 }
@@ -141,7 +144,7 @@ Rectangle {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 2
-                        line.color: 'blue'
+                        line.color: "blue"
                         path: model.linePoints[2]
                     }
                 }
@@ -150,7 +153,7 @@ Rectangle {
                     model: fmvmodel
                     delegate: MapPolyline {
                         line.width: 2
-                        line.color: 'blue'
+                        line.color: "blue"
                         path: model.linePoints[3]
                     }
                 }
@@ -160,7 +163,7 @@ Rectangle {
                     delegate: MapPolyline {
                         id: framecenterline
                         line.width: 3
-                        // line.color: 'blue'
+                        // line.color: "blue"
                         line.color: "red"
                         path: model.linePoints[4]
                         MouseArea {
@@ -173,7 +176,7 @@ Rectangle {
                         ToolTip {
                             parent: framecenterline
                             visible: frame_center_line_mousearea.containsMouse
-                            text: qsTr('Frame Center')
+                            text: qsTr("Frame Center")
                         }
                     }
                 }
@@ -181,6 +184,7 @@ Rectangle {
                 // drone marker
                 MapItemView {
                     model: dronemodel
+                    anchors.fill: parent
                     delegate: MapQuickItem {
                         coordinate: model.dronePosition
                         anchorPoint.x: droneImg.width/2

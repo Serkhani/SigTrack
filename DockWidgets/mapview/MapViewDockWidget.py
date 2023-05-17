@@ -61,8 +61,7 @@ class MapWidget(QQuickWidget):
         Adds a marker for any imported image
         """
         coord = QGeoCoordinate(imgData['lat'], imgData['long'])
-        source = QUrl(
-            "http://maps.gstatic.com/mapfiles/ridefinder-images/mm_20_gray.png")
+        source = QUrl("qrc://:/marker")
         tooltip = "<b>sender: </b> @soldierName<br>"
         exifData = imgData.get('info', Image)
         for property in exifData.get_all():
