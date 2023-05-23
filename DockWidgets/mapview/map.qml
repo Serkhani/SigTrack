@@ -9,6 +9,25 @@ Rectangle {
     Plugin {
         id: osmPlugin
         name: "osm"
+        // name: "esri"
+        // preferred: ["esri", "osm"]
+        // PluginParameter {
+        //     name: "osm.mapping.providersrepository.disabled"
+        //     value: "false"
+        // }
+        // PluginParameter {
+        //     name: "osm.mapping.providersrepository.address"
+        //     // value: "http://maps-redirect.qt.io/osm/5.8/"
+        //     // value: "https://tile.thunderforest.com/cycle/"
+        //     // value: "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/8/136/74" 
+        // }
+        // PluginParameter { name: "osm.useragent"; value: "My great Qt OSM application" }
+        // PluginParameter { name: "osm.mapping.host"; value: "http://osm.tile.server.address/" }
+        // PluginParameter { name: "osm.mapping.copyright"; value: "Soko Aerial Robotics" }
+        // PluginParameter { name: "osm.routing.host"; value: "http://osrm.server.address/viaroute" }
+        // PluginParameter { name: "osm.geocoding.host"; value: "http://geocoding.server.address" }
+        // PluginParameter { name: "osm.places.host"; value: "http://geocoding.server.address" }
+       
         PluginParameter {
             name: "osm.mapping.providersrepository.disabled"
             value: "true"
@@ -100,6 +119,55 @@ Rectangle {
                         }
                     }
                 }
+//                 MapItemView {
+//     model: markermodel
+//     delegate: MapQuickItem {
+//         coordinate: model.position_marker
+//         anchorPoint.x: image.width/2
+//         anchorPoint.y: image.height
+
+//         sourceItem: Item {
+//             id: tooltipContainer
+
+//             // Tooltip MouseArea
+//             MouseArea {
+//                 id: markerMouseArea
+//                 objectName: "buttonMouseArea"
+//                 anchors.fill: parent
+//                 hoverEnabled: true
+//                 onClicked: {
+//                     App.showImage(model.imgPath)
+//                 }
+//             }
+
+//             // Tooltip Rectangle
+//             Rectangle {
+//                 id: tooltip
+//                 width: Math.min(contentWidth + 16, image.width * 0.5) // Limit width to 50% of the image width
+//                 height: Math.min(contentHeight + 16, image.height * 0.5) // Limit height to 50% of the image height
+//                 color: "lightyellow"
+//                 border.color: "black"
+//                 border.width: 1
+//                 radius: 4
+
+//                 // Tooltip Text
+//                 Text {
+//                     anchors.centerIn: parent
+//                     text: qsTr(model.tooltip)
+//                     font.pixelSize: 14
+//                     wrapMode: Text.Wrap
+//                 }
+
+//                 // Position the tooltip within the parent image
+//                 x: markerMouseArea.containsMouse ? -width - 8 : image.width + 8
+//                 y: markerMouseArea.containsMouse ? -height - 8 : image.height + 8
+
+//                 // Hide the tooltip when not hovered
+//                 visible: markerMouseArea.containsMouse
+//             }
+//         }
+//     }
+// }
 
                 // path traversed by the drone
                 MapItemView {
@@ -191,6 +259,8 @@ Rectangle {
                         anchorPoint.y: droneImg.height/2
                         sourceItem: Image {
                             id: droneImg
+                            width: 70
+                            height: 70                    
                             transform: Rotation {
                                 origin.x: droneImg.width/2
                                 origin.y: droneImg.height/2
