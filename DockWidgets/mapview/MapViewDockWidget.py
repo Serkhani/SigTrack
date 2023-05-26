@@ -60,18 +60,26 @@ class MapWidget(QQuickWidget):
         """
         Adds a marker for any imported image
         """
+        # print(imgPath, imgData)
         coord = QGeoCoordinate(imgData['lat'], imgData['long'])
         source = QUrl("qrc://:/marker")
         tooltip = "<b>sender: </b> @soldierName<br>"
-        exifData = imgData.get('info', Image)
-        for property in exifData.get_all():
-            try:
-                if property == 'flash':
-                    continue
-                tooltip += f'<b>{property}:</b> {exifData[property]}<br>'
-            except:
-                tooltip += f'<b>{property}:</b> Unable to read<br>'
-
+        tooltip += f"<b>lat: </b> {coord.latitude()}<br>"
+        tooltip += f"<b>long: </b> {coord.longitude()}<br>"
+        # tooltip += f"<b>alt: </b> {imgData.get('alt', 'NA')}<br>"
+        # exifData = imgData.get('info')
+        # # print(exifData.list_all(), "yie")
+        # info = exifData.list_all()
+        # print(info)
+        # for property in info:
+        #     try:
+        #         if property == 'flash':
+        #             continue
+        #         # if exifData.get(property, "Unable to read"):
+        #         tooltip += f'<b>{property}:</b> {exifData.get(property, "Unable to read")}<br>'
+        #     except:
+        #         tooltip += f'<b>{property}:</b> Unable to read<br>'
+        #     print(f"position: {coord}\n, source: {source}\n, imgPath: {imgPath}\n, imgTooltip: {tooltip}\n")
         self.markermodel.appendMarker(
             {"position": coord, "source": source, "imgPath": imgPath, "imgTooltip": tooltip})
 
