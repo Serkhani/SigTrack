@@ -14,6 +14,6 @@ class DockWidget(QDockWidget):
         self.mainWindow.editingPanel.hide()
         if self.mainWindow.dockCount == 0:
             self.mainWindow.ui.label.show()
-
+        self.widget().close()
         QDockWidget.closeEvent(self, event)
 

@@ -1,11 +1,12 @@
 # This Python file uses the following encoding: utf-8
+import PySide2.QtGui
 from PySide2.QtMultimedia import QMediaPlayer, QMediaContent
 from PySide2.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QPushButton, QStyle, QSizePolicy
 from PySide2.QtCore import QUrl, QTimer, Qt
-from PySide2.QtCore import QUrl
 from PySide2.QtMultimedia import QMediaContent, QMediaPlayer
 from PySide2.QtMultimediaWidgets import QVideoWidget
 from PySide2.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout
+from PySide2.QtGui import QCloseEvent
 # from DockWidgets.utils import getVideoLocationInfo
 from klv_data.element import UnknownElement
 from klv_data.streamparser import StreamParser
@@ -335,3 +336,9 @@ class VideoViewDockWidget(QWidget):
                 continue
             data = packet.MetadataList()
             self.data = data
+    
+    def closeEvent(self, event: QCloseEvent) -> None:
+        print("close")
+        self.mediaPlayer.stop()
+        self.videoPlayerWidget.close()
+        return super().closeEvent(event)
