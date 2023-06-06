@@ -10,11 +10,13 @@ class AddCommand(QtWidgets.QUndoCommand):
     def undo(self):
         self.scene.removeItem(self.item)
         self.scene.update()
+        super().undo()
 
     def redo(self):
         self.scene.addItem(self.item)
         self.scene.clearSelection()
         self.scene.update()
+        super().redo()
 
     def tr(self, message):
         return QCoreApplication.translate('SigTrack', message)
