@@ -1,49 +1,24 @@
 # encoding: utf-8
+import logging
 import os
 import sys
-
 from pprint import pprint
 from time import sleep
 
-from sigtrack.views.constants import _DOCK_OPTS, _DOCK_POSITIONS
-
-from sigtrack.views.imageview.ImageViewDockWidget import ImageViewDockWidget
-from sigtrack.views.videoview.VideoViewDockWidget import VideoViewDockWidget
-from sigtrack.views.mapview.MapViewDockWidget import MapWidget
-from sigtrack.views.dockWidget import DockWidget
-
-# import Editing.icon_resources
-
-from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QFileDialog,
-    QLabel,
-    QMessageBox,
-    QDockWidget,
-    QSplashScreen,
-)
-
-from PySide6.QtCore import Qt
-
-from PySide6.QtGui import (
-    QFont,
-    QIcon,
-    QPixmap,
-    QTransform,
-)
-
-# Important:
-# You need to run the following command to generate the ui_form.py file
-#     PySide6-uic form.ui -o ui_form.py, or
-#     PySide6-uic form.ui -o ui_form.py
-
-from sigtrack.views.ui_form import Ui_MainWindow
 from exif import Image
-from sigtrack.views.constants import PHOTO_EXTENSIONS  # , DEPENDENCIES
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont, QIcon, QPixmap, QTransform
+from PySide6.QtWidgets import (QApplication, QDockWidget, QFileDialog, QLabel,
+                               QMainWindow, QMessageBox, QSplashScreen)
 
-# Setup logging
-import logging
+from sigtrack.views.constants import PHOTO_EXTENSIONS  # , DEPENDENCIES
+from sigtrack.views.constants import _DOCK_OPTS, _DOCK_POSITIONS
+from sigtrack.views.dockWidget import DockWidget
+from sigtrack.views.imageview.ImageViewDockWidget import ImageViewDockWidget
+from sigtrack.views.mapview.MapViewDockWidget import MapWidget
+from sigtrack.views.ui_form import Ui_MainWindow
+from sigtrack.views.videoview.VideoViewDockWidget import VideoViewDockWidget
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.DEBUG,
@@ -68,17 +43,20 @@ class MainWindow(QMainWindow):
 
         logger.info("Setting up function callbacks for menu actions")
         self.ui.actionImgFile.triggered.connect(self.importImgFileLocalAction)
-        self.ui.actionImgFolder.triggered.connect(self.importImgFolderLocalAction)
+        self.ui.actionImgFolder.triggered.connect(
+            self.importImgFolderLocalAction)
         self.ui.actionImgNetwork.triggered.connect(self.importImgNetworkAction)
         self.ui.actionVidFile.triggered.connect(self.importVidFileLocalAction)
-        self.ui.actionVidFolder.triggered.connect(self.importVidFolderLocalAction)
+        self.ui.actionVidFolder.triggered.connect(
+            self.importVidFolderLocalAction)
         self.ui.actionVidNetwork.triggered.connect(self.importVidNetworkAction)
         self.ui.actionSave.triggered.connect(self.saveAction)
         self.ui.actionUndo.triggered.connect(self.undoAction)
         self.ui.actionRedo.triggered.connect(self.redoAction)
         self.ui.actionZoom_In.triggered.connect(self.zoomInAction)
         self.ui.actionZoom_Out.triggered.connect(self.zoomOutAction)
-        self.ui.actionZoom_Selection.triggered.connect(self.zoomSelectionAction)
+        self.ui.actionZoom_Selection.triggered.connect(
+            self.zoomSelectionAction)
         self.ui.actionPan.triggered.connect(self.panAction)
         self.ui.actionMap.triggered.connect(self.mapAction)
         self.ui.actionImage.triggered.connect(self.imageAction)
@@ -236,7 +214,8 @@ class MainWindow(QMainWindow):
         self.inputFilesList = QFileDialog.getOpenFileNames(
             self,
             caption="Select image(s)",
-            dir="C:\\Users\\LENOVO\\Desktop",  # \\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
+            # \\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
+            dir="C:\\Users\\LENOVO\\Desktop",
             filter="Video (*.mp4 *.ts *.mov)",
         )
         if not self.findChild(MapWidget):
@@ -260,7 +239,8 @@ class MainWindow(QMainWindow):
         self.inputFilesList = QFileDialog.getOpenFileNames(
             self,
             caption="Select image(s)",
-            dir="C:\\Users\\LENOVO\\Desktop",  # \\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
+            # \\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
+            dir="C:\\Users\\LENOVO\\Desktop",
             filter="Image (*.jpg)",
         )
         if self.inputFilesList[0]:
@@ -366,7 +346,8 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
     logger.info("Starting SigTrack")
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon(os.path.join("sigtrack/resources/icons/sigtrack.ico")))
+    app.setWindowIcon(
+        QIcon(os.path.join("sigtrack/resources/icons/sigtrack.ico")))
 
     # # ======FOR SPLASH SCREEN======
 
@@ -401,6 +382,6 @@ if __name__ == "__main__":
     widget.show()
 
     # Close the splash screen and continue with the main application
-    # splash.close()
+    splash.close()
     logger.info("Starting event loop")
     sys.exit(app.exec())

@@ -76,3 +76,4 @@ build/
 dist/
 output.bin
 .vscode/
+__pycache__/

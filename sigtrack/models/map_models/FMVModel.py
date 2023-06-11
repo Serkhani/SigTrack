@@ -1,5 +1,7 @@
-from PySide2.QtCore import QAbstractListModel, QModelIndex, Qt
-from PySide2.QtPositioning import QGeoCoordinate
+from PySide6.QtCore import QAbstractListModel, QModelIndex, Qt
+from PySide6.QtPositioning import QGeoCoordinate
+
+
 class FMVModel(QAbstractListModel):
     PolygonRole, LineRole = range(Qt.UserRole, Qt.UserRole + 2)
 

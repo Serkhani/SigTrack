@@ -1,9 +1,10 @@
-from sigtrack.views.mapview.models.MarkerModel import MarkerModel
-from sigtrack.views.mapview.models.DroneModel import DroneModel
-from sigtrack.views.mapview.models.FMVModel import FMVModel
-from PySide6.QtQuickWidgets import QQuickWidget
+from PySide6.QtCore import QObject, QUrl, Signal, Slot
 from PySide6.QtPositioning import QGeoCoordinate
-from PySide6.QtCore import QObject, Slot, Signal, QUrl
+from PySide6.QtQuickWidgets import QQuickWidget
+
+from sigtrack.models.map_models.DroneModel import DroneModel
+from sigtrack.models.map_models.FMVModel import FMVModel
+from sigtrack.models.map_models.MarkerModel import MarkerModel
 
 
 class iceController(QObject):

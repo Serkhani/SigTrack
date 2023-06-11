@@ -1,5 +1,5 @@
-from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QGraphicsPixmapItem, QGraphicsItem
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QGraphicsPixmapItem, QGraphicsItem
 from DockWidgets.imageview.undo_redo_command import DeleteCommand
 
 class WatermarkItem(QGraphicsPixmapItem):
