@@ -75,7 +75,4 @@ SigTrack.zip
 build/
 dist/
 output.bin
-.vscode
-
-# Virtual environment
-.venv/
+.vscode/

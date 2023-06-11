@@ -1,0 +1,7 @@
+QWidget {
+    background-color: #fff;
+}
+
+QDockWidget {
+    background-color: #000;
+}
