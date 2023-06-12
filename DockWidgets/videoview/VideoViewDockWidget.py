@@ -1,10 +1,9 @@
 # This Python file uses the following encoding: utf-8
 import PySide2.QtGui
 from PySide2.QtMultimedia import QMediaPlayer, QMediaContent
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QPushButton, QStyle, QSizePolicy
+from PySide2.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QPushButton, QStyle, QSizePolicy, QGraphicsView, QGraphicsScene
 from PySide2.QtCore import QUrl, QTimer, Qt
-from PySide2.QtMultimedia import QMediaContent, QMediaPlayer
-from PySide2.QtMultimediaWidgets import QVideoWidget
+# from PySide2.QtMultimediaWidgets import QVideoWidget
 from PySide2.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout
 from PySide2.QtGui import QCloseEvent
 # from DockWidgets.utils import getVideoLocationInfo
@@ -17,6 +16,8 @@ import os
 import DockWidgets.videoview.rc_vid_icons
 from klv_data.FmvKlvReader import _seconds_to_time, _seconds_to_time_frac, _time_to_seconds
 from pprint  import pprint
+from DockWidgets.videoview.custom_videographicsitem import VideoWidget
+from DockWidgets.videoview.latlon_dialog import MarkerPopUp
 
 
 class VideoViewDockWidget(QWidget):
@@ -24,16 +25,18 @@ class VideoViewDockWidget(QWidget):
         super().__init__()
         self.mainWindow = mainWindow
         self.filePath = filePath
+        self.markerPopUp = MarkerPopUp()
+        self.addMarkerButton = QPushButton()
+        self.addMarkerButton.clicked.connect(self.show_popup)
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.mediaPlayer.error.connect(self.handleError)
-        self.videoPlayerWidget = QVideoWidget()
+        self.videoPlayerWidget = VideoWidget(self.markerPopUp)
         self.mediaPlayer.setVideoOutput(self.videoPlayerWidget)
         self.playBtn = QPushButton()
         self.playBtn.setIcon(
             self.style().standardIcon(QStyle.SP_MediaPlay))
         self.volBtn = QPushButton()
-        self.volBtn.setIcon(
-            self.style().standardIcon(QStyle.SP_MediaVolume))
+        self.volBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaVolume))
         self.volBtn.setDisabled(True)
         self.playBtn.clicked.connect(self.play)
         self.stopBtn = QPushButton()
@@ -94,10 +97,16 @@ class VideoViewDockWidget(QWidget):
         hbox1.addWidget(self.volBtn)
         hbox1.addWidget(self.volumeSlider)
         hbox1.addWidget(self.fmvBtn)
+        hbox1.addWidget(self.addMarkerButton)
         hbox2 = QHBoxLayout()
         hbox2.addWidget(self.timeSlider)
         hbox2.addWidget(self.timestampLabel)
         vbox = QVBoxLayout()
+        # view = QGraphicsView()
+        # scene = QGraphicsScene()
+        # scene.addItem(self.videoPlayerWidget)
+        # view.setScene(self.videoPlayerWidget)
+        # vbox.addWidget(view, 20)
         vbox.addWidget(self.videoPlayerWidget,20)
         vbox.addLayout(hbox1,1)
         vbox.addLayout(hbox2,1)
@@ -194,6 +203,9 @@ class VideoViewDockWidget(QWidget):
                 self.style().standardIcon(QStyle.SP_MediaPlay))
             
             self.timeSlider.setValue(0)
+    def show_popup(self):
+        self.fmv()
+        self.markerPopUp.show()
 
     def extract_metadata(self, video_path):
         try:
@@ -290,6 +302,22 @@ class VideoViewDockWidget(QWidget):
                 #drone motion and stuff
                 # self.mainWindow.map.updateDronePosition(Offset_Corner_Latitude_Point_3, Offset_Corner_Longitude_Point_3)
                 self.mainWindow.map.updateDronePosition(droneData)
+                if self.markerPopUp.isAddMarker and self.videoPlayerWidget.markerPos:
+                    latPercentage  = (self.videoPlayerWidget.markerPos.x() / self.videoPlayerWidget.width())#*100
+                    lonPercentage  = (self.videoPlayerWidget.markerPos.y()/ self.videoPlayerWidget.height())#*100
+                    topLeftLat = float(metadata[23][-1]) - float(metadata[26][-1])
+                    bottomRightLat = float(metadata[23][-1]) + float(metadata[32][-1])
+                    topLeftLon = float(metadata[24][-1]) + float(metadata[27][-1])
+                    bottomRightLon = float(metadata[24][-1]) + float(metadata[31][-1])
+                    # latdiff = float(metadata[26][-1]) - float(metadata[30][-1]);print(f"lat1: {metadata[26][-1]}"); print(f"latdiff:{latdiff}")
+                    # londiff = float(metadata[27][-1]) - float(metadata[31][-1]);print(f"lon1: {metadata[27][-1]}"); print(f"londiff:{londiff}")
+                    latdiff = bottomRightLat - topLeftLat
+                    londiff = bottomRightLon - topLeftLon
+                    latPercent = latdiff * latPercentage
+                    lonPercent = londiff * lonPercentage
+                    # data = [float(metadata[27][-1])+ latPercent, float(metadata[27][-1])+lonPercent]
+                    data = [topLeftLat+ latPercent, topLeftLon+lonPercent]
+                    self.markerPopUp.change_text(data)
             else:
                 self.get_metadata_from_buffer(currentTimeInfo)
         else:
@@ -338,7 +366,15 @@ class VideoViewDockWidget(QWidget):
             self.data = data
     
     def closeEvent(self, event: QCloseEvent) -> None:
-        print("close")
-        self.mediaPlayer.stop()
+        # print("close")
+        # self.mediaPlayer.stop()
+        self.mediaPlayer.deleteLater()
+        self.mediaPlayer = None
         self.videoPlayerWidget.close()
+        self.videoPlayerWidget.deleteLater()
+        self.videoPlayerWidget = None
+        self.markerPopUp.close()
+        self.markerPopUp.deleteLater()
+        self.markerPopUp = None
+        # self.markerPopUp.destroy()
         return super().closeEvent(event)

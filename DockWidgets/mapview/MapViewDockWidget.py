@@ -25,8 +25,7 @@ class iceController(QObject):
 
 class MapWidget(QQuickWidget):
     def __init__(self, mainWindow, parent=None):
-        super(MapWidget, self).__init__(
-            parent, resizeMode=QQuickWidget.SizeRootObjectToView)
+        super(MapWidget, self).__init__(parent, resizeMode=QQuickWidget.SizeRootObjectToView)
         self.mainWindow = mainWindow
         self.markermodel = MarkerModel(self)
         self.dronemodel = DroneModel(self)
