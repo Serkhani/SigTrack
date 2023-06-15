@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="fforward">video_view/fast-forward.png</file>
+        <file alias="pause">video_view/pause-button.png</file>
+        <file alias="rewind">video_view/rewind-button.png</file>
+        <file alias="play">video_view/play-button.png</file>
+        <file alias="stop">video_view/stop.png</file>
+    </qresource>
+</RCC>
