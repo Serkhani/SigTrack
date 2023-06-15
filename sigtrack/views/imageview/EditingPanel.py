@@ -35,7 +35,7 @@ from PySide6.QtGui import (
 )
 
 # import sigtrack.views.editing.icon_resources
-from sigtrack.views.editing.colorComboBox import ColorComboBox
+from sigtrack.models.editing_models.colorComboBox import ColorComboBox
 
 class EditingPanelDockWidget(QDockWidget):
     def __init__(self, widget):
