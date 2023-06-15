@@ -77,3 +77,4 @@ dist/
 output.bin
 .vscode/
 __pycache__/
+*.code-workspace
