@@ -18,5 +18,6 @@
         <file alias="line">editing_icons/drawLine.png</file>
         <file alias="watermark">editing_icons/watermark.JPG</file>
         <file alias="sigtrack">editing_icons/Sigtrack.jpg</file>
+        <file alias="sigtrack_icon">editing_icons/sigtrack.ico</file>
     </qresource>
 </RCC>

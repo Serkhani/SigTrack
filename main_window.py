@@ -18,6 +18,7 @@ from sigtrack.views.imageview.ImageViewDockWidget import ImageViewDockWidget
 from sigtrack.views.mapview.MapViewDockWidget import MapWidget
 from sigtrack.views.ui_form import Ui_MainWindow
 from sigtrack.views.videoview.VideoViewDockWidget import VideoViewDockWidget
+import sigtrack.resources.compiled.editing_icons_rc
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -347,13 +348,13 @@ if __name__ == "__main__":
     logger.info("Starting SigTrack")
     app = QApplication(sys.argv)
     app.setWindowIcon(
-        QIcon(os.path.join("sigtrack/resources/icons/sigtrack.ico")))
+        QIcon(os.path.join(":/sigtrack_icon")))
 
     # # ======FOR SPLASH SCREEN======
 
     # Load the image for the splash screen
     logger.info("Loading splash screen")
-    pixmap = QPixmap(os.path.join("sigtrack/resources/icons/sigtrack.jpg"))
+    pixmap = QPixmap(os.path.join(":/sigtrack"))
 
     # Rotate and scale the image until it can't be seen
     angle = 100
