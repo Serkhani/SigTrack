@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="\">
+        <file alias="drone">map_view/drone.png</file>
+        <file alias="marker">map_view/marker.png</file>
+        <file alias="map">../../views/map_view/map.qml</file>
+        <file>../../views/mapview/application.js</file>
+    </qresource>
+</RCC>
