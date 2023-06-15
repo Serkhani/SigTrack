@@ -5,6 +5,7 @@ from PySide6.QtQuickWidgets import QQuickWidget
 from sigtrack.models.map_models.DroneModel import DroneModel
 from sigtrack.models.map_models.FMVModel import FMVModel
 from sigtrack.models.map_models.MarkerModel import MarkerModel
+import sigtrack.resources.compiled.map_rc
 
 
 class iceController(QObject):
