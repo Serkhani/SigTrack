@@ -2,7 +2,7 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGraphicsTextItem, QGraphicsItem
 from PySide6.QtGui import QTextBlockFormat, QTextCursor
-from sigtrack.views.imageview.image_models.undo_redo_command import DeleteCommand
+from sigtrack.models.image_models.undo_redo_command import DeleteCommand
 
 class TextItem(QGraphicsTextItem):
     itemType = QGraphicsTextItem().type()
