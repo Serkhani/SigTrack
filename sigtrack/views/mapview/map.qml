@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtPositioning 
 import QtLocation 
-// import "application.js" as App
+import "../../views/mapview/application.js" as App
 
 Rectangle {
     id: rectangle
