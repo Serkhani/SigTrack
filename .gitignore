@@ -77,3 +77,4 @@ dist/
 output.bin
 .vscode
 *.code-workspace
+sigtract_dev
