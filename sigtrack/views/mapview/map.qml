@@ -1,7 +1,7 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtPositioning 5.15
-import QtLocation 5.15
+import QtQuick
+import QtQuick.Controls
+import QtPositioning 
+import QtLocation 
 // import "application.js" as App
 
 Rectangle {
