@@ -5,5 +5,6 @@
         <file alias="rewind">vid-icons/rewind-button.png</file>
         <file alias="play">vid-icons/play-button.png</file>
         <file alias="stop">vid-icons/stop.png</file>
+        <file alias="marker">vid-icons/marker.png</file>
     </qresource>
 </RCC>
