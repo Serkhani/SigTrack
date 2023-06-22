@@ -5,7 +5,7 @@ from PySide2.QtWidgets import  QDialog, QLineEdit, QPushButton, QFormLayout, QMe
 class Multiplexor(QDialog):
     def __init__(self, parent=None):
         super(Multiplexor, self).__init__(parent)
-        
+        self.setWindowTitle('Multiplexor')
         self.video_line_edit = QLineEdit()
         self.log_line_edit = QLineEdit()
         self.output_dir_line_edit = QLineEdit()
@@ -15,11 +15,22 @@ class Multiplexor(QDialog):
         self.start_button = QPushButton("Start")
         
         layout = QFormLayout()
-        layout.addRow("Video File:", QHBoxLayout([self.video_line_edit, self.video_button]))
-        layout.addRow("Log File:", QHBoxLayout([self.log_line_edit, self.log_button]))
-        layout.addRow("Output Directory:", QHBoxLayout([self.output_dir_line_edit, self.output_dir_button]))
-        layout.addRow("", self.start_button)
+        video_layout = QHBoxLayout()
+        video_layout.addWidget(self.video_line_edit)
+        video_layout.addWidget(self.video_button)
         
+        log_layout = QHBoxLayout()
+        log_layout.addWidget(self.log_line_edit)
+        log_layout.addWidget(self.log_button)
+        
+        output_dir_layout = QHBoxLayout()
+        output_dir_layout.addWidget(self.output_dir_line_edit)
+        output_dir_layout.addWidget(self.output_dir_button)
+        
+        layout.addRow("Video File:", video_layout)
+        layout.addRow("Log File:", log_layout)
+        layout.addRow("Output Directory:", output_dir_layout)
+        layout.addRow("", self.start_button)
         self.setLayout(layout)
         
         self.video_button.clicked.connect(self.select_video_file)
