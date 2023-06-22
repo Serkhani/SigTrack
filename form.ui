@@ -44,7 +44,6 @@
       <property name="font">
        <font>
         <pointsize>20</pointsize>
-        <weight>75</weight>
         <italic>true</italic>
         <bold>true</bold>
        </font>
@@ -112,6 +111,7 @@
     </widget>
     <addaction name="menuImport"/>
     <addaction name="actionSave"/>
+    <addaction name="actionCreate_video_with_MISB"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -327,6 +327,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+Ø</string>
+   </property>
+  </action>
+  <action name="actionCreate_video_with_MISB">
+   <property name="text">
+    <string>Create video with MISB</string>
    </property>
   </action>
  </widget>
