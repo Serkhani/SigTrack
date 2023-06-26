@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 from PySide6.QtWidgets import (
+    QFileDialog,
     QGraphicsView,
     QGraphicsScene,
     QGraphicsLineItem,
@@ -30,7 +31,16 @@ from PySide6.QtGui import (
 from sigtrack.models.image_models.undo_redo_command import AddCommand
 from sigtrack.models.image_models.painter import Painter
 from sigtrack.models.image_models.textItem import TextItem
+from sigtrack.models.image_models.watermarkitem import WatermarkItem
 from sigtrack.views.imageview.EditingPanel import EditingPanel
+
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s | %(filename)s [%(levelname)s] %(message)s',
+)
 
 
 class ImageViewDockWidget(QGraphicsView):
@@ -74,6 +84,9 @@ class ImageViewDockWidget(QGraphicsView):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setDragMode(QGraphicsView.NoDrag)
+
+        self.watermark_item = WatermarkItem(self.scene)
+
         # self.rect = self.scene.sceneRect()
         self.preview = None
         self.path = None
@@ -252,8 +265,19 @@ class ImageViewDockWidget(QGraphicsView):
         addCommand = AddCommand(self.preview, self.scene)
         self.undoStack.push(addCommand)
 
-    def watermarkbutton(self):
-        pass
+    def addWatermark(self):
+        self.watermark = True
+        watermark_image_path, _ = QFileDialog.getOpenFileName(
+            self, self.tr("Open Image"), "", self.tr(
+                "Image Files (*.png *.jpg *.bmp)")
+        )
+        if watermark_image_path:
+            self.watermark_item.reset()
+            self.watermark_item.load_watermark_image(watermark_image_path)
+            addCommand = AddCommand(self.watermark_item, self.scene)
+            self.undoStack.push(addCommand)
+        else:
+            return
 
     def showImageOnView(self, imgPath):
         self.imgPath = imgPath

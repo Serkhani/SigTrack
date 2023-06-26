@@ -1,4 +1,6 @@
 # This Python file uses the following encoding: utf-8
+from sigtrack.models.image_models.colorComboBox import ColorComboBox
+import logging
 
 from PySide6.QtWidgets import (
     QDockWidget,
@@ -34,8 +36,14 @@ from PySide6.QtGui import (
     QKeySequence
 )
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s | %(filename)s [%(levelname)s] %(message)s',
+)
+
 # import sigtrack.views.editing.icon_resources
-from sigtrack.models.image_models.colorComboBox import ColorComboBox
+
 
 class EditingPanelDockWidget(QDockWidget):
     def __init__(self, widget):
@@ -48,32 +56,33 @@ class EditingPanel(QWidget):
     def __init__(self, viewer):
         super().__init__()
         self.viewer = viewer
-        self.editingToolbar = QToolBar("Edit",self)
+        self.editingToolbar = QToolBar("Edit", self)
         self.editingToolbar.setOrientation(Qt.Vertical)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.setSizePolicy(sizePolicy)
 
-        self.undoAction = self.viewer.undoStack.createUndoAction(self, self.tr("Undo"))
+        self.undoAction = self.viewer.undoStack.createUndoAction(
+            self, self.tr("Undo"))
         self.undoAction.setIcon(QIcon(":/undo"))
         self.undoAction.setShortcuts(QKeySequence.Undo)
-        self.redoAction = self.viewer.undoStack.createRedoAction(self, self.tr("Redo"))
+        self.redoAction = self.viewer.undoStack.createRedoAction(
+            self, self.tr("Redo"))
         self.redoAction.setIcon(QIcon(":/redo"))
         self.redoAction.setShortcuts(QKeySequence.Redo)
-        self.rectAction = QAction(QIcon(":/rect"),"rectangle")
+        self.rectAction = QAction(QIcon(":/rect"), "rectangle")
         self.rectAction.triggered.connect(self.drawRect)
-        self.circleAction = QAction(QIcon(":/circle"),"circle")
+        self.circleAction = QAction(QIcon(":/circle"), "circle")
         self.circleAction.triggered.connect(self.drawCircle)
-        self.freeHandAction = QAction(QIcon(":freehand"),"freeHand")
+        self.freeHandAction = QAction(QIcon(":freehand"), "freeHand")
         self.freeHandAction.triggered.connect(self.drawFreeHand)
-        self.lineAction = QAction(QIcon(":/line"),"line")
+        self.lineAction = QAction(QIcon(":/line"), "line")
         self.lineAction.triggered.connect(self.drawLine)
-        self.polygonAction = QAction(QIcon(":/polygon"),"polygon")
+        self.polygonAction = QAction(QIcon(":/polygon"), "polygon")
         self.polygonAction.triggered.connect(self.drawPolygon)
-        self.textAction = QAction(QIcon(":/addText"),"Text")
+        self.textAction = QAction(QIcon(":/addText"), "Text")
         self.textAction.triggered.connect(self.addTextbutton)
-        self.watermarkAction = QAction(QIcon(":/watermark"),"Watermark")
+        self.watermarkAction = QAction(QIcon(":/watermark"), "Watermark")
         self.watermarkAction.triggered.connect(self.watermarkbutton)
-
 
         self.editingToolbar.addAction(self.undoAction)
         self.editingToolbar.addAction(self.redoAction)
@@ -83,8 +92,6 @@ class EditingPanel(QWidget):
         self.editingToolbar.addAction(self.freeHandAction)
         self.editingToolbar.addAction(self.textAction)
         self.editingToolbar.addAction(self.watermarkAction)
-
-
 
         self.extent = QPushButton(self)
         self.extent.setIcon(QIcon(':extent'))
@@ -112,10 +119,9 @@ class EditingPanel(QWidget):
 
         self.fillColorPicker = QPushButton(self)
         self.fillColorPicker.setText('...')
-        self.fillColorPicker.setSizePolicy(QSizePolicy(QSizePolicy.Minimum,QSizePolicy.Minimum))
+        self.fillColorPicker.setSizePolicy(QSizePolicy(
+            QSizePolicy.Minimum, QSizePolicy.Minimum))
         self.fillColorPicker.clicked.connect(self.fillColorPickerbutton)
-
-
 
         # # Add tips on buttons
         self.extent.setToolTip(self.tr('Extent photo'))
@@ -162,9 +168,10 @@ class EditingPanel(QWidget):
         self.strokeWidthLabel.setText(self.tr('Width'))
         StrokeWidthLayout.addWidget(self.strokeWidthLabel)
         self.strokeWidthSpinBox = QSpinBox()
-        self.strokeWidthSpinBox.setRange(1,10)
+        self.strokeWidthSpinBox.setRange(1, 10)
         self.strokeWidthSpinBox.setSingleStep(1)
-        self.strokeWidthSpinBox.valueChanged.connect(self.strokeWidthSpinBoxValueChanged)
+        self.strokeWidthSpinBox.valueChanged.connect(
+            self.strokeWidthSpinBoxValueChanged)
         StrokeWidthLayout.addWidget(self.strokeWidthSpinBox)
         VBToolPropertiesLayout.addLayout(StrokeWidthLayout)
         # Color
@@ -173,7 +180,8 @@ class EditingPanel(QWidget):
         self.strokeColorLabel.setText(self.tr('Color'))
         StrokeColorLayout.addWidget(self.strokeColorLabel)
         self.strokeColorComboBox = ColorComboBox()
-        self.strokeColorComboBox.currentIndexChanged.connect(self.strokeColorComboBoxValueChanged)
+        self.strokeColorComboBox.currentIndexChanged.connect(
+            self.strokeColorComboBoxValueChanged)
         StrokeColorLayout.addWidget(self.strokeColorComboBox)
         StrokeColorLayout.addWidget(self.strokeColorPicker)
         VBToolPropertiesLayout.addLayout(StrokeColorLayout)
@@ -183,7 +191,8 @@ class EditingPanel(QWidget):
         self.strokeStyleLabel.setText(self.tr('Style'))
         StrokeStyleLayout.addWidget(self.strokeStyleLabel)
         self.strokeStyleComboBox = QComboBox()
-        self.strokeStyleComboBox.currentIndexChanged.connect(self.strokeStyleComboBoxValueChanged)
+        self.strokeStyleComboBox.currentIndexChanged.connect(
+            self.strokeStyleComboBoxValueChanged)
         StrokeStyleLayout.addWidget(self.strokeStyleComboBox)
         VBToolPropertiesLayout.addLayout(StrokeStyleLayout)
 
@@ -200,7 +209,8 @@ class EditingPanel(QWidget):
         OpacityLayout.addWidget(self.opacityLabel)
         # Slider
         self.opacitySlider = QSlider(Qt.Horizontal)
-        self.opacitySlider.setSizePolicy(QSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed))
+        self.opacitySlider.setSizePolicy(
+            QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed))
         self.opacitySlider.setMinimum(0)
         self.opacitySlider.setMaximum(255)
         self.opacitySlider.setValue(100)
@@ -219,7 +229,8 @@ class EditingPanel(QWidget):
         self.fillColorLabel.setText(self.tr('Color'))
         FillColorLayout.addWidget(self.fillColorLabel)
         self.fillColorComboBox = ColorComboBox()
-        self.fillColorComboBox.currentIndexChanged.connect(self.fillColorComboBoxValueChanged)
+        self.fillColorComboBox.currentIndexChanged.connect(
+            self.fillColorComboBoxValueChanged)
         FillColorLayout.addWidget(self.fillColorComboBox)
         FillColorLayout.addWidget(self.fillColorPicker)
         VBToolPropertiesLayout.addLayout(FillColorLayout)
@@ -230,7 +241,8 @@ class EditingPanel(QWidget):
         self.fillStyleLabel.setText(self.tr('Style'))
         FillStyleLayout.addWidget(self.fillStyleLabel)
         self.fillStyleComboBox = QComboBox()
-        self.fillStyleComboBox.currentIndexChanged.connect(self.fillStyleComboBoxValueChanged)
+        self.fillStyleComboBox.currentIndexChanged.connect(
+            self.fillStyleComboBoxValueChanged)
         FillStyleLayout.addWidget(self.fillStyleComboBox)
         VBToolPropertiesLayout.addLayout(FillStyleLayout)
 
@@ -250,7 +262,8 @@ class EditingPanel(QWidget):
 
         # Bold
         self.fontBoldCheckBox = QCheckBox("Bold", self)
-        self.fontBoldCheckBox.stateChanged.connect(self.fontBoldCheckBoxClicked)
+        self.fontBoldCheckBox.stateChanged.connect(
+            self.fontBoldCheckBoxClicked)
         self.fontBoldCheckBox.setVisible(False)
         VBToolPropertiesLayout.addWidget(self.fontBoldCheckBox)
 
@@ -263,13 +276,15 @@ class EditingPanel(QWidget):
         pointSizeLayout.addWidget(self.pointSizeLabel)
         # Slider
         self.pointSizeSlider = QSlider(Qt.Horizontal)
-        self.pointSizeSlider.setSizePolicy(QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed))
+        self.pointSizeSlider.setSizePolicy(
+            QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed))
         self.pointSizeSlider.setMinimum(0)
         self.pointSizeSlider.setMaximum(100)
         self.pointSizeSlider.setValue(50)
         self.pointSizeSlider.setTickInterval(25)
         self.pointSizeSlider.setVisible(False)
-        self.pointSizeSlider.valueChanged.connect(self.pointSizeSliderValueChanged)
+        self.pointSizeSlider.valueChanged.connect(
+            self.pointSizeSliderValueChanged)
         pointSizeLayout.addWidget(self.pointSizeSlider)
         # pointSizeValue
         self.pointSizeValue = QLabel(self)
@@ -344,21 +359,22 @@ class EditingPanel(QWidget):
         self.strokeColorDialog = QColorDialog()
         self.strokeColorDialog.setCurrentColor(self.viewer.painter.pen.color())
         if self.strokeColorDialog.exec_():
-            self.viewer.painter.setStrokeColor(self.strokeColorDialog.currentColor().name())
+            self.viewer.painter.setStrokeColor(
+                self.strokeColorDialog.currentColor().name())
             self.strokeColorComboBox.setEditText(self.tr('Custom'))
-
 
     def strokeWidthSpinBoxValueChanged(self):
         self.viewer.painter.setStrokeWidth(self.strokeWidthSpinBox.value())
 
-
     def strokeColorComboBoxValueChanged(self):
         # set pen color
-        self.viewer.painter.setStrokeColor(self.strokeColorComboBox.currentData())
+        self.viewer.painter.setStrokeColor(
+            self.strokeColorComboBox.currentData())
 
     def strokeStyleComboBoxValueChanged(self):
         # set pen style
-        self.viewer.painter.setStrokeStyle(self.strokeStyleComboBox.currentData())
+        self.viewer.painter.setStrokeStyle(
+            self.strokeStyleComboBox.currentData())
 
     def strokeCheckBoxClicked(self):
         isChecked = self.strokeCheckBox.isChecked()
@@ -373,19 +389,18 @@ class EditingPanel(QWidget):
             self.strokeColorComboBoxValueChanged()
             self.strokeWidthSpinBoxValueChanged()
 #           self.strokeStyleComboBoxValueChanged()
-        else: self.viewer.painter.setStrokeDefault()
-
-
+        else:
+            self.viewer.painter.setStrokeDefault()
 
     def fillColorPickerbutton(self):
         # color picker
         self.fillColorDialog = QColorDialog()
         self.fillColorDialog.setCurrentColor(self.viewer.painter.brush.color())
         if self.fillColorDialog.exec_():
-            self.viewer.painter.setFillColor(self.fillColorDialog.currentColor().name())
+            self.viewer.painter.setFillColor(
+                self.fillColorDialog.currentColor().name())
             self.fillColorComboBox.setEditText(self.tr('Custom'))
             self.opacitySliderValueChanged()
-
 
     def fillStyleComboBoxValueChanged(self):
         # set brush style
@@ -411,9 +426,9 @@ class EditingPanel(QWidget):
         if isChecked:
             self.fillColorComboBoxValueChanged()
             self.opacitySliderValueChanged()
-            #self.fillStyleComboBoxValueChanged()
-        else: self.viewer.painter.setFillDefault()
-
+            # self.fillStyleComboBoxValueChanged()
+        else:
+            self.viewer.painter.setFillDefault()
 
     def opacitySliderValueChanged(self):
         color = self.fillColorComboBox.currentData()
@@ -422,11 +437,14 @@ class EditingPanel(QWidget):
         self.viewer.painter.setFillColor(color)
         self.OpacityValue.setText(str(value))
 
+        if self.viewer.watermark:
+            self.viewer.watermark_item.update_watermark_opacity(value)
+
     def showMessage(self, title, msg, button, icon):
         msgBox = QMessageBox()
-        if icon=='Warning':
+        if icon == 'Warning':
             msgBox.setIcon(QMessageBox.Warning)
-        if icon=='Info':
+        if icon == 'Info':
             msgBox.setIcon(QMessageBox.Information)
         msgBox.setWindowTitle(title)
         msgBox.setText(msg)
@@ -434,25 +452,25 @@ class EditingPanel(QWidget):
         font = QFont()
         font.setPointSize(9)
         msgBox.setFont(font)
-        msgBox.setWindowFlags(Qt.CustomizeWindowHint | Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint)
+        msgBox.setWindowFlags(Qt.CustomizeWindowHint |
+                              Qt.WindowStaysOnTopHint | Qt.WindowCloseButtonHint)
         buttonY = msgBox.button(QMessageBox.Ok)
         buttonY.setText(button)
         buttonY.setFont(font)
         msgBox.exec_()
 
     def updateForText(self, condition):
-#        self.alignCenter.setVisible(condition)
-#        self.alignLeft.setVisible(condition)
-#        self.alignRight.setVisible(condition)
-#        self.alignJustify.setVisible(condition)
+        #        self.alignCenter.setVisible(condition)
+        #        self.alignLeft.setVisible(condition)
+        #        self.alignRight.setVisible(condition)
+        #        self.alignJustify.setVisible(condition)
         self.pointSizeValue.setVisible(condition)
-#        self.alignmentLabel.setVisible(condition)
+        #self.alignmentLabel.setVisible(condition)
         self.pointSizeSlider.setVisible(condition)
         self.pointSizeLabel.setVisible(condition)
         self.fontBoldCheckBox.setVisible(condition)
         self.fontLabel.setVisible(condition)
         self.fillCheckBox.setCheckState(Qt.Unchecked)
-
 
     def updateWindow(self):
         self.viewer.scene.clear()
@@ -524,7 +542,6 @@ class EditingPanel(QWidget):
         self.viewer.setDragMode(QGraphicsView.NoDrag)
         self.updateForText(self.viewer.addText)
 
-
     def drawPolygon(self):
         self.viewer.panSelect = False
         self.viewer.drawRect = False
@@ -538,7 +555,6 @@ class EditingPanel(QWidget):
         self.viewer.setCursor(Qt.CrossCursor)
         self.viewer.setDragMode(QGraphicsView.NoDrag)
         self.updateForText(self.viewer.addText)
-
 
     def drawRect(self):
         self.viewer.panSelect = False
@@ -565,11 +581,12 @@ class EditingPanel(QWidget):
         self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.ArrowCursor)
-        sceneRect = self.viewer.mapToScene(self.viewer.viewport().contentsRect()).boundingRect()
-        if sceneRect.width()>=1200 or sceneRect.height() >= 720:
+        sceneRect = self.viewer.mapToScene(
+            self.viewer.viewport().contentsRect()).boundingRect()
+        if sceneRect.width() >= 1200 or sceneRect.height() >= 720:
             return
         else:
-            self.viewer.scale(0.9,0.9)
+            self.viewer.scale(0.9, 0.9)
         # x, y, w, h = self.viewer.rect.getRect()
         # if w>=1200 or h >=720:
         #     self.extentbutton()
@@ -590,10 +607,12 @@ class EditingPanel(QWidget):
         self.viewer.drawFreeHand = False
         self.viewer.drawLine = False
         self.viewer.setCursor(Qt.ArrowCursor)
-        sceneRect = self.viewer.mapToScene(self.viewer.viewport().contentsRect()).boundingRect()
-        if sceneRect.width()>=30 or sceneRect.height() >= 30:
-            self.viewer.scale(1.1,1.1)
-        else: return
+        sceneRect = self.viewer.mapToScene(
+            self.viewer.viewport().contentsRect()).boundingRect()
+        if sceneRect.width() >= 30 or sceneRect.height() >= 30:
+            self.viewer.scale(1.1, 1.1)
+        else:
+            return
         # x, y, w, h = self.viewer.rect.getRect()
         # if (w-20 >= 30) or (h-20 >= 30):
         #     rect = QRectF(x+10,y+10,w-20,h-20)
@@ -638,7 +657,7 @@ class EditingPanel(QWidget):
         self.viewer.drawRect = False
         self.viewer.panSelect = False
         self.viewer.watermark = False
-        self.viewer.drawCircle = True 
+        self.viewer.drawCircle = False
         self.viewer.addText = False
         self.viewer.zoomSelect = False
         self.viewer.drawPolygon = False
