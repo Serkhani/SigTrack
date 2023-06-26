@@ -42,7 +42,6 @@ class MainWindow(QMainWindow):
         self.images_dict = {}
         self.imagePaths = []
 
-        logger.info("Setting up function callbacks for menu actions")
         self.ui.actionImgFile.triggered.connect(self.importImgFileLocalAction)
         self.ui.actionImgFolder.triggered.connect(
             self.importImgFolderLocalAction)
@@ -64,7 +63,6 @@ class MainWindow(QMainWindow):
         self.ui.actionVideo.triggered.connect(self.videoAction)
         self.setCentralWidget(self.ui.label)
 
-        logger.info("Setting up custom dockwidgetviews initializations")
         self.map = MapWidget(self)
         self.editingPanel = QDockWidget()
         self.addDockWidget(Qt.LeftDockWidgetArea, self.editingPanel)
@@ -72,7 +70,6 @@ class MainWindow(QMainWindow):
         self.editingPanel.hide()
         # self.imageViewer = ImageViewDockWidget(self)
         self.setGeometry(100, 100, 1100, 600)
-        logger.info("Window setup complete")
 
     def videoAction(self, filePath=""):
         """Adds video dockwidget to central widget area
@@ -81,7 +78,6 @@ class MainWindow(QMainWindow):
             filePath (str, optional): Video file path. Defaults to "".
         """
         # increment dockCount
-        logger.info("Adding video dockwidget")
         self.dockCount += 1
         # hide the label when there are views
         self.ui.label.hide()
@@ -115,7 +111,6 @@ class MainWindow(QMainWindow):
             imgPath (str, optional): image file path. Defaults to "".
         """
         # increment dockCount
-        logger.info("Adding Image dockwidget")
         self.dockCount += 1
         # hide the label when there are views
         self.ui.label.hide()
@@ -143,7 +138,6 @@ class MainWindow(QMainWindow):
         """
         Adds map dockwidget to central widget area
         """
-        logger.info("Adding Map dockwidget")
         # increment dockCount
         self.dockCount += 1
         # hide the label when there are views
@@ -345,37 +339,36 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    logger.info("Starting SigTrack")
     app = QApplication(sys.argv)
     app.setWindowIcon(
         QIcon(os.path.join(":/sigtrack_icon")))
 
     # # ======FOR SPLASH SCREEN======
 
-    # Load the image for the splash screen
-    logger.info("Loading splash screen")
-    pixmap = QPixmap(os.path.join(":/sigtrack"))
+    # # Load the image for the splash screen
+    # logger.info("Loading splash screen")
+    # pixmap = QPixmap(os.path.join(":/sigtrack"))
 
-    # Rotate and scale the image until it can't be seen
-    angle = 100
-    scale = 0.0
+    # # Rotate and scale the image until it can't be seen
+    # angle = 100
+    # scale = 0.0
 
-    # Create the splash screen and show it
-    splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
-    transform = QTransform().rotate(angle).scale(scale, scale)
-    rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
-    splash.setPixmap(rotated)
-    splash.show()
+    # # Create the splash screen and show it
+    # splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
+    # transform = QTransform().rotate(angle).scale(scale, scale)
+    # rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
+    # splash.setPixmap(rotated)
+    # splash.show()
 
-    while scale < 1.0:
-        app.processEvents()
-        angle -= 1
-        scale += 0.01
-        transform = QTransform().rotate(angle).scale(scale, scale)
-        rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
-        splash.setPixmap(rotated)
+    # while scale < 1.0:
+    #     app.processEvents()
+    #     angle -= 1
+    #     scale += 0.01
+    #     transform = QTransform().rotate(angle).scale(scale, scale)
+    #     rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
+    #     splash.setPixmap(rotated)
 
-    sleep(2)
+    # sleep(2)
     # # ======SPLASH SCREEN ENDED======
 
     widget = MainWindow()
@@ -383,6 +376,5 @@ if __name__ == "__main__":
     widget.show()
 
     # Close the splash screen and continue with the main application
-    splash.close()
-    logger.info("Starting event loop")
+    # splash.close()
     sys.exit(app.exec())
