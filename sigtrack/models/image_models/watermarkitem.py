@@ -124,12 +124,8 @@ class WatermarkItem(QGraphicsPixmapItem):
 
     def update_watermark_rotation(self, value):
         self.setTransformOriginPoint(self.boundingRect().center())
-        # transform = QTransform()
-        # transform.rotate(value)
-        # self.setTransform(transform)
         self.setRotation(value)
-        self.setRotation(value)
-        
+
     def itemChange(self, change, value):
         return super().itemChange(change, value)
 
