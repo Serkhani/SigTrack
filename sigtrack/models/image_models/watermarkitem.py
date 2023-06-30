@@ -19,7 +19,7 @@ import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.DEBUG,
-    format='%(asctime)s %(filename)s %(levelname)s\t| %(message)s',
+    format='%(asctime)s %(filename)s %(lineno)s %(levelname)s\t| %(message)s',
 )
 
 
@@ -34,7 +34,8 @@ class WatermarkItem(QGraphicsPixmapItem):
         self.setFlag(QGraphicsItem.ItemSendsGeometryChanges)
 
         self.setAcceptHoverEvents(True)
-        self.setTransformOriginPoint(0, 0)
+        self.setTransformOriginPoint(self.boundingRect().center())
+        self.setTransformationMode(Qt.SmoothTransformation)
 
         self.scale_factor = 1.0
 
@@ -46,8 +47,6 @@ class WatermarkItem(QGraphicsPixmapItem):
         self.start_scale = None
         self.original_rotation = 0.0
         self.original_position = self.pos()
-
-        logger.info(f"{self.pos()}")
 
     def hoverEnterEvent(self, event):
         self.setCursor(Qt.OpenHandCursor)
@@ -86,6 +85,7 @@ class WatermarkItem(QGraphicsPixmapItem):
             self.setFlag(QGraphicsItem.ItemIsMovable, False)
             self.setCursor(Qt.ClosedHandCursor)
             self.original_rotation = self.rotation()
+            self.original_position = self.pos()
         else:
             self.setFlag(QGraphicsItem.ItemIsMovable, True)
         return super().mousePressEvent(event)
@@ -108,11 +108,11 @@ class WatermarkItem(QGraphicsPixmapItem):
             delta = event.scenePos() - self.start_pos
             rotation = self.original_rotation + delta.y()
             value = (rotation/self.scale_factor) % 360
-            logger.info(f"Rotating by {value}")
             self.update_watermark_rotation(value)
         return super().mouseMoveEvent(event)
 
     def load_watermark_image(self, watermark_image_path):
+        self.reset()
         watermark_image = QPixmap(watermark_image_path)
         self.setPixmap(watermark_image)
 
@@ -123,6 +123,7 @@ class WatermarkItem(QGraphicsPixmapItem):
         self.setScale(value/100.0)
 
     def update_watermark_rotation(self, value):
+        self.setTransformOriginPoint(self.boundingRect().center())
         self.setRotation(value)
 
     def itemChange(self, change, value):
