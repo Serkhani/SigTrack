@@ -18,6 +18,7 @@ from klv_data.FmvKlvReader import _seconds_to_time, _seconds_to_time_frac, _time
 from pprint  import pprint
 from DockWidgets.videoview.custom_videographicsitem import VideoWidget
 from DockWidgets.videoview.latlon_dialog import MarkerPopUp
+from DockWidgets.videoview.full_motion_video_mux import Multiplexor
 
 
 class VideoViewDockWidget(QWidget):
@@ -47,6 +48,8 @@ class VideoViewDockWidget(QWidget):
         self.volumeSlider.setRange(0, 100)
         self.volumeSlider.setValue(self.mediaPlayer.volume())
         self.volumeSlider.valueChanged.connect( self.mediaPlayer.setVolume)
+        self.multiplexBtn = QPushButton()
+        self.multiplexBtn.clicked.connect(self.showMultiplexor)
         self.timeSlider = QSlider(Qt.Horizontal)
         # self.timeSlider.setRange(0, 0)
         self.timeSlider.sliderMoved.connect(self.setPosition)
@@ -90,6 +93,12 @@ class VideoViewDockWidget(QWidget):
     #     self.mediaPlayer.setVolume(self.volumeSlider.value())
 
 
+    def showMultiplexor(self):
+        self.multiplexor = Multiplexor()
+        self.multiplexor.exec_()
+
+
+
     def initUI(self):
         hbox1 = QHBoxLayout()
         hbox1.addWidget(self.playBtn)
@@ -98,6 +107,7 @@ class VideoViewDockWidget(QWidget):
         hbox1.addWidget(self.volumeSlider)
         hbox1.addWidget(self.fmvBtn)
         hbox1.addWidget(self.addMarkerButton)
+        hbox1.addWidget(self.multiplexBtn)
         hbox2 = QHBoxLayout()
         hbox2.addWidget(self.timeSlider)
         hbox2.addWidget(self.timestampLabel)
