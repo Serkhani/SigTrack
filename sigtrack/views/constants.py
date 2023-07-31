@@ -20,6 +20,31 @@ _DOCK_FEATURES = (
     QDockWidget.DockWidgetVerticalTitleBar
 )
 
+LIGHT_THEME_STYLE = """
+QMainWindow {
+    background-color: #FFF;
+}
+
+DockWidget {
+    background-color: #F0F0F0; /* Light gray background for dock widgets */
+    border: 1px solid #BBB; /* Light gray border */
+    font-size: 12px; /* Font size for dock widget content */
+}
+"""
+
+DARK_THEME_STYLE = """
+QMainWindow {
+    background-color: #333;
+    color: #FFF;
+}
+
+DockWidget {
+    background-color: #222; /* Dark gray background for dock widgets */
+    border: 1px solid #666; /* Dark gray border */
+    font-size: 12px; /* Font size for dock widget content */
+}
+"""
+
 PHOTO_EXTENSIONS = {
         "jpeg": True,
         "jpg": True,
