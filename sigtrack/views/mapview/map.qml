@@ -1,8 +1,12 @@
-import QtQuick
-import QtQuick.Controls
-import QtPositioning
-import QtLocation
-import QtQuick.Controls.Basic
+// import QtQuick
+// import QtQuick.Controls
+// import QtPositioning
+// import QtLocation
+// import QtQuick.Controls.Basic
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtPositioning 5.15
+import QtLocation 5.15
 import "../../views/mapview/application.js" as App
 
 Rectangle {
@@ -48,7 +52,7 @@ Rectangle {
         plugin: osmPlugin
         center: locationTC
         zoomLevel: 6
-        property geoCoordinate startCentroid
+        // property geoCoordinate startCentroid
 
         PinchHandler {
             id: pinch
