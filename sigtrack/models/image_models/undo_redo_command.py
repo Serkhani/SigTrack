@@ -1,8 +1,11 @@
-from PySide6.QtCore import (QCoreApplication)
-from PySide6 import QtGui
+from PySide2.QtCore import (QCoreApplication)
+from PySide2.QtWidgets import (
+    QUndoCommand,
+    QGraphicsScene
+    )
 
-class AddCommand(QtGui.QUndoCommand):
-    def __init__(self, item, scene ):
+class AddCommand(QUndoCommand):
+    def __init__(self, item, scene:QGraphicsScene ):
         super(AddCommand, self).__init__()
         self.item = item
         self.scene = scene
@@ -20,8 +23,8 @@ class AddCommand(QtGui.QUndoCommand):
         return QCoreApplication.translate('SigTrack', message)
 
 
-class DeleteCommand(QtGui.QUndoCommand):
-    def __init__(self, scene):
+class DeleteCommand(QUndoCommand):
+    def __init__(self, scene:QGraphicsScene):
         super(DeleteCommand, self).__init__()
         self.scene = scene
         self.selectedItems = self.scene.selectedItems()
@@ -39,7 +42,7 @@ class DeleteCommand(QtGui.QUndoCommand):
         return QCoreApplication.translate('SigTrack', message)
 
 
-class MoveCommand(QtGui.QUndoCommand):
+class MoveCommand(QUndoCommand):
     def __init__(self, item, oldPos):
         super(MoveCommand, self).__init__()
         self.item = item

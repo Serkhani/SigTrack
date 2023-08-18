@@ -1,5 +1,5 @@
-from PySide6 import QtCore 
-from PySide6.QtPositioning import QGeoCoordinate
+from PySide2 import QtCore 
+from PySide2.QtPositioning import QGeoCoordinate
 
 class DroneModel(QtCore.QAbstractListModel):
     IconRole, PositionRole, PathRole, HeadingRole = range(

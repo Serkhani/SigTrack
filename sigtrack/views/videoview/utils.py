@@ -1,7 +1,7 @@
 import json
-from PySide6.QtWidgets import QMessageBox
-from PySide6.QtNetwork import QNetworkAccessManager,QNetworkRequest
-from PySide6.QtCore import QUrl, QEventLoop
+from PySide2.QtWidgets import QMessageBox
+from PySide2.QtNetwork import QNetworkAccessManager,QNetworkRequest
+from PySide2.QtCore import QUrl, QEventLoop
 from sigtrack.klv_data.element import UnknownElement
 from sigtrack.klv_data.streamparser import StreamParser
 import platform, subprocess, os

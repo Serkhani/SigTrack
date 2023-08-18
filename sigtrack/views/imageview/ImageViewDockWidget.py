@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from PySide6.QtWidgets import (
+from PySide2.QtWidgets import (
     QFileDialog,
     QGraphicsView,
     QGraphicsScene,
@@ -7,9 +7,10 @@ from PySide6.QtWidgets import (
     QGraphicsPathItem,
     QGraphicsEllipseItem,
     QGraphicsRectItem,
+    QUndoStack
 )
 
-from PySide6.QtCore import (
+from PySide2.QtCore import (
     Qt,
     Signal,
     QLineF,
@@ -18,12 +19,11 @@ from PySide6.QtCore import (
     QCoreApplication,
 )
 
-from PySide6.QtGui import (
+from PySide2.QtGui import (
     QPainterPath,
     QPainterPathStroker,
-    QPixmap,
     QImage,
-    QUndoStack
+    QPixmap
 )
 
 
@@ -63,7 +63,7 @@ class ImageViewDockWidget(QGraphicsView):
         self.editingPanelWidget = EditingPanel(self)
 #        self.editingPanel = EditingPanelDockWidget(self.editingPanelWidget)
         self.mainWindow.editingPanel.setWidget(self.editingPanelWidget)
-        self.setScene(self.scene)
+        self.setScene(self.scene())
         self.imgPath = None
 
         self.watermark = False
@@ -79,15 +79,15 @@ class ImageViewDockWidget(QGraphicsView):
         self.zoom_data = []
         self.scene = QGraphicsScene()
 
-        self.setScene(self.scene)
+        self.setScene(self.scene())
         self.setMouseTracking(False)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setDragMode(QGraphicsView.NoDrag)
 
-        self.watermark_item = WatermarkItem(self.scene)
+        self.watermark_item = WatermarkItem(self.scene())
 
-        # self.rect = self.scene.sceneRect()
+        # self.rect = self.scene().sceneRect()
         self.preview = None
         self.path = None
 #        for drawing shapes
@@ -103,33 +103,33 @@ class ImageViewDockWidget(QGraphicsView):
                 stroker = QPainterPathStroker()
                 self.preview = QGraphicsPathItem(
                     stroker.createStroke(self.path))
-                self.preview.setPen(self.painter.pen)
-                self.preview.setBrush(self.painter.brush)
-                self.scene.addItem(self.preview)
+                self.preview.setPen(self.painter.pen())
+                self.preview.setBrush(self.painter.brush())
+                self.scene().addItem(self.preview)
             elif self.drawLine:
                 self.preview = QGraphicsLineItem(
                     QLineF(self.begin.x(), self.begin.y(), self.begin.x(), self.begin.y()))
-                self.preview.setPen(self.painter.pen)
-                self.scene.addItem(self.preview)
+                self.preview.setPen(self.painter.pen())
+                self.scene().addItem(self.preview)
             elif self.drawRect:
                 self.preview = QGraphicsRectItem(
                     QRectF(self.begin, self.begin))
-                self.preview.setBrush(self.painter.brush)
-                self.preview.setPen(self.painter.pen)
-                self.scene.addItem(self.preview)
+                self.preview.setBrush(self.painter.brush())
+                self.preview.setPen(self.painter.pen())
+                self.scene().addItem(self.preview)
             elif self.drawCircle:
                 self.preview = QGraphicsEllipseItem(
                     QRectF(self.begin, self.begin))
-                self.preview.setBrush(self.painter.brush)
-                self.preview.setPen(self.painter.pen)
-                self.scene.addItem(self.preview)
+                self.preview.setBrush(self.painter.brush())
+                self.preview.setPen(self.painter.pen())
+                self.scene().addItem(self.preview)
         if self.panSelect:
             self.setDragMode(QGraphicsView.ScrollHandDrag)
         if self.zoomSelect:
             self.setDragMode(QGraphicsView.RubberBandDrag)
 
         self.afterLeftClick.emit(sc_pos.x(), sc_pos.y())
-        # self.rect = self.scene.sceneRect()
+        # self.rect = self.scene().sceneRect()
         QGraphicsView.mousePressEvent(self, event)
 
     def mouseDoubleClickEvent(self, event):
@@ -145,28 +145,28 @@ class ImageViewDockWidget(QGraphicsView):
         sc_pos = self.mapToScene(event.pos())
         if self.preview:
             if self.drawFreeHand and (self.preview.type() == QGraphicsPathItem().type()):
-                self.scene.removeItem(self.preview)
+                self.scene().removeItem(self.preview)
                 # Add a line to the path from the previous point to the current position
                 self.path.lineTo(sc_pos)
                 stroker = QPainterPathStroker()
                 # Create a line item from the path and add it to the scene
                 self.preview.setPath(stroker.createStroke(self.path))
-                self.scene.addItem(self.preview)
+                self.scene().addItem(self.preview)
 
             elif self.drawLine and (self.preview.type() == QGraphicsLineItem().type()):
-                self.scene.removeItem(self.preview)
+                self.scene().removeItem(self.preview)
                 self.end = sc_pos
                 line = QLineF(self.begin.x(), self.begin.y(),
                               self.end.x(), self.end.y())
                 self.preview.setLine(line)
-                self.scene.addItem(self.preview)
+                self.scene().addItem(self.preview)
 
             elif (self.drawCircle or self.drawRect) and (self.preview.type() == QGraphicsEllipseItem().type() or self.preview.type() == QGraphicsRectItem().type()):
-                self.scene.removeItem(self.preview)
+                self.scene().removeItem(self.preview)
                 self.end = sc_pos
                 rectf = QRectF(self.begin, self.end)
                 self.preview.setRect(rectf)
-                self.scene.addItem(self.preview)
+                self.scene().addItem(self.preview)
         QGraphicsView.mouseMoveEvent(self, event)
 
     def mouseReleaseEvent(self, event):
@@ -174,7 +174,7 @@ class ImageViewDockWidget(QGraphicsView):
         self.end = sc_pos
         if self.preview:
             if (self.drawRect or self.drawCircle or self.drawLine or self.drawFreeHand) and self.preview.type() != TextItem.itemType:
-                self.scene.removeItem(self.preview)
+                self.scene().removeItem(self.preview)
                 if self.drawLine and (self.preview.type() == QGraphicsLineItem().type()):
                     self.preview.setLine(
                         QLineF(self.begin.x(), self.begin.y(), self.end.x(), self.end.y()))
@@ -184,27 +184,27 @@ class ImageViewDockWidget(QGraphicsView):
                     self.preview.setPath(stroker.createStroke(self.path))
                 else:
                     self.preview.setRect(QRectF(self.begin, self.end))
-                addCommand = AddCommand(self.preview, self.scene)
+                addCommand = AddCommand(self.preview, self.scene())
                 self.undoStack.push(addCommand)
                 self.begin, self.end = QPoint(), QPoint()
                 self.preview = None
         elif self.zoomSelect:
             view_bb = self.sceneRect()
-            selection_bb = self.scene.selectionArea().boundingRect().intersected(view_bb)
-            self.scene.setSelectionArea(QPainterPath())
+            selection_bb = self.scene().selectionArea().boundingRect().intersected(view_bb)
+            self.scene().setSelectionArea(QPainterPath())
             if selection_bb.isValid() and (selection_bb != view_bb):
                 self.zoom_data = selection_bb
                 self.fitInView(self.zoom_data, Qt.KeepAspectRatio)
                 # self.rect = self.zoom_data
 #        else:
-            # self.rect = self.scene.sceneRect()
+            # self.rect = self.scene().sceneRect()
 
         self.setDragMode(QGraphicsView.NoDrag)
         self.afterLeftClickReleased.emit(sc_pos.x(), sc_pos.y())
         QGraphicsView.mouseReleaseEvent(self, event)
 
     def resizeEvent(self, event):
-        self.fitInView(self.scene.sceneRect(), Qt.KeepAspectRatio)
+        self.fitInView(self.scene().sceneRect(), Qt.KeepAspectRatio)
         # self.rect = self.scene.sceneRect()
 
     def wheelEvent(self, event):
@@ -261,8 +261,8 @@ class ImageViewDockWidget(QGraphicsView):
 
     def addTextItem(self):
         self.preview = TextItem(self)
-        self.scene.addItem(self.preview)
-        addCommand = AddCommand(self.preview, self.scene)
+        self.scene().addItem(self.preview)
+        addCommand = AddCommand(self.preview, self.scene())
         self.undoStack.push(addCommand)
 
     def addWatermark(self):
@@ -274,7 +274,7 @@ class ImageViewDockWidget(QGraphicsView):
         if watermark_image_path:
             self.watermark_item.reset()
             self.watermark_item.load_watermark_image(watermark_image_path)
-            addCommand = AddCommand(self.watermark_item, self.scene)
+            addCommand = AddCommand(self.watermark_item, self.scene())
             self.undoStack.push(addCommand)
         else:
             return
@@ -286,9 +286,9 @@ class ImageViewDockWidget(QGraphicsView):
             if not self.mainWindow.dockCount:
                 self.mainWindow.imageAction()
             img = QImage(imgPath)
-            self.scene.clear()
+            self.scene().clear()
             self.pixmap = QPixmap.fromImage(img)
-            self.scene.addPixmap(self.pixmap)
+            self.scene().addPixmap(self.pixmap)
             self.setSceneRect(QRectF(self.pixmap.rect()))
             self.resizeEvent([])
             self.showNormal()
