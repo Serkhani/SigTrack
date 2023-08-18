@@ -15,6 +15,17 @@ files = [
 plum-py = ">=0.5.0,<2.0.0"
 
 [[package]]
+name = "hotreload"
+version = "2020.6.12.15.23.48"
+description = "Run any arbitrary python script every time the code changes in the file."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "hotreload-2020.6.12.15.23.48-py3-none-any.whl", hash = "sha256:3675e5de541dfe6385c35637036b1d703479a9e690d2de8305b2c1ba8c08ca7a"},
+    {file = "hotreload-2020.6.12.15.23.48.tar.gz", hash = "sha256:4c5fe330221ee60af2506c33593f36b7cfdfe7bbe327438aae86e111857ae555"},
+]
+
+[[package]]
 name = "jinja2"
 version = "3.1.2"
 description = "A very fast and expressive template engine."
@@ -189,4 +200,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<3.12"
-content-hash = "a1191c44608ea8000c9f3f44d04eb659a8cf042b89cca63b32b347c83cb1e2a9"
+content-hash = "cb0654b9d0a4ff5cb2051ca8f21cf7e3225c7d9db4092b2f2a7bafac91fc941c"

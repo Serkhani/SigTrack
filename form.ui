@@ -134,27 +134,21 @@
     <property name="title">
      <string>View</string>
     </property>
+    <widget class="QMenu" name="menuSettings">
+     <property name="title">
+      <string>Settings</string>
+     </property>
+     <addaction name="actionApp_Theme"/>
+    </widget>
     <addaction name="actionMap"/>
     <addaction name="actionImage"/>
     <addaction name="actionVideo"/>
-   </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
-    <widget class="QMenu" name="menuSwitch_theme">
-     <property name="title">
-      <string>Switch theme</string>
-     </property>
-     <addaction name="actionLight_Teal"/>
-     <addaction name="actionDark_Teal"/>
-    </widget>
-    <addaction name="menuSwitch_theme"/>
+    <addaction name="separator"/>
+    <addaction name="menuSettings"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
-   <addaction name="menuSettings"/>
   </widget>
   <widget class="QToolBar" name="editingToolbar">
    <property name="windowTitle">
@@ -359,6 +353,11 @@
   <action name="actionDark_Teal">
    <property name="text">
     <string>Dark Teal</string>
+   </property>
+  </action>
+  <action name="actionApp_Theme">
+   <property name="text">
+    <string>App Theme</string>
    </property>
   </action>
  </widget>

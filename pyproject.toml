@@ -11,6 +11,7 @@ python = ">=3.9,<3.12"
 pyside6 = "^6.5.1.1"
 exif = "^1.6.0"
 qt-material = "^2.14"
+hotreload = "^2020.6.12.15.23.48"
 
 
 [build-system]

@@ -11,7 +11,7 @@ from PySide6.QtGui import QFont, QIcon, QPixmap, QTransform
 from PySide6.QtWidgets import (QApplication, QDockWidget, QFileDialog, QLabel,
                                QMainWindow, QMessageBox, QSplashScreen)
 
-from sigtrack.views.constants import PHOTO_EXTENSIONS, LIGHT_THEME_STYLE, DARK_THEME_STYLE
+from sigtrack.views.constants import PHOTO_EXTENSIONS
 from sigtrack.views.constants import _DOCK_OPTS, _DOCK_POSITIONS
 from sigtrack.views.dockWidget import DockWidget
 from sigtrack.views.imageview.ImageViewDockWidget import ImageViewDockWidget
@@ -20,7 +20,7 @@ from sigtrack.views.mapview.MapViewDockWidget import MapWidget
 from qt_material import apply_stylesheet
 from form_ui import Ui_MainWindow
 from sigtrack.views.videoview.VideoViewDockWidget import VideoViewDockWidget
-import sigtrack.resources.compiled.editing_icons_rc
+from sigtrack.views.settings import ThemeSelectWindow
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -64,8 +64,7 @@ class MainWindow(QMainWindow):
         self.ui.actionMap.triggered.connect(self.mapAction)
         self.ui.actionImage.triggered.connect(self.imageAction)
         self.ui.actionVideo.triggered.connect(self.videoAction)
-        self.ui.actionDark_Teal.triggered.connect(self.changeThemeDark)
-        self.ui.actionLight_Teal.triggered.connect(self.changeThemeLight)
+        self.ui.actionApp_Theme.triggered.connect(self.openThemeSettings)
         self.setCentralWidget(self.ui.label)
 
         self.map = MapWidget(self)
@@ -76,13 +75,9 @@ class MainWindow(QMainWindow):
         # self.imageViewer = ImageViewDockWidget(self)
         self.setGeometry(100, 100, 1100, 600)
 
-    def changeThemeDark(self):
-        self.theme = "dark_teal.xml"
-        apply_stylesheet(app, self.theme)
-    
-    def changeThemeLight(self):
-        self.theme = "light_teal.xml"
-        apply_stylesheet(app, self.theme)
+    def openThemeSettings(self):
+        window = ThemeSelectWindow(self)
+        window.show()
 
     def videoAction(self, filePath=""):
         """Adds video dockwidget to central widget area
