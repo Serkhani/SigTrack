@@ -22,6 +22,8 @@ from sigtrack.views.ui_form import Ui_MainWindow
 from sigtrack.views.videoview.VideoViewDockWidget import VideoViewDockWidget
 from sigtrack.views.settings import ThemeSelectWindow
 
+import sigtrack.resources.compiled.editing_icons_rc
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.DEBUG,
