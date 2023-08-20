@@ -42,7 +42,7 @@ Rectangle {
             value: "http://maps-redirect.qt.io/osm/5.8/"
         }
     }
-    // property variant locationTC: QtPositioning.coordinate(7.9465, 1.0232)
+    property variant locationTC: QtPositioning.coordinate(7.9465, 1.0232)
     property int zoomLevel: 6
     // property bool mousePressed: false
     // property point lastMousePos
