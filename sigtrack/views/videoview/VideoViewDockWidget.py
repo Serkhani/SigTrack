@@ -1,8 +1,8 @@
 # This Python file uses the following encoding: utf-8
-import PySide6.QtGui
+import PySide2.QtGui
 
-from PySide6.QtMultimedia import QMediaPlayer
-from PySide6.QtWidgets import (
+from PySide2.QtMultimedia import QMediaPlayer
+from PySide2.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
@@ -13,10 +13,10 @@ from PySide6.QtWidgets import (
     QSizePolicy
 )
 
-from PySide6.QtCore import QUrl, QTimer, Qt
-from PySide6.QtMultimedia import QMediaPlayer
-from PySide6.QtMultimediaWidgets import QVideoWidget
-from PySide6.QtGui import QCloseEvent
+from PySide2.QtCore import QUrl, QTimer, Qt
+from PySide2.QtMultimedia import QMediaPlayer
+from PySide2.QtMultimediaWidgets import QVideoWidget
+from PySide2.QtGui import QCloseEvent
 
 # from DockWidgets.utils import getVideoLocationInfo
 from sigtrack.klv_data.element import UnknownElement

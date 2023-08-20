@@ -8,9 +8,9 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import *
-from PySide6.QtGui import *
-from PySide6.QtWidgets import *
+from PySide2.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
 
 
 class Ui_MainWindow(object):
@@ -65,6 +65,15 @@ class Ui_MainWindow(object):
         self.actionImgFile.setObjectName(u"actionImgFile")
         self.actionImgFolder = QAction(MainWindow)
         self.actionImgFolder.setObjectName(u"actionImgFolder")
+        self.actionSwitch_Theme = QAction(MainWindow)
+        self.actionSwitch_Theme.setObjectName(u"actionSwitch_Theme")
+        self.actionSwitch_Theme.setCheckable(True)
+        self.actionLight_Teal = QAction(MainWindow)
+        self.actionLight_Teal.setObjectName(u"actionLight_Teal")
+        self.actionDark_Teal = QAction(MainWindow)
+        self.actionDark_Teal.setObjectName(u"actionDark_Teal")
+        self.actionApp_Theme = QAction(MainWindow)
+        self.actionApp_Theme.setObjectName(u"actionApp_Theme")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
@@ -82,7 +91,7 @@ class Ui_MainWindow(object):
         font.setPointSize(20)
         font.setBold(True)
         font.setItalic(True)
-        font.setWeight(QFont.Weight(75))
+        font.setWeight(75)
         self.label.setFont(font)
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setWordWrap(True)
@@ -111,6 +120,8 @@ class Ui_MainWindow(object):
         self.menuZoom.setObjectName(u"menuZoom")
         self.menuView = QMenu(self.menubar)
         self.menuView.setObjectName(u"menuView")
+        self.menuSettings = QMenu(self.menuView)
+        self.menuSettings.setObjectName(u"menuSettings")
         MainWindow.setMenuBar(self.menubar)
         self.editingToolbar = QToolBar(MainWindow)
         self.editingToolbar.setObjectName(u"editingToolbar")
@@ -141,6 +152,9 @@ class Ui_MainWindow(object):
         self.menuView.addAction(self.actionMap)
         self.menuView.addAction(self.actionImage)
         self.menuView.addAction(self.actionVideo)
+        self.menuView.addSeparator()
+        self.menuView.addAction(self.menuSettings.menuAction())
+        self.menuSettings.addAction(self.actionApp_Theme)
         self.editingToolbar.addSeparator()
 
         self.retranslateUi(MainWindow)
@@ -233,6 +247,10 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.actionImgFolder.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Alt+\u00d8", None))
 #endif // QT_CONFIG(shortcut)
+        self.actionSwitch_Theme.setText(QCoreApplication.translate("MainWindow", u"Switch to dark theme", None))
+        self.actionLight_Teal.setText(QCoreApplication.translate("MainWindow", u"Light Teal", None))
+        self.actionDark_Teal.setText(QCoreApplication.translate("MainWindow", u"Dark Teal", None))
+        self.actionApp_Theme.setText(QCoreApplication.translate("MainWindow", u"App Theme", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Add a View", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuImport.setTitle(QCoreApplication.translate("MainWindow", u"Import", None))
@@ -243,6 +261,7 @@ class Ui_MainWindow(object):
         self.menuEdit.setTitle(QCoreApplication.translate("MainWindow", u"Edit", None))
         self.menuZoom.setTitle(QCoreApplication.translate("MainWindow", u"Zoom", None))
         self.menuView.setTitle(QCoreApplication.translate("MainWindow", u"View", None))
+        self.menuSettings.setTitle(QCoreApplication.translate("MainWindow", u"Settings", None))
         self.editingToolbar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
     # retranslateUi
 

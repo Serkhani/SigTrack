@@ -2,7 +2,7 @@
 from sigtrack.models.image_models.colorComboBox import ColorComboBox
 import logging
 
-from PySide6.QtWidgets import (
+from PySide2.QtWidgets import (
     QDockWidget,
     QGraphicsView,
     QVBoxLayout,
@@ -18,17 +18,17 @@ from PySide6.QtWidgets import (
     QToolBar,
     QPushButton,
     QColorDialog,
+    QAction,
     QSizePolicy
 )
 
-from PySide6.QtCore import (
+from PySide2.QtCore import (
     Qt,
     QRectF,
     QCoreApplication
 )
 
-from PySide6.QtGui import (
-    QAction,
+from PySide2.QtGui import (
     QIcon,
     QPixmap,
     QImage,

@@ -6,9 +6,9 @@ from pprint import pprint
 from time import sleep
 
 from exif import Image
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont, QIcon, QPixmap, QTransform
-from PySide6.QtWidgets import (QApplication, QDockWidget, QFileDialog, QLabel,
+from PySide2.QtCore import Qt
+from PySide2.QtGui import QFont, QIcon, QPixmap, QTransform
+from PySide2.QtWidgets import (QApplication, QDockWidget, QFileDialog, QLabel,
                                QMainWindow, QMessageBox, QSplashScreen)
 
 from sigtrack.views.constants import PHOTO_EXTENSIONS
@@ -18,7 +18,7 @@ from sigtrack.views.imageview.ImageViewDockWidget import ImageViewDockWidget
 from sigtrack.views.mapview.MapViewDockWidget import MapWidget
 
 from qt_material import apply_stylesheet
-from form_ui import Ui_MainWindow
+from sigtrack.views.ui_form import Ui_MainWindow
 from sigtrack.views.videoview.VideoViewDockWidget import VideoViewDockWidget
 from sigtrack.views.settings import ThemeSelectWindow
 
@@ -385,4 +385,4 @@ if __name__ == "__main__":
 
     # Close the splash screen and continue with the main application
     # splash.close()
-    sys.exit(app.exec())
+    sys.exit(app.exec_())
