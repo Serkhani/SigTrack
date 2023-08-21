@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "sigtrack-dev"
+version = "0.1.0"
+description = ""
+authors = ["jdboachie <judeboachiekwame@gmail.com>"]
+readme = "README.md"
+packages = [{include = "sigtrack_dev"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+pyside6 = "^6.5.1.1"
+exif = "^1.6.0"
+qt-material = "^2.14"
+hotreload = "^2020.6.12.15.23.48"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

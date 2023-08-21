@@ -75,6 +75,7 @@ SigTrack.zip
 build/
 dist/
 output.bin
-.vscode
+.vscode/
+__pycache__/
 *.code-workspace
-sigtract_dev
+sigtract_dev/

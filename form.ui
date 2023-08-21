@@ -134,9 +134,17 @@
     <property name="title">
      <string>View</string>
     </property>
+    <widget class="QMenu" name="menuSettings">
+     <property name="title">
+      <string>Settings</string>
+     </property>
+     <addaction name="actionApp_Theme"/>
+    </widget>
     <addaction name="actionMap"/>
     <addaction name="actionImage"/>
     <addaction name="actionVideo"/>
+    <addaction name="separator"/>
+    <addaction name="menuSettings"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -332,6 +340,27 @@
   <action name="actionCreate_video_with_MISB">
    <property name="text">
     <string>Create video with MISB</string>
+  <action name="actionSwitch_Theme">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Switch to dark theme</string>
+   </property>
+  </action>
+  <action name="actionLight_Teal">
+   <property name="text">
+    <string>Light Teal</string>
+   </property>
+  </action>
+  <action name="actionDark_Teal">
+   <property name="text">
+    <string>Dark Teal</string>
+   </property>
+  </action>
+  <action name="actionApp_Theme">
+   <property name="text">
+    <string>App Theme</string>
    </property>
   </action>
  </widget>

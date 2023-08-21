@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="circle">editing_icons/circle.svg</file>
+        <file alias="click">editing_icons/click_photos.svg</file>
+        <file alias="extent">editing_icons/extent.svg</file>
+        <file alias="import">editing_icons/import_icon.png</file>
+        <file alias="pan">editing_icons/pan.svg</file>
+        <file alias="photo">editing_icons/photos.qml</file>
+        <file alias="rect">editing_icons/rectangle.svg</file>
+        <file alias="redo">editing_icons/redo.svg</file>
+        <file alias="save">editing_icons/save.svg</file>
+        <file alias="undo">editing_icons/undo.svg</file>
+        <file alias="zoomSelected">editing_icons/zoom_selected.svg</file>
+        <file alias="zoomIn">editing_icons/zoom-in.svg</file>
+        <file alias="zoomOut">editing_icons/zoom-out.svg</file>
+        <file alias="addText">editing_icons/add_text.png</file>
+        <file alias="freehand">editing_icons/drawfreehand.png</file>
+        <file alias="line">editing_icons/drawLine.png</file>
+        <file alias="watermark">editing_icons/watermark.JPG</file>
+        <file alias="sigtrack">editing_icons/Sigtrack.jpg</file>
+        <file alias="sigtrack_icon">editing_icons/sigtrack.ico</file>
+    </qresource>
+</RCC>
