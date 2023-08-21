@@ -1,19 +1,21 @@
 # This Python file uses the following encoding: utf-8
 import PySide2.QtGui
 from PySide2.QtMultimedia import QMediaPlayer, QMediaContent
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QPushButton, QStyle, QSizePolicy, QGraphicsView, QGraphicsScene
-from PySide2.QtCore import QUrl, QTimer, Qt
+from PySide2.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QMessageBox, QPushButton, QStyle, QSizePolicy, QGraphicsView, QGraphicsScene
+from PySide2.QtCore import QUrl, QTimer, Qt, Slot
 # from PySide2.QtMultimediaWidgets import QVideoWidget
 from PySide2.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout
 from PySide2.QtGui import QCloseEvent
 # from DockWidgets.utils import getVideoLocationInfo
 from klv_data.element import UnknownElement
 from klv_data.streamparser import StreamParser
+import platform, subprocess, os, sys
+
 import platform
 import subprocess
 import os
 
-import DockWidgets.videoview.rc_vid_icons
+# import sigtrack.views.videoview.rc_vid_icons
 from klv_data.FmvKlvReader import _seconds_to_time, _seconds_to_time_frac, _time_to_seconds
 from pprint  import pprint
 from DockWidgets.videoview.custom_videographicsitem import VideoWidget
@@ -68,7 +70,6 @@ class VideoViewDockWidget(QWidget):
         self.pass_time = 250
         self.PrecisionTimeStamp = ""
         self.currentInfo = 0.0
-        self.playerState = QMediaPlayer.PlayingState
         self.klv_folder = os.getcwd()
         self.initUI()
 
@@ -78,7 +79,9 @@ class VideoViewDockWidget(QWidget):
             self.mediaPlayer.setMedia(media_content)
             self.playBtn.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaPlay))
+            # self.mediaPlayer.play()
             # self.timestampLabel.setText('--:-- / --:--')
+
 
     # def setupMediaPlayer(self):
     #     self.mediaPlayer = QMediaPlayer(self)
@@ -163,8 +166,16 @@ class VideoViewDockWidget(QWidget):
             self.mediaPlayer.positionChanged.connect(self.on_position_changed)
         # # load video
 
-    def handleError(self, error):
-        print('Error:', error)
+    @Slot("QMediaPlayer::Error", str)
+    def handleError(self, error, error_string):
+        print(error_string, file=sys.stderr)
+        print("erroror")
+        self.show_status_message(error_string)
+    
+    # @Slot("QMediaPlayer::PlaybackState")
+    # def update_buttons(self, state):
+    #     self.stopBtn.setEnabled(state != QMediaPlayer.StoppedState)
+
 
     def play(self):
         if not self.filePath:
@@ -179,7 +190,19 @@ class VideoViewDockWidget(QWidget):
                 self.style().standardIcon(QStyle.SP_MediaPause))
             # self.timer.start()
         self.timeSlider.setRange(0, self.mediaPlayer.duration() / 1000)
+
+    @Slot()
+    def ensure_stopped(self):
+        if self.mediaPlayer.state() != QMediaPlayer.StoppedState:
+            self.mediaPlayer.stop()
         
+    def show_status_message(self, message):
+        msgBox = QMessageBox()
+        msgBox.setText(message)
+        msgBox.exec_()
+
+        # QMessageBox(message)
+        # self.mainWindow.statusBar().showMessage(message, 5000)
 
     def stop(self):
         if not self.filePath:
@@ -244,7 +267,7 @@ class VideoViewDockWidget(QWidget):
         """
         progress_in_seconds = progress / 1000
         # print(f"progress_in_seconds: {progress_in_seconds}")
-        if self.playerState == QMediaPlayer.PausedState:
+        if self.mediaPlayer.state() == QMediaPlayer.PausedState:
             self.updateDurationInfo(progress_in_seconds, True)
         else:
             self.updateDurationInfo(progress_in_seconds)
@@ -351,7 +374,7 @@ class VideoViewDockWidget(QWidget):
             elif stdout_data == "BUFFERING":
                 if self.mediaPlayer.notifyInterval() <= 1000:
                     print("QgsFmvPlayer: Metadata Buffering...")
-                    oldState = self.playerState
+                    oldState = self.mediaPlayer.state()
                     self.mediaPlayer.pause()    
                     QTimer.singleShot(2000, lambda: self.resumePlay(oldState))
                     return
