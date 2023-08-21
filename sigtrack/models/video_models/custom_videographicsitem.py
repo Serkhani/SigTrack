@@ -2,7 +2,7 @@ from PySide2.QtGui import QMouseEvent
 from PySide2.QtMultimediaWidgets import QVideoWidget
 from PySide2.QtWidgets import QGraphicsSceneMouseEvent #, QGraphicsScene
 from PySide2.QtPositioning import QGeoCoordinate
-from sigtrack.views.videoview.latlon_dialog import MarkerPopUp
+from sigtrack.models.video_models.latlon_dialog import MarkerPopUp
 
 class VideoWidget(QVideoWidget):
     def __init__(self, dialog: MarkerPopUp):

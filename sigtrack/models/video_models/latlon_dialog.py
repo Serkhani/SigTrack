@@ -1,11 +1,22 @@
-from PySide2.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QWidget#, QMessageBox
+from PySide2.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout, QWidget, QMainWindow #, QMessageBox
 from PySide2.QtCore import Qt
 from PySide2.QtPositioning import QGeoCoordinate
 
-class MarkerPopUp(QWidget):
+class MarkerPopUp(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("LatLon")
+        self.parent = parent
+        x, y = parent.width()//2.5 - parent.pos().x(), parent.pos().y() - 50
+        self.setGeometry(x, y, 400, 400)
+        self.setFixedSize(self.size())
+        self.setWindowFlags(
+            Qt.FramelessWindowHint
+            | Qt.WindowSystemMenuHint
+            | Qt.WindowTitleHint
+            | Qt.WindowMinimizeButtonHint
+            | Qt.WindowCloseButtonHint
+            | Qt.WindowStaysOnTopHint
+        )
         
         self.isAddMarker = False
 

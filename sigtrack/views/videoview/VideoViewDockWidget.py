@@ -7,9 +7,9 @@ from PySide2.QtGui import QCloseEvent
 from sigtrack.klv_data.element import UnknownElement
 from sigtrack.klv_data.streamparser import StreamParser
 from sigtrack.klv_data.FmvKlvReader import _seconds_to_time, _seconds_to_time_frac, _time_to_seconds
-from sigtrack.views.videoview.custom_videographicsitem import VideoWidget
-from sigtrack.views.videoview.latlon_dialog import MarkerPopUp
-from sigtrack.views.videoview.full_motion_video_mux import Multiplexor
+from sigtrack.models.video_models.custom_videographicsitem import VideoWidget
+from sigtrack.models.video_models.latlon_dialog import MarkerPopUp
+from sigtrack.models.video_models.full_motion_video_mux import Multiplexor
 
 from pprint  import pprint
 import platform, subprocess, os, sys
@@ -19,7 +19,8 @@ class VideoViewDockWidget(QWidget):
         super().__init__()
         self.mainWindow = mainWindow
         self.filePath = filePath
-        self.markerPopUp = MarkerPopUp()
+        self.videoMarkers:MarkerPopUp = []
+        self.markerPopUp = MarkerPopUp(mainWindow)
         self.addMarkerButton = QPushButton()
         self.addMarkerButton.clicked.connect(self.show_popup)
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
@@ -127,31 +128,6 @@ class VideoViewDockWidget(QWidget):
     #     self.setPosition(position*0.01*self.mediaPlayer.duration())
 
     def fmv(self):
-        # info = getVideoLocationInfo(self.filePath)
-        # print(info)
-        # run fmv mode
-        # self.f = subprocess.run(["ffmpeg", "-y", "-i", self.filePath, "-map",
-        #                         "0:d", "-c", "copy", "-copy_unknown", "-f", "data", "output.bin"])
-        # i = self.filePath.split(os.sep)[-1]
-        # # load klv data
-        # try:
-        #     with open('output.bin', 'rb') as f:
-        #         frameCenterLat, frameCenterLong = None, None
-        #         try:
-        #             for index, packet in enumerate(StreamParser(f)):
-        #                 data = packet.MetadataList()
-        #                 frameCenterLat = data[13][-1]
-        #                 frameCenterLong = data[14][-1]
-        #                 frameCenterAlt = data[15][-1]
-        #                 print(frameCenterLat)
-        #                 print(frameCenterLong)
-        #                 print(frameCenterAlt)
-        #                 # self.mainWindow.mapAction()
-        #         except ValueError as e:
-        #             print("value Error")
-        #         
-        # except:
-        #     self.showMessage(f"some geo info missing from {i}")
         if self.filePath:
             self.metadata = self.extract_metadata(self.filePath)
             self.setPosition(0)
@@ -163,11 +139,6 @@ class VideoViewDockWidget(QWidget):
         print(error_string, file=sys.stderr)
         print("erroror")
         self.show_status_message(error_string)
-    
-    # @Slot("QMediaPlayer::PlaybackState")
-    # def update_buttons(self, state):
-    #     self.stopBtn.setEnabled(state != QMediaPlayer.StoppedState)
-
 
     def play(self):
         if not self.filePath:
@@ -192,9 +163,6 @@ class VideoViewDockWidget(QWidget):
         msgBox = QMessageBox()
         msgBox.setText(message)
         msgBox.exec_()
-
-        # QMessageBox(message)
-        # self.mainWindow.statusBar().showMessage(message, 5000)
 
     def stop(self):
         if not self.filePath:
@@ -221,13 +189,12 @@ class VideoViewDockWidget(QWidget):
             int(duration // 60), int(duration % 60))
         self.timestampLabel.setText(current_time_str + ' / ' + duration_str)
         self.timeSlider.setValue(current_time)
-
         if current_time == duration:
             self.mediaPlayer.stop()
             self.playBtn.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaPlay))
-            
             self.timeSlider.setValue(0)
+
     def show_popup(self):
         self.fmv()
         self.markerPopUp.show()
