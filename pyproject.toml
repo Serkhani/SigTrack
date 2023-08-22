@@ -7,8 +7,7 @@ readme = "README.md"
 packages = [{include = "sigtrack_dev"}]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.12"
-pyside6 = "^6.5.1.1"
+python = ">=3.9"
 exif = "^1.6.0"
 qt-material = "^2.14"
 hotreload = "^2020.6.12.15.23.48"
