@@ -12,6 +12,7 @@ class UI_MarkerPopUp(QDockWidget):
         self.setWindowIcon(QIcon('qrc://:marker'))
         self.markersLayout = QVBoxLayout()
         self.addMarkerButton = QPushButton("Add")
+        self.setupUI()
     
     def setupUI(self) -> None:
         """
