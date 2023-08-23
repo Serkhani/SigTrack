@@ -1,15 +1,15 @@
 from PySide2.QtMultimedia import QMediaPlayer, QMediaContent
 from PySide2.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QMessageBox, QPushButton, QStyle, QSizePolicy, QGraphicsView, QGraphicsScene
 from PySide2.QtCore import QUrl, QTimer, Qt, Slot
-from PySide2.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout
 from PySide2.QtGui import QCloseEvent
+from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
 
 from sigtrack.klv_data.element import UnknownElement
 from sigtrack.klv_data.streamparser import StreamParser
 from sigtrack.klv_data.FmvKlvReader import _seconds_to_time, _seconds_to_time_frac, _time_to_seconds
-from sigtrack.models.video_models.custom_videographicsitem import VideoWidget
-from sigtrack.models.video_models.latlon_dialog import MarkerPopUp
-from sigtrack.models.video_models.full_motion_video_mux import Multiplexor
+from sigtrack.models.video_models.custom_videographicsitem import VideoGraphicsItem
+from sigtrack.models.video_models.marker_popup import MarkerPopUp
+from sigtrack.models.video_models.muxing.full_motion_video_mux import Multiplexor
 
 from pprint  import pprint
 import platform, subprocess, os, sys
@@ -19,14 +19,17 @@ class VideoViewDockWidget(QWidget):
         super().__init__()
         self.mainWindow = mainWindow
         self.filePath = filePath
-        self.videoMarkers:MarkerPopUp = []
-        self.markerPopUp = MarkerPopUp(mainWindow)
-        self.addMarkerButton = QPushButton()
-        self.addMarkerButton.clicked.connect(self.show_popup)
+
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.mediaPlayer.error.connect(self.handleError)
-        self.videoPlayerWidget = VideoWidget(self.markerPopUp)
-        self.mediaPlayer.setVideoOutput(self.videoPlayerWidget)
+
+        self.videoGraphicsItem = QGraphicsVideoItem()
+
+        self.markerPopUp = MarkerPopUp()
+        self.mediaPlayer.setVideoOutput(self.videoGraphicsItem)
+
+
+
         self.playBtn = QPushButton()
         self.playBtn.setIcon(
             self.style().standardIcon(QStyle.SP_MediaPlay))
@@ -102,31 +105,20 @@ class VideoViewDockWidget(QWidget):
         hbox1.addWidget(self.volBtn)
         hbox1.addWidget(self.volumeSlider)
         hbox1.addWidget(self.fmvBtn)
-        hbox1.addWidget(self.addMarkerButton)
         hbox1.addWidget(self.multiplexBtn)
         hbox2 = QHBoxLayout()
         hbox2.addWidget(self.timeSlider)
         hbox2.addWidget(self.timestampLabel)
         vbox = QVBoxLayout()
-        # view = QGraphicsView()
-        # scene = QGraphicsScene()
-        # scene.addItem(self.videoPlayerWidget)
-        # view.setScene(self.videoPlayerWidget)
-        # vbox.addWidget(view, 20)
-        vbox.addWidget(self.videoPlayerWidget,20)
+        graphicsview = QGraphicsView()
+        scene=QGraphicsScene()
+        graphicsview.setScene(scene)
+        scene.addItem(self.videoGraphicsItem)
+        vbox.addWidget(graphicsview,20)
         vbox.addLayout(hbox1,1)
         vbox.addLayout(hbox2,1)
         self.setLayout(vbox)
     
-    # def slider_pressed(self, event):
-    #     "To handle the time slider track click event"
-    #     # Calculate the position of the click on the track
-    #     position = self.timeSlider.minimum() + ((self.timeSlider.maximum() - self.timeSlider.minimum()) * event.pos().x()) // self.timeSlider.width()
-    #     # Set the value of the slider to that position
-    #     print(position)
-    #     # self.timeSlider.setValue(position)    
-    #     self.setPosition(position*0.01*self.mediaPlayer.duration())
-
     def fmv(self):
         if self.filePath:
             self.metadata = self.extract_metadata(self.filePath)
@@ -194,10 +186,6 @@ class VideoViewDockWidget(QWidget):
             self.playBtn.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaPlay))
             self.timeSlider.setValue(0)
-
-    def show_popup(self):
-        self.fmv()
-        self.markerPopUp.show()
 
     def extract_metadata(self, video_path):
         try:

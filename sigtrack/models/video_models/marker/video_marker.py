@@ -11,8 +11,6 @@ class VideoMarker(QGraphicsItem):
         super().__init__()
         self.icon =  QUrl("qrc://:/marker")
         self.markerIndicator:MarkerIndicator = MarkerIndicator()
-        self.lat = QLabel("0.0")
-        self.lon = QLabel("0.0")
         self.setFlags(
             QGraphicsItem.ItemToolTipHasChanged | 
             QGraphicsItem.ItemIsMovable |
@@ -23,5 +21,4 @@ class VideoMarker(QGraphicsItem):
         """
         Change the text when the button is clicked
         """
-        self.lat.setText(f"lat: {str(data[0])}")
-        self.lon.setText(f"lon: {str(data[1])}")
+        self.setToolTip(f"lat: {data[0]} lon: {data[1]}")

@@ -1,6 +1,7 @@
 from PySide2.QtGui import QCloseEvent, QIcon
 from PySide2.QtWidgets import QDockWidget, QVBoxLayout, QPushButton
 
+from sigtrack.views.videoview.markers.ui_marker import UI_Marker
 import sigtrack.resources.compiled.map_rc
 
 
@@ -23,7 +24,8 @@ class UI_MarkerPopUp(QDockWidget):
         layout.addWidget(self.addMarkerButton)
         self.setLayout(layout)
 
-
+    def addMarker(self, marker:UI_Marker):
+        self.markersLayout.addLayout(marker)
     
     def closeEvent(self, event: QCloseEvent) -> None:
         """
