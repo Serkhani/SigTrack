@@ -7,7 +7,7 @@ class MarkerIndicator(QGraphicsRectItem):
         An indicator for each marker
     """
     
-    def __init__(self, color:QColor):
-        self.color = color
+    def __init__(self):
+        self.color = QColor()
         self.setRect(QRectF(0.0,0.0,2.0,2.0))
         self.brush:QBrush = QBrush(self.color)
