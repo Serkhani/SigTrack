@@ -25,6 +25,9 @@ class UI_MarkerPopUp(QDockWidget):
         self.setLayout(layout)
 
     def addMarker(self, marker:UI_Marker):
+        """
+            add marker entry to dockwidget
+        """
         self.markersLayout.addLayout(marker)
     
     def closeEvent(self, event: QCloseEvent) -> None:
