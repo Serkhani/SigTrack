@@ -5,9 +5,9 @@ from PySide2.QtGui import (QPainter, QBrush, QPen, QFont, QColor)
 class Painter(QPainter):
     def __init__(self):
         QPainter.__init__(self)
-        self.brush = QBrush(QColor(Qt.black))
-        self.pen = QPen()
-        self.font = QFont()
+        self.brush:QBrush = QBrush(QColor(Qt.black))
+        self.pen:QPen = QPen()
+        self.font:QFont = QFont()
         self.font.setPointSize(50)
 
     def setFontFamily(self, family):
