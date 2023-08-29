@@ -17,9 +17,10 @@ from sigtrack.views.dockWidget import DockWidget
 from sigtrack.views.imageview.ImageViewDockWidget import ImageViewDockWidget
 from sigtrack.views.mapview.MapViewDockWidget import MapWidget
 
+from sigtrack.controllers.videoviewCon import VideoViewCon
+
 from qt_material import apply_stylesheet
 from sigtrack.views.ui_form import Ui_MainWindow
-from sigtrack.views.videoview.VideoViewDockWidget import VideoViewDockWidget
 from sigtrack.views.settings import ThemeSelectWindow
 
 import sigtrack.resources.compiled.editing_icons_rc
@@ -108,7 +109,7 @@ class MainWindow(QMainWindow):
             dockWidget.setWidget(label)
         else:
             # Create the videoplayer
-            videoPlayer = VideoViewDockWidget(filePath, self)
+            videoPlayer = VideoViewCon(filePath, self)
             dockWidget.setWidget(videoPlayer)
 
         dockWidget.setWindowTitle("VideoView")
