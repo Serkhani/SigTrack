@@ -30,6 +30,7 @@ class VideoViewModel(QWidget):
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.mediaPlayer.error.connect(self.handleError)
         self.videoGraphicsItem = QGraphicsVideoItem()
+        # self.videoGraphicsItem = VideoGraphicsItem()
         self.markerPopUp = MarkerPopUp()
         self.mediaPlayer.setVideoOutput(self.videoGraphicsItem)
 
@@ -51,9 +52,8 @@ class VideoViewModel(QWidget):
             self.mediaPlayer.positionChanged.connect(self.on_position_changed)
 
     @Slot("QMediaPlayer::Error", str)
-    def handleError(self, error, error_string):
+    def handleError(self, error_string):
         print(error_string, file=sys.stderr)
-        print("erroror")
         self.show_status_message(error_string)
 
     # def play(self):
