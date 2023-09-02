@@ -17,7 +17,7 @@ from sigtrack.views.dockWidget import DockWidget
 from sigtrack.views.imageview.ImageViewDockWidget import ImageViewDockWidget
 from sigtrack.views.mapview.MapViewDockWidget import MapWidget
 
-from sigtrack.controllers.videoviewCon import VideoViewCon
+from sigtrack.controllers.videoviewCon import VideoViewConDockWidget
 
 from qt_material import apply_stylesheet
 from sigtrack.views.ui_form import Ui_MainWindow
@@ -94,10 +94,11 @@ class MainWindow(QMainWindow):
         self.ui.label.hide()
         # videoFile = "C:\\Users\\LENOVO\\Desktop\\Tracking Vessel.ts"
         # print(videoFile)
-        # create dockwidget
-        dockWidget = DockWidget(self)
-
+        
+        # The change happened here because the videoviewcondockwidget is no more just a widget but also a dockWidget
         if not filePath:
+            # create dockwidget
+            dockWidget = DockWidget(self)
             label = QLabel()
             label.setText("No Video")
             label.setAlignment(Qt.AlignCenter)
@@ -108,11 +109,9 @@ class MainWindow(QMainWindow):
             label.setFont(font)
             dockWidget.setWidget(label)
         else:
-            # Create the videoplayer
-            videoPlayer = VideoViewCon(filePath, self)
-            dockWidget.setWidget(videoPlayer)
+            # Create the videoviewdockwidget
+            dockWidget = VideoViewConDockWidget(filePath, self)
 
-        dockWidget.setWindowTitle("VideoView")
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def imageAction(self, imgPath=""):
