@@ -1,5 +1,5 @@
 from PySide2.QtMultimedia import QMediaPlayer
-from PySide2.QtWidgets import QWidget, QSlider, QDockWidget, QMessageBox, QPushButton, QStyle
+from PySide2.QtWidgets import QDockWidget, QMessageBox, QStyle, QGraphicsScene
 from PySide2.QtCore import QUrl, Qt, Slot
 from PySide2.QtGui import QCloseEvent
 from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
@@ -7,6 +7,7 @@ from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
 from sigtrack.klv_data.element import UnknownElement
 from sigtrack.klv_data.streamparser import StreamParser
 from sigtrack.klv_data.FmvKlvReader import _seconds_to_time_frac, _time_to_seconds
+from sigtrack.models.video_models.custom_videographicsitem import VideoGraphicsItem
 from sigtrack.models.video_models.videoviewModel import VideoViewModel
 from sigtrack.views.videoview.ui_videoview import Ui_VideoView
 
@@ -19,7 +20,9 @@ class VideoViewConDockWidget(QDockWidget):
         self.setFocusPolicy(Qt.StrongFocus)
         self.model = VideoViewModel(filePath, mainWindow)
         self.ui_video = Ui_VideoView()
+        
         self.ui_video.setupUi(self)
+        self.ui_video.graphicsView.setScene(self.model.scene)
         self.ui_video.playBtn.clicked.connect(self.play)
         self.ui_video.stopBtn.clicked.connect(self.stop)
         self.ui_video.volumeSlider.valueChanged.connect( self.model.mediaPlayer.setVolume)
@@ -29,9 +32,10 @@ class VideoViewConDockWidget(QDockWidget):
         self.ui_video.volumeSlider.setValue(self.model.mediaPlayer.volume())
         self.ui_video.volumeSlider.valueChanged.connect(self.model.mediaPlayer.setVolume)
         self.ui_video.volBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaVolume))
+        self.ui_video.volBtn.setDisabled(True)
         self.ui_video.stopBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaStop))
         self.ui_video.playBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
-
+        self.model.mediaPlayer.setVideoOutput(self.model.videoGraphicsItem)
         self.model.mediaPlayer.positionChanged.connect(self.updateTime)
         if self.filePath:
             media_content = QUrl(self.filePath)
@@ -167,8 +171,8 @@ class VideoViewConDockWidget(QDockWidget):
     def closeEvent(self, event: QCloseEvent) -> None:
         self.model.mediaPlayer.deleteLater()
         self.model.mediaPlayer = None
-        self.model.markerPopUp.close()
-        self.model.markerPopUp.deleteLater()
+        # self.model.markerPopUp.close()
+        # self.model.markerPopUp.deleteLater()
         self.model.markerPopUp = None
         self.mainWindow.dockCount -= 1
         self.mainWindow.editingPanel.hide()

@@ -7,7 +7,6 @@ from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
 from sigtrack.klv_data.element import UnknownElement
 from sigtrack.klv_data.streamparser import StreamParser
 from sigtrack.klv_data.FmvKlvReader import _time_to_seconds
-from sigtrack.models.video_models.custom_videographicsitem import VideoGraphicsItem
 from sigtrack.models.video_models.marker.marker_popup import MarkerPopUp
 from sigtrack.models.video_models.muxing.full_motion_video_mux import Multiplexor
 
@@ -26,13 +25,14 @@ class VideoViewModel(QWidget):
         self.klv_folder = os.getcwd()
         self.filePath = filePath
         self.mainWindow = mainWindow
-
+        self.videoGraphicsItem = QGraphicsVideoItem()
+        self.scene = QGraphicsScene()
+        self.videoGraphicsItem = QGraphicsVideoItem()
+        self.scene.addItem(self.videoGraphicsItem)
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.mediaPlayer.error.connect(self.handleError)
-        self.videoGraphicsItem = QGraphicsVideoItem()
         # self.videoGraphicsItem = VideoGraphicsItem()
         self.markerPopUp = MarkerPopUp()
-        self.mediaPlayer.setVideoOutput(self.videoGraphicsItem)
 
         # if self.filePath:
         #     media_content = QUrl(self.filePath)
