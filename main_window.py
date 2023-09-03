@@ -353,38 +353,36 @@ if __name__ == "__main__":
     app.setWindowIcon(
         QIcon(os.path.join(":/sigtrack_icon")))
 
-    # # ======FOR SPLASH SCREEN======
+    # ======FOR SPLASH SCREEN======
 
-    # # Load the image for the splash screen
-    # logger.info("Loading splash screen")
-    # pixmap = QPixmap(os.path.join(":/sigtrack"))
+    # Load the image for the splash screen
+    logger.info("Loading splash screen")
+    pixmap = QPixmap(os.path.join(":/sigtrack"))
 
-    # # Rotate and scale the image until it can't be seen
-    # angle = 100
-    # scale = 0.0
+    # Rotate and scale the image until it can't be seen
+    angle = 100
+    scale = 0.0
 
-    # # Create the splash screen and show it
-    # splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
-    # transform = QTransform().rotate(angle).scale(scale, scale)
-    # rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
-    # splash.setPixmap(rotated)
-    # splash.show()
+    # Create the splash screen and show it
+    splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
+    transform = QTransform().rotate(angle).scale(scale, scale)
+    rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
+    splash.setPixmap(rotated)
+    splash.show()
 
-    # while scale < 1.0:
-    #     app.processEvents()
-    #     angle -= 1
-    #     scale += 0.01
-    #     transform = QTransform().rotate(angle).scale(scale, scale)
-    #     rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
-    #     splash.setPixmap(rotated)
+    while scale < 1.0:
+        app.processEvents()
+        angle -= 1
+        scale += 0.01
+        transform = QTransform().rotate(angle).scale(scale, scale)
+        rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
+        splash.setPixmap(rotated)
 
-    # sleep(2)
-    # # ======SPLASH SCREEN ENDED======
+    # ======SPLASH SCREEN ENDED======
 
     widget = MainWindow()
     widget.setWindowTitle("SigTrack")
-    widget.show()
-
     # Close the splash screen and continue with the main application
-    # splash.close()
+    splash.finish(widget)#Makes splash screen wait until the widget is loaded then it closes.
+    widget.show()
     sys.exit(app.exec_())
