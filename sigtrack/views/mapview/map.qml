@@ -15,6 +15,7 @@ Rectangle {
         id: osmPlugin
         name: "osm"
         // name: "esri"
+        // name: "mapboxgl"
         // preferred: ["esri", "osm"]
         // PluginParameter {
         //     name: "osm.mapping.providersrepository.disabled"
