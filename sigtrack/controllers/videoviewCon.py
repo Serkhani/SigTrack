@@ -1,8 +1,7 @@
 from PySide2.QtMultimedia import QMediaPlayer
-from PySide2.QtWidgets import QDockWidget, QMessageBox, QStyle, QGraphicsScene
-from PySide2.QtCore import QUrl, Qt, Slot
-from PySide2.QtGui import QCloseEvent
-from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
+from PySide2.QtWidgets import QDockWidget, QMessageBox, QStyle
+from PySide2.QtCore import QUrl, Qt, Slot, QRectF, QSizeF
+from PySide2.QtGui import QCloseEvent, QResizeEvent, QShowEvent
 
 from sigtrack.klv_data.element import UnknownElement
 from sigtrack.klv_data.streamparser import StreamParser
@@ -42,6 +41,18 @@ class VideoViewConDockWidget(QDockWidget):
             self.model.mediaPlayer.setMedia(media_content)
             self.ui_video.playBtn.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaPlay))
+            # self.ui_video.graphicsView.setSceneRect(self.model.scene.itemsBoundingRect())
+            # self.ui_video.graphicsView.fitInView(self.model.scene.sceneRect(), Qt.KeepAspectRatio)
+            # self.ui_video.graphicsView.showNormal()
+            # print(self.ui_video.graphicsView.sceneRect())
+            # print(self.ui_video.graphicsView.size())
+            # print(self.model.scene.itemsBoundingRect())
+            # self.model.videoGraphicsItem.setSize(QSizeF(self.ui_video.graphicsView.width(), self.ui_video.graphicsView.height()))
+            # self.resizeEvent(QResizeEvent(self.size(), self.size()))
+            # self.ui_video.graphicsView.fitInView(self.model.videoGraphicsItem, Qt.IgnoreAspectRatio)
+
+            
+            
             
         # self.model.mediaPlayer.error.connect(self.handleError)
         # self.playBtn.clicked.connect(self.play)
@@ -166,6 +177,16 @@ class VideoViewConDockWidget(QDockWidget):
                 self.get_metadata_from_buffer(currentTimeInfo)
         else:
             tStr = ""
+
+    
+    def resizeEvent(self, event: QResizeEvent):
+        self.ui_video.graphicsView.fitInView(self.model.videoGraphicsItem, Qt.IgnoreAspectRatio)
+        super().resizeEvent(event)
+
+
+
+
+
     
     
     def closeEvent(self, event: QCloseEvent) -> None:

@@ -9,6 +9,7 @@ from sigtrack.klv_data.streamparser import StreamParser
 from sigtrack.klv_data.FmvKlvReader import _time_to_seconds
 from sigtrack.models.video_models.marker.marker_popup import MarkerPopUp
 from sigtrack.models.video_models.muxing.full_motion_video_mux import Multiplexor
+from sigtrack.models.video_models.custom_videographicsitem import VideoGraphicsItem
 
 from pprint import pprint
 import subprocess, sys, os
@@ -25,13 +26,12 @@ class VideoViewModel(QWidget):
         self.klv_folder = os.getcwd()
         self.filePath = filePath
         self.mainWindow = mainWindow
-        self.videoGraphicsItem = QGraphicsVideoItem()
         self.scene = QGraphicsScene()
-        self.videoGraphicsItem = QGraphicsVideoItem()
+        # self.videoGraphicsItem = QGraphicsVideoItem()
+        self.videoGraphicsItem = VideoGraphicsItem()
         self.scene.addItem(self.videoGraphicsItem)
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.mediaPlayer.error.connect(self.handleError)
-        # self.videoGraphicsItem = VideoGraphicsItem()
         self.markerPopUp = MarkerPopUp()
 
         # if self.filePath:
@@ -39,7 +39,6 @@ class VideoViewModel(QWidget):
         #     self.mediaPlayer.setMedia(media_content)
         #     self.playBtn.setIcon(
         #         self.style().standardIcon(QStyle.SP_MediaPlay))
-
 
     def showMultiplexor(self):
         self.multiplexor = Multiplexor()
