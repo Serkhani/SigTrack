@@ -1,7 +1,7 @@
 from PySide2.QtMultimedia import QMediaPlayer
 from PySide2.QtWidgets import QDockWidget, QMessageBox, QStyle
 from PySide2.QtCore import QUrl, Qt, Slot, QRectF, QSizeF
-from PySide2.QtGui import QCloseEvent, QResizeEvent, QShowEvent
+from PySide2.QtGui import QCloseEvent, QResizeEvent, QShowEvent, QPainter
 
 from sigtrack.klv_data.element import UnknownElement
 from sigtrack.klv_data.streamparser import StreamParser
@@ -21,7 +21,8 @@ class VideoViewConDockWidget(QDockWidget):
         self.ui_video = Ui_VideoView()
         
         self.ui_video.setupUi(self)
-        self.ui_video.graphicsView.setScene(self.model.scene)
+        self.ui_video.verticalLayout.insertWidget(0, self.model.graphicsView)
+        # self.ui_video.graphicsView.setScene(self.model.scene)
         self.ui_video.playBtn.clicked.connect(self.play)
         self.ui_video.stopBtn.clicked.connect(self.stop)
         self.ui_video.volumeSlider.valueChanged.connect( self.model.mediaPlayer.setVolume)
@@ -34,36 +35,13 @@ class VideoViewConDockWidget(QDockWidget):
         self.ui_video.volBtn.setDisabled(True)
         self.ui_video.stopBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaStop))
         self.ui_video.playBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
-        self.model.mediaPlayer.setVideoOutput(self.model.videoGraphicsItem)
         self.model.mediaPlayer.positionChanged.connect(self.updateTime)
         if self.filePath:
             media_content = QUrl(self.filePath)
             self.model.mediaPlayer.setMedia(media_content)
             self.ui_video.playBtn.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaPlay))
-            # self.ui_video.graphicsView.setSceneRect(self.model.scene.itemsBoundingRect())
-            # self.ui_video.graphicsView.fitInView(self.model.scene.sceneRect(), Qt.KeepAspectRatio)
-            # self.ui_video.graphicsView.showNormal()
-            # print(self.ui_video.graphicsView.sceneRect())
-            # print(self.ui_video.graphicsView.size())
-            # print(self.model.scene.itemsBoundingRect())
-            # self.model.videoGraphicsItem.setSize(QSizeF(self.ui_video.graphicsView.width(), self.ui_video.graphicsView.height()))
-            # self.resizeEvent(QResizeEvent(self.size(), self.size()))
-            # self.ui_video.graphicsView.fitInView(self.model.videoGraphicsItem, Qt.IgnoreAspectRatio)
-
             
-            
-            
-        # self.model.mediaPlayer.error.connect(self.handleError)
-        # self.playBtn.clicked.connect(self.play)
-        # self.stopBtn.clicked.connect(self.stop)
-        # self.multiplexBtn.clicked.connect(self.showMultiplexor)
-        # self.timeSlider.sliderMoved.connect(self.setPosition)
-        # self.fmvBtn.clicked.connect(self.fmv)
-        # self.model.mediaPlayer.positionChanged.connect(self.updateTime)
-
-
-
     def play(self):
         if not self.filePath:
             return
@@ -179,12 +157,15 @@ class VideoViewConDockWidget(QDockWidget):
             tStr = ""
 
     
-    def resizeEvent(self, event: QResizeEvent):
-        self.ui_video.graphicsView.fitInView(self.model.videoGraphicsItem, Qt.IgnoreAspectRatio)
-        super().resizeEvent(event)
+    # def resizeEvent(self, event: QResizeEvent):
+    #     self.ui_video.graphicsView.fitInView(self.model.videoGraphicsItem, Qt.IgnoreAspectRatio)
+    #     super().resizeEvent(event)
 
 
-
+    # def showEvent(self, event: QShowEvent):
+    #     # Call fitInView in the showEvent method to ensure it's done when the widget is shown
+    #     self.ui_video.graphicsView.fitInView(self.model.videoGraphicsItem, Qt.IgnoreAspectRatio)
+    #     super().showEvent(event)
 
 
     
