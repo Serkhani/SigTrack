@@ -28,31 +28,44 @@ class Ui_VideoView(object):
         self.dockWidgetContents.setSizePolicy(sizePolicy)
         self.verticalLayout = QVBoxLayout(self.dockWidgetContents)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.graphicsView = QGraphicsView(self.dockWidgetContents)
-        self.graphicsView.setObjectName(u"graphicsView")
-
-        self.verticalLayout.addWidget(self.graphicsView)
-
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.horizontalLayout.setContentsMargins(0, -1, 0, 0)
         self.playBtn = QPushButton(self.dockWidgetContents)
         self.playBtn.setObjectName(u"playBtn")
-        icon = QIcon(QIcon.fromTheme(u"media-playback-pause"))
+        icon = QIcon()
+        iconThemeName = u"media-playback-pause"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon = QIcon.fromTheme(iconThemeName)
+        else:
+            icon.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+        
         self.playBtn.setIcon(icon)
 
         self.horizontalLayout.addWidget(self.playBtn)
 
         self.stopBtn = QPushButton(self.dockWidgetContents)
         self.stopBtn.setObjectName(u"stopBtn")
-        icon1 = QIcon(QIcon.fromTheme(u"media-playback-stop"))
+        icon1 = QIcon()
+        iconThemeName = u"media-playback-stop"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon1 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon1.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+        
         self.stopBtn.setIcon(icon1)
 
         self.horizontalLayout.addWidget(self.stopBtn)
 
         self.volBtn = QPushButton(self.dockWidgetContents)
         self.volBtn.setObjectName(u"volBtn")
-        icon2 = QIcon(QIcon.fromTheme(u"multimedia-volume-control"))
+        icon2 = QIcon()
+        iconThemeName = u"multimedia-volume-control"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon2 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon2.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+        
         self.volBtn.setIcon(icon2)
 
         self.horizontalLayout.addWidget(self.volBtn)

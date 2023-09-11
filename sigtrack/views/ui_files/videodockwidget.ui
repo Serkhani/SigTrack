@@ -28,9 +28,6 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QGraphicsView" name="graphicsView"/>
-    </item>
-    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="leftMargin">
        <number>0</number>
@@ -50,7 +47,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="media-playback-pause"/>
+         <iconset theme="media-playback-pause">
+          <normaloff>.</normaloff>.</iconset>
         </property>
         <property name="shortcut">
          <string>Space</string>
@@ -69,7 +67,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="media-playback-stop"/>
+         <iconset theme="media-playback-stop">
+          <normaloff>.</normaloff>.</iconset>
         </property>
         <property name="shortcut">
          <string>Esc</string>
@@ -88,7 +87,8 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset theme="multimedia-volume-control"/>
+         <iconset theme="multimedia-volume-control">
+          <normaloff>.</normaloff>.</iconset>
         </property>
        </widget>
       </item>
