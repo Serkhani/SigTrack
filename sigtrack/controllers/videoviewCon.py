@@ -29,6 +29,7 @@ class VideoViewConDockWidget(QDockWidget):
         self.ui_video.multiplexBtn.clicked.connect(self.model.showMultiplexor)
         self.ui_video.timeSlider.sliderMoved.connect(self.model.setPosition)
         self.ui_video.fmvBtn.clicked.connect(self.model.fmv)
+        self.ui_video.vidMarkerBtn.clicked.connect(self.model.markerPopUp.show())
         self.ui_video.volumeSlider.setValue(self.model.mediaPlayer.volume())
         self.ui_video.volumeSlider.valueChanged.connect(self.model.mediaPlayer.setVolume)
         self.ui_video.volBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaVolume))
@@ -155,19 +156,6 @@ class VideoViewConDockWidget(QDockWidget):
                 self.get_metadata_from_buffer(currentTimeInfo)
         else:
             tStr = ""
-
-    
-    # def resizeEvent(self, event: QResizeEvent):
-    #     self.ui_video.graphicsView.fitInView(self.model.videoGraphicsItem, Qt.IgnoreAspectRatio)
-    #     super().resizeEvent(event)
-
-
-    # def showEvent(self, event: QShowEvent):
-    #     # Call fitInView in the showEvent method to ensure it's done when the widget is shown
-    #     self.ui_video.graphicsView.fitInView(self.model.videoGraphicsItem, Qt.IgnoreAspectRatio)
-    #     super().showEvent(event)
-
-
     
     
     def closeEvent(self, event: QCloseEvent) -> None:
