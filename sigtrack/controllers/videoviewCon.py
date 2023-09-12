@@ -167,7 +167,7 @@ class VideoViewConDockWidget(QDockWidget):
         self.model.mediaPlayer = None
         # self.model.markerPopUp.close()
         # self.model.markerPopUp.deleteLater()
-        self.model.markerPopUp = None
+        # self.model.markerPopUp = None
         self.mainWindow.dockCount -= 1
         self.mainWindow.editingPanel.hide()
         if self.mainWindow.dockCount == 0:
