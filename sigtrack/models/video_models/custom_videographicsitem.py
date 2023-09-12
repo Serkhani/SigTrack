@@ -1,18 +1,12 @@
 from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
 
+from sigtrack.controllers.markerpopupCon import MarkerPopUpCon
+
+
 class VideoGraphicsItem(QGraphicsVideoItem):
     def __init__(self):
         super().__init__()
-
-        # player = new QMediaPlayer(this);
-
-        # QGraphicsVideoItem *item = new QGraphicsVideoItem;
-        # player->setVideoOutput(item);
-        # graphicsView->scene()->addItem(item);
-        # graphicsView->show();
-
-        # player->setSource(QUrl("http://example.com/myclip4.ogv"));
-        # player->play();
+        self.markerPopUp = MarkerPopUpCon()
     def addMarker(self):
         pass
 

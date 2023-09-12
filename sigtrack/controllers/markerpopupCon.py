@@ -1,3 +1,4 @@
+import PySide2.QtGui
 from PySide2.QtWidgets import QDockWidget
 from PySide2.QtCore import Qt
 
@@ -12,4 +13,6 @@ class MarkerPopUpCon(QDockWidget):
         self.marker_model = MarkerPopUpModel()
         self.ui_marker.setupUi(self)
         self.ui_marker.addMarkerBtn.clicked.connect(self.marker_model.addMarker())
-        # self.hide()
+    
+
+        
