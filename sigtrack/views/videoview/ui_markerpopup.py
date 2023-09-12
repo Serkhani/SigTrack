@@ -18,7 +18,9 @@ class Ui_MarkerDockwidget(object):
         if not MarkerDockwidget.objectName():
             MarkerDockwidget.setObjectName(u"MarkerDockwidget")
         MarkerDockwidget.resize(400, 300)
-        MarkerDockwidget.setAllowedAreas(Qt.NoDockWidgetArea)
+        MarkerDockwidget.setFloating(True)
+        MarkerDockwidget.setFeatures(QDockWidget.DockWidgetClosable|QDockWidget.DockWidgetFloatable|QDockWidget.DockWidgetMovable)
+        MarkerDockwidget.setAllowedAreas(Qt.LeftDockWidgetArea|Qt.RightDockWidgetArea)
         self.Markers = QWidget()
         self.Markers.setObjectName(u"Markers")
         sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
@@ -33,10 +35,10 @@ class Ui_MarkerDockwidget(object):
 
         self.verticalLayout.addWidget(self.label, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
-        self.pushButton = QPushButton(self.Markers)
-        self.pushButton.setObjectName(u"pushButton")
+        self.addMarkerBtn = QPushButton(self.Markers)
+        self.addMarkerBtn.setObjectName(u"addMarkerBtn")
 
-        self.verticalLayout.addWidget(self.pushButton)
+        self.verticalLayout.addWidget(self.addMarkerBtn)
 
         MarkerDockwidget.setWidget(self.Markers)
 
@@ -48,6 +50,6 @@ class Ui_MarkerDockwidget(object):
     def retranslateUi(self, MarkerDockwidget):
         MarkerDockwidget.setWindowTitle(QCoreApplication.translate("MarkerDockwidget", u"Markers", None))
         self.label.setText(QCoreApplication.translate("MarkerDockwidget", u"No Markers", None))
-        self.pushButton.setText(QCoreApplication.translate("MarkerDockwidget", u"Add Marker", None))
+        self.addMarkerBtn.setText(QCoreApplication.translate("MarkerDockwidget", u"Add Marker", None))
     # retranslateUi
 
