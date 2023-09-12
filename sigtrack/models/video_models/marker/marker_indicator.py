@@ -8,6 +8,7 @@ class MarkerIndicator(QGraphicsRectItem):
     """
     
     def __init__(self):
+        super().__init__()
         self.color = QColor()
         self.setRect(QRectF(0.0,0.0,2.0,2.0))
         self.brush:QBrush = QBrush(self.color)
