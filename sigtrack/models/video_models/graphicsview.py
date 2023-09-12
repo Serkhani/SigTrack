@@ -13,7 +13,9 @@ class VideoGraphicsView(QGraphicsView):
         self.setScene(self.scene)
 
     def resizeEvent(self, event: QResizeEvent):
-        self.fitInView(self.sceneRect(), Qt.IgnoreAspectRatio)
+        # self.fitInView(self.sceneRect(), Qt.IgnoreAspectRatio)
+        self.fitInView(self.sceneRect(), Qt.KeepAspectRatio)
+        # self.fitInView(self.sceneRect(), Qt.KeepAspectRatioByExpanding)
         super().resizeEvent(event)
 
 
