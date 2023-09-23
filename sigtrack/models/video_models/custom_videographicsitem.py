@@ -1,4 +1,5 @@
 from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
+from PySide2.QtCore import Qt
 
 from sigtrack.controllers.markerpopupCon import MarkerPopUpCon
 
@@ -7,6 +8,7 @@ class VideoGraphicsItem(QGraphicsVideoItem):
     def __init__(self):
         super().__init__()
         self.markerPopUp = MarkerPopUpCon()
+        self.setAspectRatioMode(Qt.IgnoreAspectRatio)
     def addMarker(self):
         pass
 

@@ -7,15 +7,12 @@ from sigtrack.models.video_models.custom_videographicsitem import VideoGraphicsI
 class VideoGraphicsView(QGraphicsView):
     def __init__(self):
         super().__init__()
-        self.scene = QGraphicsScene()
-        self.scene.clear()
+        self.customScene = QGraphicsScene()
+        self.setScene(self.customScene)
         self.videoGraphicsItem = VideoGraphicsItem()
-        self.scene.addItem(self.videoGraphicsItem)
-        self.scene.setSceneRect(self.videoGraphicsItem.boundingRect())
-        self.setScene(self.scene)
-        self.fitInView(self.scene.sceneRect(), Qt.IgnoreAspectRatio)
+        self.customScene.addItem(self.videoGraphicsItem)
 
     def resizeEvent(self, event: QResizeEvent):
-        self.scene.setSceneRect(self.videoGraphicsItem.boundingRect())
-        self.fitInView(self.scene.sceneRect(), Qt.IgnoreAspectRatio)
+        self.customScene.setSceneRect(self.videoGraphicsItem.boundingRect())
+        self.fitInView(self.customScene.sceneRect(), Qt.IgnoreAspectRatio)
         super().resizeEvent(event)
