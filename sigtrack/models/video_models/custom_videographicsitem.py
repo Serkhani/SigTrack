@@ -1,16 +1,16 @@
 from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
 from PySide2.QtCore import Qt
 
-from sigtrack.controllers.markerpopupCon import MarkerPopUpCon
+from sigtrack.models.video_models.marker.video_marker import VideoMarker
 
 
 class VideoGraphicsItem(QGraphicsVideoItem):
     def __init__(self):
         super().__init__()
-        self.markerPopUp = MarkerPopUpCon()
         self.setAspectRatioMode(Qt.IgnoreAspectRatio)
     def addMarker(self):
-        pass
+        videoMarker = VideoMarker()
+        self.scene().addItem(videoMarker)
 
 # class VideoWidget(QVideoWidget):
 #     def __init__(self, dialog: MarkerPopUp):

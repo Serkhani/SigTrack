@@ -3,6 +3,7 @@ from PySide2.QtGui import QResizeEvent, QShowEvent
 from PySide2.QtCore import Qt, QSizeF
  
 from sigtrack.models.video_models.custom_videographicsitem import VideoGraphicsItem
+from sigtrack.controllers.markerpopupCon import MarkerPopUpCon
 
 class VideoGraphicsView(QGraphicsView):
     def __init__(self):
@@ -10,6 +11,7 @@ class VideoGraphicsView(QGraphicsView):
         self.customScene = QGraphicsScene()
         self.setScene(self.customScene)
         self.videoGraphicsItem = VideoGraphicsItem()
+        self.markerPopUp = MarkerPopUpCon()
         self.customScene.addItem(self.videoGraphicsItem)
 
     def resizeEvent(self, event: QResizeEvent):

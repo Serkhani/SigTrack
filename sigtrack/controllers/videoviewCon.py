@@ -44,7 +44,8 @@ class VideoViewConDockWidget(QDockWidget):
                 self.style().standardIcon(QStyle.SP_MediaPlay))
     
     def setMarkerWidgetVisibility(self):
-        self.model.graphicsView.videoGraphicsItem.markerPopUp.setVisible(self.showMarkerVisibility)
+        # self.model.graphicsView.videoGraphicsItem.markerPopUp.setVisible(self.showMarkerVisibility)
+        self.model.graphicsView.markerPopUp.setVisible(self.showMarkerVisibility)
         self.showMarkerVisibility = not self.showMarkerVisibility
             
     def play(self):
