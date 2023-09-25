@@ -30,12 +30,8 @@
     </sizepolicy>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
-    <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>No Markers</string>
-      </property>
-     </widget>
+    <item>
+     <widget class="QListView" name="listView"/>
     </item>
     <item>
      <widget class="QPushButton" name="addMarkerBtn">

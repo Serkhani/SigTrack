@@ -30,10 +30,10 @@ class Ui_MarkerDockwidget(object):
         self.Markers.setSizePolicy(sizePolicy)
         self.verticalLayout = QVBoxLayout(self.Markers)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.label = QLabel(self.Markers)
-        self.label.setObjectName(u"label")
+        self.listView = QListView(self.Markers)
+        self.listView.setObjectName(u"listView")
 
-        self.verticalLayout.addWidget(self.label, 0, Qt.AlignHCenter|Qt.AlignVCenter)
+        self.verticalLayout.addWidget(self.listView)
 
         self.addMarkerBtn = QPushButton(self.Markers)
         self.addMarkerBtn.setObjectName(u"addMarkerBtn")
@@ -49,7 +49,6 @@ class Ui_MarkerDockwidget(object):
 
     def retranslateUi(self, MarkerDockwidget):
         MarkerDockwidget.setWindowTitle(QCoreApplication.translate("MarkerDockwidget", u"Markers", None))
-        self.label.setText(QCoreApplication.translate("MarkerDockwidget", u"No Markers", None))
         self.addMarkerBtn.setText(QCoreApplication.translate("MarkerDockwidget", u"Add Marker", None))
     # retranslateUi
 
