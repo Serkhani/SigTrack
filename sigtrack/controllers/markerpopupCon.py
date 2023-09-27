@@ -15,7 +15,7 @@ class MarkerPopUpCon(QDockWidget):
         # self.marker_model = MarkerPopUpModel()
         self.marker_model = MarkerListModel()
         self.ui_marker.listView.setModel(self.marker_model)
-        self.ui_marker.addMarkerBtn.clicked.connect(self.marker_model.addMarker())
+        # self.ui_marker.addMarkerBtn.clicked.connect(self.marker_model.addMarker())
     
 
         

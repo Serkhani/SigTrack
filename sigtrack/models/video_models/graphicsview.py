@@ -11,8 +11,9 @@ class VideoGraphicsView(QGraphicsView):
         self.customScene = QGraphicsScene()
         self.setScene(self.customScene)
         self.videoGraphicsItem = VideoGraphicsItem()
-        self.markerPopUp = MarkerPopUpCon()
         self.customScene.addItem(self.videoGraphicsItem)
+        self.markerPopUp = MarkerPopUpCon()
+        self.markerPopUp.ui_marker.addMarkerBtn.clicked.connect(self.markerPopUp.marker_model.addMarker)
 
     def resizeEvent(self, event: QResizeEvent):
         self.customScene.setSceneRect(self.videoGraphicsItem.boundingRect())

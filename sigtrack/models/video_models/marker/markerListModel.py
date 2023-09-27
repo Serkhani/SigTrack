@@ -1,5 +1,6 @@
 from PySide2.QtCore import (Qt, QAbstractListModel, QModelIndex)
 from PySide2.QtGui import QColor
+from datetime import datetime
 
 class MarkerListModel(QAbstractListModel):
     def __init__(self):
@@ -28,8 +29,11 @@ class MarkerListModel(QAbstractListModel):
 
     def addMarker(self):
         # color = Qt.black
-        color = QColor('blue')
-        text= f"lat: {1.1}\nlong: {2.2}"
+        colorName = QColor().colorNames()[len(self.markers)]
+        print(colorName)
+        color = QColor(colorName)
+        # text= f"lat: {1.1}\nlong: {2.2}"
+        text = datetime.now().time()
         self.beginInsertRows(QModelIndex(), len(self.markers), len(self.markers))
         self.markers.append({'color': color, 'text': text})
         self.endInsertRows()
