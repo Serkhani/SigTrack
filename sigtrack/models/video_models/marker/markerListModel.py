@@ -20,6 +20,8 @@ class MarkerListModel(QAbstractListModel):
             return marker['text']
         elif role == Qt.DecorationRole:
             return marker['color']
+        elif role == Qt.UserRole:
+            return "Custom Button"
 
     def removeRow(self, row, parent=QModelIndex()):
         if 0 <= row < len(self.markers):
