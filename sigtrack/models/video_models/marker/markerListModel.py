@@ -29,7 +29,7 @@ class MarkerListModel(QAbstractListModel):
             del self.markers[row]
             self.endRemoveRows()
 
-    def addMarker(self):
+    def addMarker(self)-> QColor:
         # color = Qt.black
         colorName = QColor().colorNames()[len(self.markers)]
         print(colorName)
@@ -39,3 +39,4 @@ class MarkerListModel(QAbstractListModel):
         self.beginInsertRows(QModelIndex(), len(self.markers), len(self.markers))
         self.markers.append({'color': color, 'text': text})
         self.endInsertRows()
+        return color

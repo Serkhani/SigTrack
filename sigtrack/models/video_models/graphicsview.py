@@ -4,6 +4,7 @@ from PySide2.QtCore import Qt, QSizeF
  
 from sigtrack.models.video_models.custom_videographicsitem import VideoGraphicsItem
 from sigtrack.controllers.markerpopupCon import MarkerPopUpCon
+from sigtrack.models.video_models.marker.video_marker import VideoMarker
 
 class VideoGraphicsView(QGraphicsView):
     def __init__(self):
@@ -13,7 +14,16 @@ class VideoGraphicsView(QGraphicsView):
         self.videoGraphicsItem = VideoGraphicsItem()
         self.customScene.addItem(self.videoGraphicsItem)
         self.markerPopUp = MarkerPopUpCon()
-        self.markerPopUp.ui_marker.addMarkerBtn.clicked.connect(self.markerPopUp.marker_model.addMarker)
+        self.markerPopUp.ui_marker.addMarkerBtn.clicked.connect(self.addMarker)
+
+    def addMarker(self):
+        # videoMarker = VideoMarker()
+        # self.customScene.addItem(videoMarker.pixmapItem)
+        color = self.markerPopUp.marker_model.addMarker()
+        self.videoGraphicsItem.addMarker(color)
+
+
+
 
     def resizeEvent(self, event: QResizeEvent):
         self.customScene.setSceneRect(self.videoGraphicsItem.boundingRect())

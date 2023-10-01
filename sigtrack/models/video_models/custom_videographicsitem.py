@@ -1,5 +1,6 @@
 from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
 from PySide2.QtCore import Qt
+from PySide2.QtGui import QColor
 
 from sigtrack.models.video_models.marker.video_marker import VideoMarker
 
@@ -8,9 +9,15 @@ class VideoGraphicsItem(QGraphicsVideoItem):
     def __init__(self):
         super().__init__()
         self.setAspectRatioMode(Qt.IgnoreAspectRatio)
-    def addMarker(self):
-        videoMarker = VideoMarker()
+    
+
+    
+    def addMarker(self, color: QColor):
+        videoMarker = VideoMarker(color)
         self.scene().addItem(videoMarker)
+        # self.videoGraphicsItem.addMarker()
+    
+
 
 # class VideoWidget(QVideoWidget):
 #     def __init__(self, dialog: MarkerPopUp):
