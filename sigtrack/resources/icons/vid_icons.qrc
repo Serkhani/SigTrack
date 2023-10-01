@@ -5,5 +5,6 @@
         <file alias="rewind">video_view/rewind-button.png</file>
         <file alias="play">video_view/play-button.png</file>
         <file alias="stop">video_view/stop.png</file>
+        <file alias="vidMarker">video_view/marker.png</file>
     </qresource>
 </RCC>
