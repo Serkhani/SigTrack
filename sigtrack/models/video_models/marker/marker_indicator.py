@@ -7,12 +7,13 @@ class MarkerIndicator(QGraphicsRectItem):
         An indicator for each marker
     """
     
-    def __init__(self, rect:QRectF):
+    def __init__(self, rect:QRectF, color:QColor):
         super().__init__()
-        self.color = QColor()
+        self.color = color
         self.qrect = rect
-        self.setRect(QRectF(self.qrect.width()/2,self.qrect.bottom(),2.0,2.0))
+        self.setRect(QRectF(self.qrect.left()+((self.qrect.right()-self.qrect.left())/2),self.qrect.bottom(),5.0,5.0))
         self.brush:QBrush = QBrush(self.color)
+        self.setBrush(self.brush)
 
     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         """

@@ -10,34 +10,14 @@ class VideoGraphicsItem(QGraphicsVideoItem):
         super().__init__()
         self.setAspectRatioMode(Qt.IgnoreAspectRatio)
     
-
-    
     def addMarker(self, color: QColor):
         videoMarker = VideoMarker(color)
+        # Calculate the position to center the image in the scene
+        scene_rect = self.scene().sceneRect()
+        image_rect = videoMarker.boundingRect()
+        center_x = (scene_rect.width() - image_rect.width()) / 2.0
+        center_y = (scene_rect.height() - image_rect.height()) / 2.0
+        # Set the position of the videoMarker in the center of the scene
+        videoMarker.setPos(center_x, center_y)
         self.scene().addItem(videoMarker)
-        # self.videoGraphicsItem.addMarker()
-    
-
-
-# class VideoWidget(QVideoWidget):
-#     def __init__(self, dialog: MarkerPopUp):
-#         super().__init__()
-#         self.dialog = dialog
-#         self.markerPos = None
-        
-#     def mousePressEvent(self, event: QGraphicsSceneMouseEvent) -> None:
-#             # put an image marker here
-#         if self.dialog.isAddMarker:
-#             self.markerPos = event.pos()
-#             print(event.pos())  
-#         super().mousePressEvent(event)
-
-#     def mouseMoveEvent(self, event: QMouseEvent) -> None:
-#         if self.dialog.isAddMarker:
-#             mousePos = event.pos()
-#             # print(mousePos.x)
-#             print(f"moouse.x(): {mousePos.x()} mouse.y: {mousePos.y()}")
-#             coordinate = QGeoCoordinate(float(mousePos.x()), float(mousePos.y()))
-
-#             self.dialog.change_text([mousePos.x(), mousePos.y()])
-#         super().mouseMoveEvent(event)
+        self.scene().addItem(videoMarker.markerIndicator)
