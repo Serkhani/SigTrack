@@ -28,7 +28,8 @@ class VideoViewModel(QWidget):
         self.mainWindow = mainWindow
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.mediaPlayer.error.connect(self.handleError)
-        self.graphicsView = VideoGraphicsView()
+        # self.graphicsView = VideoGraphicsView()
+        self.graphicsView = VideoGraphicsView(self)
         self.mediaPlayer.setVideoOutput(self.graphicsView.videoGraphicsItem)
     
     def showMultiplexor(self):
@@ -165,20 +166,7 @@ class VideoViewModel(QWidget):
                     'Offset Corner Longitude Point 4': metadata[33][-1]
                     }
                 self.mainWindow.map.updateDronePosition(droneData)
-                if self.markerPopUp.isAddMarker and self.videoPlayerWidget.markerPos:
-                    latPercentage  = (self.videoPlayerWidget.markerPos.x() / self.videoPlayerWidget.width())#*100
-                    lonPercentage  = (self.videoPlayerWidget.markerPos.y()/ self.videoPlayerWidget.height())#*100
-                    topLeftLat = float(metadata[23][-1]) - float(metadata[26][-1])
-                    bottomRightLat = float(metadata[23][-1]) + float(metadata[32][-1])
-                    topLeftLon = float(metadata[24][-1]) + float(metadata[27][-1])
-                    bottomRightLon = float(metadata[24][-1]) + float(metadata[31][-1])
-                    latdiff = bottomRightLat - topLeftLat
-                    londiff = bottomRightLon - topLeftLon
-                    latPercent = latdiff * latPercentage
-                    lonPercent = londiff * lonPercentage
-                    data = [topLeftLat+ latPercent, topLeftLon+lonPercent]
-                    self.markerPopUp.change_text(data)
-    
+                self.graphicsView.updateData(metadata)
     def packetStreamParser(self, stdout_data):
         """Common packet process
         @type stdout_data: String

@@ -3,8 +3,9 @@ from PySide2.QtGui import QMouseEvent, QPainter
 from PySide2.QtWidgets import QItemDelegate, QStyleOptionButton, QApplication, QStyleOptionViewItem, QStyle
 
 class RemoveButtonDelegate(QItemDelegate):
-    def __init__(self, parent=None):
+    def __init__(self, videographicsview,parent=None):
         super().__init__(parent)
+        self.videographicsview = videographicsview
 
     def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: QModelIndex):
         if index.data(Qt.UserRole):        
@@ -31,6 +32,7 @@ class RemoveButtonDelegate(QItemDelegate):
             button_rect = option.rect
             if button_rect.contains(event.pos()):
                 model.removeRow(index.row())
+                self.videographicsview.removeMarker()
                 return True
 
         return False
