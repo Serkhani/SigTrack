@@ -3,8 +3,9 @@ from PySide2.QtGui import QMouseEvent, QPainter
 from PySide2.QtWidgets import QItemDelegate, QStyleOptionButton, QApplication, QStyleOptionViewItem, QStyle
 
 class RemoveButtonDelegate(QItemDelegate):
-    def __init__(self, videographicsview,parent=None):
+    def __init__(self, listview, videographicsview,parent=None):
         super().__init__(parent)
+        self.listview = listview
         self.videographicsview = videographicsview
 
     def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: QModelIndex):
