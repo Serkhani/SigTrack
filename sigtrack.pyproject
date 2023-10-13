@@ -1,6 +1,7 @@
 {
     "files": [
         "main_window.py",
-        "form.ui"
+        "form.ui",
+        "C:\Users\USER\Desktop\SigTrack\sigtrack\views\ui_files\videodockwidget.ui"
     ]
 }

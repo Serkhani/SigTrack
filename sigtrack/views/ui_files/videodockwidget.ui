@@ -111,7 +111,7 @@
          <string>FMV</string>
         </property>
         <property name="text">
-         <string/>
+         <string>FMV</string>
         </property>
         <property name="shortcut">
          <string>Ctrl+F</string>
@@ -124,7 +124,7 @@
          <string>Video Marker</string>
         </property>
         <property name="text">
-         <string/>
+         <string>Marker</string>
         </property>
         <property name="shortcut">
          <string>Ctrl+I</string>
@@ -134,7 +134,7 @@
       <item>
        <widget class="QPushButton" name="multiplexBtn">
         <property name="text">
-         <string/>
+         <string>Mux</string>
         </property>
         <property name="shortcut">
          <string>Ctrl+M</string>
