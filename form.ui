@@ -340,6 +340,8 @@
   <action name="actionCreate_video_with_MISB">
    <property name="text">
     <string>Create video with MISB</string>
+  </property>
+</action>
   <action name="actionSwitch_Theme">
    <property name="checkable">
     <bool>true</bool>
