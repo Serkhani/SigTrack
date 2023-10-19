@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="question">log_icons/question.svg</file>
-        <file alias="information">log_icons/information_icon.svg</file>
-        <file alias="warning">log_icons/warning.svg</file>
+        <file alias="question">log_icons/question_icon.svg</file>
+        <file alias="information">log_icons/info_icon.svg</file>
+        <file alias="warning">log_icons/warning_icon.svg</file>
         <file alias="critical">log_icons/critical_icon.svg</file>
-        <file alias="mult_icon">log_icons/mult_icon.svg</file>
+        <file alias="mult_icon">log_icons/mult_icon.png</file>
     </qresource>
 </RCC>
