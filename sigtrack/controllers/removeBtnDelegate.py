@@ -9,7 +9,7 @@ class RemoveButtonDelegate(QItemDelegate):
         self.videographicsview = videographicsview
 
     def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: QModelIndex):
-        if index.data(Qt.UserRole):        
+        if index.data(Qt.UserRole):
             button = QStyleOptionButton()
             r = option.rect#getting the rect of the cell
             x = r.left() + r.width() - 30 #the X coordinate

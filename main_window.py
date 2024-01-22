@@ -47,7 +47,6 @@ class MainWindow(QMainWindow):
         self.inputFolderPath, self.inputFilesList = None, None
         self.images_dict = {}
         self.imagePaths = []
-
         self.ui.actionImgFile.triggered.connect(self.importImgFileLocalAction)
         self.ui.actionImgFolder.triggered.connect(
             self.importImgFolderLocalAction)

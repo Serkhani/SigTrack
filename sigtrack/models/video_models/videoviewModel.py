@@ -104,7 +104,7 @@ class VideoViewModel(QWidget):
 
     def extract_metadata(self, video_path):
         try:
-            probe = subprocess.check_output(["ffmpeg", "-y", "-i", video_path, "-map", "0:d", "-c", "copy", "-copy_unknown", "-f", "data", "-"])
+            probe = subprocess.check_output(["ffmpeg/ffmpeg.exe", "-y", "-i", video_path, "-map", "0:d", "-c", "copy", "-copy_unknown", "-f", "data", "-"])
             print(probe)
         except subprocess.CalledProcessError as e:
             print("Error running FFmpeg to extract metadata: ", e)

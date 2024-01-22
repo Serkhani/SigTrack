@@ -79,10 +79,15 @@ class Multiplexor(QDialog):
         
         # Run FFmpeg command to multiplex video and log file
         command = [
-            "ffmpeg",
+            "ffmpeg/ffmpeg",
             "-i", video_file,
             "-i", log_file,
-            "-c", "copy",
+            # "-c", "copy",
+            "-map", "0",
+            "-map", "1",
+            "-c:v", "copy",
+            "-c:a", "copy",
+            "-c:m", "copy",
             output_file
         ]
         try:

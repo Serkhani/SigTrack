@@ -31,7 +31,8 @@ from os.path import dirname, abspath
 #raster square size in pixel that will be loaded from dtm
 dtm_buffer = 20
 #ffmpeg path
-ffmpegConf = "C://FFMPEG//bin//"
+# ffmpegConf = "C://FFMPEG//bin//"
+ffmpegConf = "//ffmpeg//"
 #buffer metadata reader size (important : IF THIS VALUE IS VERY HIGH THE PLUGIN WILL FAIL)
 min_buffer_size = 5
 
