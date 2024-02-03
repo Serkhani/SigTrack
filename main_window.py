@@ -10,6 +10,9 @@ from PySide2.QtCore import Qt
 from PySide2.QtGui import QFont, QIcon, QPixmap, QTransform
 from PySide2.QtWidgets import (QApplication, QDockWidget, QFileDialog, QLabel,
                                QMainWindow, QMessageBox, QSplashScreen)
+from sigtrack.controllers.chatCon import ItemController
+from sigtrack.models.chat.ChatModel import ItemModel
+from sigtrack.views.chat.ChatView import ItemView
 
 from sigtrack.views.constants import PHOTO_EXTENSIONS
 from sigtrack.views.constants import _DOCK_OPTS, _DOCK_POSITIONS
@@ -67,6 +70,7 @@ class MainWindow(QMainWindow):
         self.ui.actionImage.triggered.connect(self.imageAction)
         self.ui.actionVideo.triggered.connect(self.videoAction)
         self.ui.actionApp_Theme.triggered.connect(self.openThemeSettings)
+        self.ui.actionChat.triggered.connect(self.chatAction)
         self.setCentralWidget(self.ui.label)
 
         self.map = MapWidget(self)
@@ -158,6 +162,25 @@ class MainWindow(QMainWindow):
         #        dockWidget.setWidget(self.mapView.webView)
         mapView = MapWidget(self)
         dockWidget.setWidget(mapView)
+        self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
+
+    def chatAction(self):
+        """
+        Adds chat dockwidget to central widget area
+        """
+        # increment dockCount
+        self.dockCount += 1
+        # hide the label when there are views
+        self.ui.label.hide()
+        # create dock widget
+        dockWidget = DockWidget(self)
+        dockWidget.setWindowTitle("chat")
+        model = ItemModel()
+        view = ItemView(model)
+        controller = ItemController(model, view)
+        view.show()
+        # chatView = MapWidget(self)
+        dockWidget.setWidget(view)
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def getDockIndex(self):

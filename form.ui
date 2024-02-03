@@ -145,6 +145,7 @@
     <addaction name="actionVideo"/>
     <addaction name="separator"/>
     <addaction name="menuSettings"/>
+    <addaction name="actionChat"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -340,8 +341,8 @@
   <action name="actionCreate_video_with_MISB">
    <property name="text">
     <string>Create video with MISB</string>
-  </property>
-</action>
+   </property>
+  </action>
   <action name="actionSwitch_Theme">
    <property name="checkable">
     <bool>true</bool>
@@ -363,6 +364,11 @@
   <action name="actionApp_Theme">
    <property name="text">
     <string>App Theme</string>
+   </property>
+  </action>
+  <action name="actionChat">
+   <property name="text">
+    <string>Chat</string>
    </property>
   </action>
  </widget>

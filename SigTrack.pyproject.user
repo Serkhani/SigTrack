@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 9.0.2, 2023-06-22T14:56:42. -->
+<!-- Written by QtCreator 9.0.2, 2024-01-25T13:36:17. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -144,12 +144,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">constants.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/constants.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/constants.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\constants.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.1">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -161,12 +159,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DockWidgets/imageview/undo_redo_command.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview/undo_redo_command.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview/undo_redo_command.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\DockWidgets\imageview\undo_redo_command.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.10">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -178,12 +174,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Editing/colorComboBox.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/Editing/colorComboBox.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/Editing/colorComboBox.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\Editing\colorComboBox.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/Editing</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.11">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -195,12 +189,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DockWidgets/videoview/vid_icons_rc.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/DockWidgets/videoview/vid_icons_rc.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/DockWidgets/videoview/vid_icons_rc.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\DockWidgets\videoview\vid_icons_rc.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/DockWidgets/videoview</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.12">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -212,12 +204,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DockWidgets/dockWidget.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/DockWidgets/dockWidget.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/DockWidgets/dockWidget.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\DockWidgets\dockWidget.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/DockWidgets</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.13">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -229,12 +219,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DockWidgets/mapview/rc_map.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/DockWidgets/mapview/rc_map.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/DockWidgets/mapview/rc_map.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\DockWidgets\mapview\rc_map.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/DockWidgets/mapview</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.14">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -246,12 +234,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DockWidgets/mapview/MapViewDockWidget.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/DockWidgets/mapview/MapViewDockWidget.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/DockWidgets/mapview/MapViewDockWidget.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\DockWidgets\mapview\MapViewDockWidget.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/DockWidgets/mapview</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.2">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -263,12 +249,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DockWidgets/videoview/VideoViewDockWidget.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/DockWidgets/videoview/VideoViewDockWidget.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/DockWidgets/videoview/VideoViewDockWidget.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\DockWidgets\videoview\VideoViewDockWidget.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/DockWidgets/videoview</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.3">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -280,12 +264,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DockWidgets/imageview/textItem.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview/textItem.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview/textItem.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\DockWidgets\imageview\textItem.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.4">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -297,12 +279,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DockWidgets/imageview/painter.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview/painter.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview/painter.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\DockWidgets\imageview\painter.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.5">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -314,12 +294,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DockWidgets/imageview/ImageViewDockWidget.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview/ImageViewDockWidget.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview/ImageViewDockWidget.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\DockWidgets\imageview\ImageViewDockWidget.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.6">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -331,12 +309,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Editing/EditingPanel.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/Editing/EditingPanel.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/Editing/EditingPanel.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\Editing\EditingPanel.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/Editing</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.7">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -348,12 +324,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">DockWidgets/imageview/watermarkitem.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview/watermarkitem.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview/watermarkitem.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\DockWidgets\imageview\watermarkitem.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack/DockWidgets/imageview</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.8">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -365,12 +339,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">mainwindow.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/mainwindow.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/mainwindow.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\mainwindow.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.RunConfiguration.9">
     <value type="bool" key="Analyzer.Perf.Settings.UseGlobalSettings">true</value>
@@ -382,12 +354,10 @@
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">ui_form.py</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/USER/Desktop/SigTrack/ui_form.py</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/USER/Desktop/SigTrack/ui_form.py</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\USER\Desktop\SigTrack\ui_form.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/USER/Desktop/SigTrack</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">15</value>
   </valuemap>
