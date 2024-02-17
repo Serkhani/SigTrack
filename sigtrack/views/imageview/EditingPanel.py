@@ -19,7 +19,8 @@ from PySide2.QtWidgets import (
     QPushButton,
     QColorDialog,
     QAction,
-    QSizePolicy
+    QSizePolicy,
+    QFileDialog
 )
 
 from PySide2.QtCore import (
@@ -35,6 +36,9 @@ from PySide2.QtGui import (
     QFont,
     QKeySequence
 )
+
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -83,6 +87,10 @@ class EditingPanel(QWidget):
         self.textAction.triggered.connect(self.addTextbutton)
         self.watermarkAction = QAction(QIcon(":/watermark"), "Watermark")
         self.watermarkAction.triggered.connect(self.watermarkbutton)
+        # Add a button to generate the PDF report
+        self.generate_pdf_btn = QPushButton('Generate PDF Report', self)
+        self.generate_pdf_btn.clicked.connect(self.generateReport)
+
 
         self.editingToolbar.addAction(self.undoAction)
         self.editingToolbar.addAction(self.redoAction)
@@ -92,6 +100,7 @@ class EditingPanel(QWidget):
         self.editingToolbar.addAction(self.freeHandAction)
         self.editingToolbar.addAction(self.textAction)
         self.editingToolbar.addAction(self.watermarkAction)
+        self.editingToolbar.addWidget(self.generate_pdf_btn)
 
         self.extent = QPushButton(self)
         self.extent.setIcon(QIcon(':extent'))
@@ -683,6 +692,38 @@ class EditingPanel(QWidget):
     def closeEvent(self, event):
         self.viewer.undoStack.clear()
         QWidget.closeEvent(self, event)
+
+    def generateReport(self):
+        # Get the file path and name from the user using QFileDialog
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        file_dialog = QFileDialog(self, "Save PDF Report", "", "PDF Files (*.pdf);;All Files (*)", options=options)
+        file_dialog.setDefaultSuffix('pdf')
+        file_path, _ = file_dialog.getSaveFileName()
+
+        if file_path:
+            # Open a PDF file for writing
+            file_path = file_path.split('.')[0]+'.pdf'
+            c = canvas.Canvas(file_path, pagesize=letter)
+
+            # Iterate through the images and add them to the PDF
+            # Replace 'image_paths' with the actual list of image paths from your application
+            image_paths = [self.viewer.imgPath]
+            for img_path in image_paths:
+                # Calculate image size to fit on the page
+                img_width, img_height = letter
+                img_resolution = c.drawInlineImage(img_path, 0, 0, width=img_width, height=img_height)
+                scale_x = img_width / img_resolution[0]
+                scale_y = img_height / img_resolution[1]
+
+                c.scale(scale_x, scale_y)
+                #c.drawInlineImage(img_path, 100, 500, width=img_width, height=img_height)
+
+                # Add some space between images
+                c.showPage()
+
+            # Save and close the PDF
+            c.save()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
