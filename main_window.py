@@ -79,6 +79,7 @@ class MainWindow(QMainWindow):
         self.editingPanel.setFloating(True)
         self.editingPanel.hide()
         # self.imageViewer = ImageViewDockWidget(self)
+        self.imageViewer = None
         self.setGeometry(100, 100, 1100, 600)
 
     def openThemeSettings(self):
@@ -225,7 +226,7 @@ class MainWindow(QMainWindow):
         """
         options = QFileDialog.Options()
         options |= QFileDialog.ReadOnly
-        if self.imageViewer.imgPath:
+        if self.imageViewer and self.imageViewer.imgPath:
             file_name, _ = QFileDialog.getSaveFileName(
                 self,
                 "Save Image",
