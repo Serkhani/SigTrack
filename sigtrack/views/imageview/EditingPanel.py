@@ -20,13 +20,16 @@ from PySide2.QtWidgets import (
     QColorDialog,
     QAction,
     QSizePolicy,
+    QFileDialog,
     QFileDialog
 )
 
 from PySide2.QtCore import (
     Qt,
     QRectF,
-    QCoreApplication
+    QCoreApplication,
+    QByteArray,
+    QBuffer
 )
 
 from PySide2.QtGui import (
@@ -39,6 +42,9 @@ from PySide2.QtGui import (
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
+from PIL import Image
+from reportlab.lib.utils import ImageReader
+import io
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -717,13 +723,14 @@ class EditingPanel(QWidget):
                 scale_y = img_height / img_resolution[1]
 
                 c.scale(scale_x, scale_y)
-                #c.drawInlineImage(img_path, 100, 500, width=img_width, height=img_height)
 
                 # Add some space between images
                 c.showPage()
 
             # Save and close the PDF
             c.save()
+                # # Save and close the PDF
+                # c.save()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
