@@ -53,7 +53,13 @@ logging.basicConfig(
 )
 
 # import sigtrack.views.editing.icon_resources
-
+# Filtering opencv
+opencv = False
+try:
+    import cv2
+    opencv = True
+except:
+    opencv = False
 
 class EditingPanelDockWidget(QDockWidget):
     def __init__(self, widget):
