@@ -57,6 +57,8 @@ logging.basicConfig(
 opencv = False
 try:
     import cv2
+    import numpy as np
+    from matplotlib import pyplot as plt
     opencv = True
 except:
     opencv = False
@@ -272,6 +274,28 @@ class EditingPanel(QWidget):
 
         HBToolViewPropsLayout.addWidget(VBToolPropertiesWidget)
         VBlayout.addLayout(HBToolViewPropsLayout)
+
+        # OpenCV filtering 
+        # Add exclusive checkboxes
+        self.edgesFilterCheckBox = QCheckBox("Edges Filter", self)
+        self.edgesFilterCheckBox.stateChanged.connect(self.edgesFilterCheckBoxClicked)
+        VBToolPropertiesLayout.addWidget(self.edgesFilterCheckBox)
+
+        self.convolutionCheckBox = QCheckBox("2D Convolution", self)
+        self.convolutionCheckBox.stateChanged.connect(self.convolutionCheckBoxClicked)
+        VBToolPropertiesLayout.addWidget(self.convolutionCheckBox)
+
+        self.medianFilterCheckBox = QCheckBox("Median Filter", self)
+        self.medianFilterCheckBox.stateChanged.connect(self.medianFilterCheckBoxClicked)
+        VBToolPropertiesLayout.addWidget(self.medianFilterCheckBox)
+
+        self.gaussianFilterCheckBox = QCheckBox("Gaussian Filter", self)
+        self.gaussianFilterCheckBox.stateChanged.connect(self.gaussianFilterCheckBoxClicked)
+        VBToolPropertiesLayout.addWidget(self.gaussianFilterCheckBox)
+
+        self.gaussianHighpassCheckBox = QCheckBox("Gaussian Highpass", self)
+        self.gaussianHighpassCheckBox.stateChanged.connect(self.gaussianHighpassCheckBoxClicked)
+        VBToolPropertiesLayout.addWidget(self.gaussianHighpassCheckBox)
 
 #        self.setLayout(VBlayout)
 
@@ -503,6 +527,103 @@ class EditingPanel(QWidget):
         self.drawSelf.layerActive.selectByIds([self.drawSelf.featureIndex])
         self.viewer.resizeEvent([])
         self.extentbutton()
+
+    def operate(self, filt):
+        height, width = filt.shape[:2]
+        try:
+            rgb = cv2.cvtColor(filt, cv2.COLOR_GRAY2RGB)
+        except:
+            rgb = cv2.cvtColor(filt, cv2.COLOR_BGR2RGB)
+
+        bytesPerLine = 3 * width
+        qImg = QImage(rgb, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+        # return qImg
+        return qImg
+
+        # self.drawSelf.getImage = QImage(rgb, width, height, QImage.Format_RGB888)
+        # OpenCV filtering
+    def edgesFilterCheckBoxClicked(self):
+        self.convolutionCheckBox.setChecked(False)
+        self.medianFilterCheckBox.setChecked(False)
+        self.gaussianFilterCheckBox.setChecked(False)
+        self.gaussianHighpassCheckBox.setChecked(False)
+        if self.edgesFilterCheckBox.isChecked():
+            # Handle edges filter activation
+            img = cv2.imread(self.viewer.imgPath, 0)
+            filt = cv2.Canny(img, 100, 200)
+            self.viewer.scene.clear()
+            
+
+            pixmap = QPixmap.fromImage(self.operate(filt))
+            self.viewer.scene.addPixmap(pixmap)
+            self.viewer.setSceneRect(QRectF(pixmap.rect()))
+            self.viewer.resizeEvent([])
+            self.extentbutton()
+
+
+        else:
+            # Handle edges filter deactivation
+            pass
+
+    def convolutionCheckBoxClicked(self):
+        self.edgesFilterCheckBox.setChecked(False)
+        self.medianFilterCheckBox.setChecked(False)
+        self.gaussianFilterCheckBox.setChecked(False)
+        self.gaussianHighpassCheckBox.setChecked(False)
+        if self.convolutionCheckBox.isChecked():
+            # Handle 2D convolution activation
+            img = cv2.imread(self.viewer.imgPat)
+            kernel = np.ones((5, 5), np.float32) / 25
+            filt = cv2.filter2D(img, -1, kernel)
+            self.operate(filt)
+        else:
+            # Handle 2D convolution deactivation
+            pass
+
+    def medianFilterCheckBoxClicked(self):
+        self.convolutionCheckBox.setChecked(False)
+        self.edgesFilterCheckBox.setChecked(False)
+        self.gaussianFilterCheckBox.setChecked(False)
+        self.gaussianHighpassCheckBox.setChecked(False)
+        if self.medianFilterCheckBox.isChecked():
+            # Handle median filter activation
+            img = cv2.imread(self.viewer.imgPat)
+            filt = cv2.medianBlur(img, 5)
+            self.operate(filt)
+        else:
+            # Handle median filter deactivation
+            pass
+
+    def gaussianFilterCheckBoxClicked(self):
+        self.convolutionCheckBox.setChecked(False)
+        self.medianFilterCheckBox.setChecked(False)
+        self.edgesFilterCheckBox.setChecked(False)
+        self.gaussianHighpassCheckBox.setChecked(False)
+        if self.gaussianFilterCheckBox.isChecked():
+            # Handle Gaussian filter activation
+            img = cv2.imread(self.viewer.imgPat)
+            filt = cv2.GaussianBlur(img, (5, 5), 0)
+            self.operate(filt)
+        else:
+            # Handle Gaussian filter deactivation
+            pass
+
+    def gaussianHighpassCheckBoxClicked(self):
+        self.convolutionCheckBox.setChecked(False)
+        self.medianFilterCheckBox.setChecked(False)
+        self.gaussianFilterCheckBox.setChecked(False)
+        self.edgesFilterCheckBox.setChecked(False)
+        if self.gaussianHighpassCheckBox.isChecked():
+            # Handle Gaussian Highpass activation
+            from scipy import ndimage
+            data = np.array(cv2.imread(self.viewer.imgPat))
+            lowpass = ndimage.gaussian_filter(data, 3)
+            filt = data - lowpass
+            self.operate(filt)
+        else:
+            # Handle Gaussian Highpass deactivation
+            
+            pass
 
     def zoom_to_selectbutton(self):
         self.drawSelf.iface.actionZoomToSelected().trigger()
