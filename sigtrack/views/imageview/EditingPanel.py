@@ -114,7 +114,6 @@ class EditingPanel(QWidget):
         self.editingToolbar.addAction(self.freeHandAction)
         self.editingToolbar.addAction(self.textAction)
         self.editingToolbar.addAction(self.watermarkAction)
-        self.editingToolbar.addWidget(self.generate_pdf_btn)
 
         self.extent = QPushButton(self)
         self.extent.setIcon(QIcon(':extent'))
@@ -296,6 +295,8 @@ class EditingPanel(QWidget):
         self.gaussianHighpassCheckBox = QCheckBox("Gaussian Highpass", self)
         self.gaussianHighpassCheckBox.stateChanged.connect(self.gaussianHighpassCheckBoxClicked)
         VBToolPropertiesLayout.addWidget(self.gaussianHighpassCheckBox)
+
+        VBToolPropertiesLayout.addWidget(self.generate_pdf_btn)
 
 #        self.setLayout(VBlayout)
 
@@ -537,7 +538,6 @@ class EditingPanel(QWidget):
 
         bytesPerLine = 3 * width
         qImg = QImage(rgb, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-        # return qImg
         return qImg
 
         # self.drawSelf.getImage = QImage(rgb, width, height, QImage.Format_RGB888)
@@ -551,10 +551,8 @@ class EditingPanel(QWidget):
             # Handle edges filter activation
             img = cv2.imread(self.viewer.imgPath, 0)
             filt = cv2.Canny(img, 100, 200)
-            self.viewer.scene.clear()
-            
-
             pixmap = QPixmap.fromImage(self.operate(filt))
+            self.viewer.scene.clear()
             self.viewer.scene.addPixmap(pixmap)
             self.viewer.setSceneRect(QRectF(pixmap.rect()))
             self.viewer.resizeEvent([])
