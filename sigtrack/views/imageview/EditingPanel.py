@@ -539,6 +539,13 @@ class EditingPanel(QWidget):
         bytesPerLine = 3 * width
         qImg = QImage(rgb, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
         return qImg
+    
+    def updateImageView(self, pixmap:QPixmap):
+        self.viewer.scene.clear()
+        self.viewer.scene.addPixmap(pixmap)
+        self.viewer.setSceneRect(QRectF(pixmap.rect()))
+        self.viewer.resizeEvent([])
+        self.extentbutton()
 
         # self.drawSelf.getImage = QImage(rgb, width, height, QImage.Format_RGB888)
         # OpenCV filtering
@@ -556,11 +563,7 @@ class EditingPanel(QWidget):
             # Handle edges filter deactivation
             qImg = QImage(self.viewer.imgPath)
             pixmap = QPixmap.fromImage(qImg)
-        self.viewer.scene.clear()
-        self.viewer.scene.addPixmap(pixmap)
-        self.viewer.setSceneRect(QRectF(pixmap.rect()))
-        self.viewer.resizeEvent([])
-        self.extentbutton()
+        self.updateImageView(pixmap= pixmap)
 
     def convolutionCheckBoxClicked(self):
         self.edgesFilterCheckBox.setChecked(False)
