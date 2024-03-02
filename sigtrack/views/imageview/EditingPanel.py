@@ -572,13 +572,15 @@ class EditingPanel(QWidget):
         self.gaussianHighpassCheckBox.setChecked(False)
         if self.convolutionCheckBox.isChecked():
             # Handle 2D convolution activation
-            img = cv2.imread(self.viewer.imgPat)
+            img = cv2.imread(self.viewer.imgPath, 0)
             kernel = np.ones((5, 5), np.float32) / 25
             filt = cv2.filter2D(img, -1, kernel)
-            self.operate(filt)
+            pixmap = QPixmap.fromImage(self.operate(filt))
         else:
             # Handle 2D convolution deactivation
-            pass
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.updateImageView(pixmap= pixmap)
 
     def medianFilterCheckBoxClicked(self):
         self.convolutionCheckBox.setChecked(False)
@@ -587,7 +589,7 @@ class EditingPanel(QWidget):
         self.gaussianHighpassCheckBox.setChecked(False)
         if self.medianFilterCheckBox.isChecked():
             # Handle median filter activation
-            img = cv2.imread(self.viewer.imgPat)
+            img = cv2.imread(self.viewer.imgPath)
             filt = cv2.medianBlur(img, 5)
             self.operate(filt)
         else:
@@ -601,7 +603,7 @@ class EditingPanel(QWidget):
         self.gaussianHighpassCheckBox.setChecked(False)
         if self.gaussianFilterCheckBox.isChecked():
             # Handle Gaussian filter activation
-            img = cv2.imread(self.viewer.imgPat)
+            img = cv2.imread(self.viewer.imgPath)
             filt = cv2.GaussianBlur(img, (5, 5), 0)
             self.operate(filt)
         else:
@@ -616,7 +618,7 @@ class EditingPanel(QWidget):
         if self.gaussianHighpassCheckBox.isChecked():
             # Handle Gaussian Highpass activation
             from scipy import ndimage
-            data = np.array(cv2.imread(self.viewer.imgPat))
+            data = np.array(cv2.imread(self.viewer.imgPath))
             lowpass = ndimage.gaussian_filter(data, 3)
             filt = data - lowpass
             self.operate(filt)
