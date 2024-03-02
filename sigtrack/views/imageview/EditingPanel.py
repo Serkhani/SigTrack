@@ -625,11 +625,12 @@ class EditingPanel(QWidget):
             data = np.array(cv2.imread(self.viewer.imgPath))
             lowpass = ndimage.gaussian_filter(data, 3)
             filt = data - lowpass
-            self.operate(filt)
+            pixmap = QPixmap.fromImage(self.operate(filt))
         else:
             # Handle Gaussian Highpass deactivation
-            
-            pass
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.updateImageView(pixmap= pixmap)
 
     def zoom_to_selectbutton(self):
         self.drawSelf.iface.actionZoomToSelected().trigger()
