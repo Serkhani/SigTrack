@@ -277,23 +277,23 @@ class EditingPanel(QWidget):
         # OpenCV filtering 
         # Add exclusive checkboxes
         self.edgesFilterCheckBox = QCheckBox("Edges Filter", self)
-        self.edgesFilterCheckBox.stateChanged.connect(self.edgesFilterCheckBoxClicked)
+        self.edgesFilterCheckBox.clicked.connect(self.edgesFilterCheckBoxClicked)
         VBToolPropertiesLayout.addWidget(self.edgesFilterCheckBox)
 
         self.convolutionCheckBox = QCheckBox("2D Convolution", self)
-        self.convolutionCheckBox.stateChanged.connect(self.convolutionCheckBoxClicked)
+        self.convolutionCheckBox.clicked.connect(self.convolutionCheckBoxClicked)
         VBToolPropertiesLayout.addWidget(self.convolutionCheckBox)
 
         self.medianFilterCheckBox = QCheckBox("Median Filter", self)
-        self.medianFilterCheckBox.stateChanged.connect(self.medianFilterCheckBoxClicked)
+        self.medianFilterCheckBox.clicked.connect(self.medianFilterCheckBoxClicked)
         VBToolPropertiesLayout.addWidget(self.medianFilterCheckBox)
 
         self.gaussianFilterCheckBox = QCheckBox("Gaussian Filter", self)
-        self.gaussianFilterCheckBox.stateChanged.connect(self.gaussianFilterCheckBoxClicked)
+        self.gaussianFilterCheckBox.clicked.connect(self.gaussianFilterCheckBoxClicked)
         VBToolPropertiesLayout.addWidget(self.gaussianFilterCheckBox)
 
         self.gaussianHighpassCheckBox = QCheckBox("Gaussian Highpass", self)
-        self.gaussianHighpassCheckBox.stateChanged.connect(self.gaussianHighpassCheckBoxClicked)
+        self.gaussianHighpassCheckBox.clicked.connect(self.gaussianHighpassCheckBoxClicked)
         VBToolPropertiesLayout.addWidget(self.gaussianHighpassCheckBox)
 
         VBToolPropertiesLayout.addWidget(self.generate_pdf_btn)
