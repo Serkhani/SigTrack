@@ -552,16 +552,15 @@ class EditingPanel(QWidget):
             img = cv2.imread(self.viewer.imgPath, 0)
             filt = cv2.Canny(img, 100, 200)
             pixmap = QPixmap.fromImage(self.operate(filt))
-            self.viewer.scene.clear()
-            self.viewer.scene.addPixmap(pixmap)
-            self.viewer.setSceneRect(QRectF(pixmap.rect()))
-            self.viewer.resizeEvent([])
-            self.extentbutton()
-
-
         else:
             # Handle edges filter deactivation
-            pass
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.viewer.scene.clear()
+        self.viewer.scene.addPixmap(pixmap)
+        self.viewer.setSceneRect(QRectF(pixmap.rect()))
+        self.viewer.resizeEvent([])
+        self.extentbutton()
 
     def convolutionCheckBoxClicked(self):
         self.edgesFilterCheckBox.setChecked(False)
