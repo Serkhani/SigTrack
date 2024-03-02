@@ -591,10 +591,12 @@ class EditingPanel(QWidget):
             # Handle median filter activation
             img = cv2.imread(self.viewer.imgPath)
             filt = cv2.medianBlur(img, 5)
-            self.operate(filt)
+            pixmap = QPixmap.fromImage(self.operate(filt))
         else:
             # Handle median filter deactivation
-            pass
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.updateImageView(pixmap= pixmap)
 
     def gaussianFilterCheckBoxClicked(self):
         self.convolutionCheckBox.setChecked(False)
