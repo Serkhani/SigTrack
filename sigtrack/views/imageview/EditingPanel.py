@@ -607,10 +607,12 @@ class EditingPanel(QWidget):
             # Handle Gaussian filter activation
             img = cv2.imread(self.viewer.imgPath)
             filt = cv2.GaussianBlur(img, (5, 5), 0)
-            self.operate(filt)
+            pixmap = QPixmap.fromImage(self.operate(filt))
         else:
             # Handle Gaussian filter deactivation
-            pass
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.updateImageView(pixmap= pixmap)
 
     def gaussianHighpassCheckBoxClicked(self):
         self.convolutionCheckBox.setChecked(False)
