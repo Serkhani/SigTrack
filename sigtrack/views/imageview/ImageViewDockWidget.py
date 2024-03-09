@@ -42,7 +42,6 @@ logging.basicConfig(
     format='%(asctime)s | %(filename)s [%(levelname)s] %(message)s',
 )
 
-
 class ImageViewDockWidget(QGraphicsView):
     afterLeftClick = Signal(float, float)
     afterLeftClickReleased = Signal(float, float)
@@ -156,8 +155,7 @@ class ImageViewDockWidget(QGraphicsView):
             elif self.drawLine and (self.preview.type() == QGraphicsLineItem().type()):
                 self.scene.removeItem(self.preview)
                 self.end = sc_pos
-                line = QLineF(self.begin.x(), self.begin.y(),
-                              self.end.x(), self.end.y())
+                line = QLineF(self.begin.x(), self.begin.y(), self.end.x(), self.end.y())
                 self.preview.setLine(line)
                 self.scene.addItem(self.preview)
 

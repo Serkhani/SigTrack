@@ -275,26 +275,71 @@ class EditingPanel(QWidget):
         VBlayout.addLayout(HBToolViewPropsLayout)
 
         # OpenCV filtering 
+        OpenCVFiltersLayout = QHBoxLayout()
+        self.openCVLabel = QLabel(self)
+        self.openCVLabel.setText(self.tr('OpenCV'))
+        OpenCVFilterList = QVBoxLayout()
+        OpenCVFiltersLayout.addWidget(self.openCVLabel)
+        OpenCVFiltersLayout.addLayout(OpenCVFilterList)
         # Add exclusive checkboxes
         self.edgesFilterCheckBox = QCheckBox("Edges Filter", self)
         self.edgesFilterCheckBox.clicked.connect(self.edgesFilterCheckBoxClicked)
-        VBToolPropertiesLayout.addWidget(self.edgesFilterCheckBox)
+        OpenCVFilterList.addWidget(self.edgesFilterCheckBox)
 
         self.convolutionCheckBox = QCheckBox("2D Convolution", self)
         self.convolutionCheckBox.clicked.connect(self.convolutionCheckBoxClicked)
-        VBToolPropertiesLayout.addWidget(self.convolutionCheckBox)
+        OpenCVFilterList.addWidget(self.convolutionCheckBox)
 
         self.medianFilterCheckBox = QCheckBox("Median Filter", self)
         self.medianFilterCheckBox.clicked.connect(self.medianFilterCheckBoxClicked)
-        VBToolPropertiesLayout.addWidget(self.medianFilterCheckBox)
+        OpenCVFilterList.addWidget(self.medianFilterCheckBox)
 
         self.gaussianFilterCheckBox = QCheckBox("Gaussian Filter", self)
         self.gaussianFilterCheckBox.clicked.connect(self.gaussianFilterCheckBoxClicked)
-        VBToolPropertiesLayout.addWidget(self.gaussianFilterCheckBox)
+        OpenCVFilterList.addWidget(self.gaussianFilterCheckBox)
 
         self.gaussianHighpassCheckBox = QCheckBox("Gaussian Highpass", self)
         self.gaussianHighpassCheckBox.clicked.connect(self.gaussianHighpassCheckBoxClicked)
-        VBToolPropertiesLayout.addWidget(self.gaussianHighpassCheckBox)
+        OpenCVFilterList.addWidget(self.gaussianHighpassCheckBox)
+        VBToolPropertiesLayout.addLayout(OpenCVFiltersLayout)
+
+
+        # Bands
+        BandsLayout = QHBoxLayout()
+        self.bandsLabel = QLabel(self)
+        self.bandsLabel.setText(self.tr('Bands'))
+        BandsListLayout = QVBoxLayout()
+        BandsLayout.addWidget(self.bandsLabel)
+        BandsLayout.addLayout(BandsListLayout)
+        self.greenBandCheckBox = QCheckBox("Green", self)
+        self.greenBandCheckBox.clicked.connect(self.greenCheckBoxClicked)
+        self.redBandCheckBox = QCheckBox("Red", self)
+        self.redBandCheckBox.clicked.connect(self.redCheckBoxClicked)
+        self.blueBandCheckBox = QCheckBox("Blue", self)
+        self.blueBandCheckBox.clicked.connect(self.blueCheckBoxClicked)
+        BandsListLayout.addWidget(self.greenBandCheckBox)
+        BandsListLayout.addWidget(self.redBandCheckBox)
+        BandsListLayout.addWidget(self.blueBandCheckBox)
+        VBToolPropertiesLayout.addLayout(BandsLayout)
+
+        # Filters
+        FiltersLayout = QHBoxLayout()
+        self.filtersLabel = QLabel(self)
+        self.filtersLabel.setText(self.tr('Filters'))
+        FilterListLayout = QVBoxLayout()
+        FiltersLayout.addWidget(self.filtersLabel)
+        FiltersLayout.addLayout(FilterListLayout)
+        self.grayFilterCheckBox = QCheckBox("Gray", self)
+        self.grayFilterCheckBox.clicked.connect(self.grayFilterCheckBoxClicked)
+        self.mirrorFilterCheckBox = QCheckBox("Mirror", self)
+        self.mirrorFilterCheckBox.clicked.connect(self.mirrorFilterCheckBoxClicked)
+        self.monoFilterCheckBox = QCheckBox("Mono", self)
+        self.monoFilterCheckBox.clicked.connect(self.monoFilterCheckBoxClicked)
+        FilterListLayout.addWidget(self.grayFilterCheckBox)
+        FilterListLayout.addWidget(self.mirrorFilterCheckBox)
+        FilterListLayout.addWidget(self.monoFilterCheckBox)
+        VBToolPropertiesLayout.addLayout(FiltersLayout)
+        
 
         VBToolPropertiesLayout.addWidget(self.generate_pdf_btn)
 
@@ -554,6 +599,11 @@ class EditingPanel(QWidget):
         self.medianFilterCheckBox.setChecked(False)
         self.gaussianFilterCheckBox.setChecked(False)
         self.gaussianHighpassCheckBox.setChecked(False)
+        self.redBandCheckBox.setChecked(False)
+        self.blueBandCheckBox.setChecked(False)
+        self.grayFilterCheckBox.setChecked(False)
+        self.mirrorFilterCheckBox.setChecked(False)
+        self.greenBandCheckBox.setChecked(False)
         if self.edgesFilterCheckBox.isChecked():
             # Handle edges filter activation
             img = cv2.imread(self.viewer.imgPath, 0)
@@ -570,6 +620,11 @@ class EditingPanel(QWidget):
         self.medianFilterCheckBox.setChecked(False)
         self.gaussianFilterCheckBox.setChecked(False)
         self.gaussianHighpassCheckBox.setChecked(False)
+        self.redBandCheckBox.setChecked(False)
+        self.blueBandCheckBox.setChecked(False)
+        self.grayFilterCheckBox.setChecked(False)
+        self.mirrorFilterCheckBox.setChecked(False)
+        self.greenBandCheckBox.setChecked(False)
         if self.convolutionCheckBox.isChecked():
             # Handle 2D convolution activation
             img = cv2.imread(self.viewer.imgPath, 0)
@@ -587,6 +642,11 @@ class EditingPanel(QWidget):
         self.edgesFilterCheckBox.setChecked(False)
         self.gaussianFilterCheckBox.setChecked(False)
         self.gaussianHighpassCheckBox.setChecked(False)
+        self.redBandCheckBox.setChecked(False)
+        self.blueBandCheckBox.setChecked(False)
+        self.grayFilterCheckBox.setChecked(False)
+        self.mirrorFilterCheckBox.setChecked(False)
+        self.greenBandCheckBox.setChecked(False)
         if self.medianFilterCheckBox.isChecked():
             # Handle median filter activation
             img = cv2.imread(self.viewer.imgPath)
@@ -603,6 +663,11 @@ class EditingPanel(QWidget):
         self.medianFilterCheckBox.setChecked(False)
         self.edgesFilterCheckBox.setChecked(False)
         self.gaussianHighpassCheckBox.setChecked(False)
+        self.redBandCheckBox.setChecked(False)
+        self.blueBandCheckBox.setChecked(False)
+        self.grayFilterCheckBox.setChecked(False)
+        self.mirrorFilterCheckBox.setChecked(False)
+        self.greenBandCheckBox.setChecked(False)
         if self.gaussianFilterCheckBox.isChecked():
             # Handle Gaussian filter activation
             img = cv2.imread(self.viewer.imgPath)
@@ -619,6 +684,11 @@ class EditingPanel(QWidget):
         self.medianFilterCheckBox.setChecked(False)
         self.gaussianFilterCheckBox.setChecked(False)
         self.edgesFilterCheckBox.setChecked(False)
+        self.redBandCheckBox.setChecked(False)
+        self.blueBandCheckBox.setChecked(False)
+        self.grayFilterCheckBox.setChecked(False)
+        self.mirrorFilterCheckBox.setChecked(False)
+        self.greenBandCheckBox.setChecked(False)
         if self.gaussianHighpassCheckBox.isChecked():
             # Handle Gaussian Highpass activation
             from scipy import ndimage
@@ -628,6 +698,131 @@ class EditingPanel(QWidget):
             pixmap = QPixmap.fromImage(self.operate(filt))
         else:
             # Handle Gaussian Highpass deactivation
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.updateImageView(pixmap= pixmap)
+        
+    # bands
+    def greenCheckBoxClicked(self):
+        self.convolutionCheckBox.setChecked(False)
+        self.medianFilterCheckBox.setChecked(False)
+        self.gaussianFilterCheckBox.setChecked(False)
+        self.edgesFilterCheckBox.setChecked(False)
+        self.gaussianHighpassCheckBox.setChecked(False)
+        self.redBandCheckBox.setChecked(False)
+        self.blueBandCheckBox.setChecked(False)
+        self.grayFilterCheckBox.setChecked(False)
+        self.mirrorFilterCheckBox.setChecked(False)
+        self.monoFilterCheckBox.setChecked(False)
+        if self.greenBandCheckBox.isChecked():
+            img = np.array(cv2.imread(self.viewer.imgPath))
+            filt = np.zeros(img.shape, dtype='uint8')
+            filt[:, :, 1] = img[:, :, 1]
+            pixmap = QPixmap.fromImage(self.operate(filt))
+        else:
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.updateImageView(pixmap= pixmap)
+
+    def redCheckBoxClicked(self):
+        self.convolutionCheckBox.setChecked(False)
+        self.medianFilterCheckBox.setChecked(False)
+        self.gaussianFilterCheckBox.setChecked(False)
+        self.edgesFilterCheckBox.setChecked(False)
+        self.gaussianHighpassCheckBox.setChecked(False)
+        self.greenBandCheckBox.setChecked(False)
+        self.blueBandCheckBox.setChecked(False)
+        self.grayFilterCheckBox.setChecked(False)
+        self.mirrorFilterCheckBox.setChecked(False)
+        self.monoFilterCheckBox.setChecked(False)
+        if self.redBandCheckBox.isChecked():
+            img = np.array(cv2.imread(self.viewer.imgPath))
+            filt = np.zeros(img.shape, dtype='uint8')
+            filt[:, :, 0] = img[:, :, 0]
+            pixmap = QPixmap.fromImage(self.operate(filt))
+        else:
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.updateImageView(pixmap= pixmap)
+        
+    def blueCheckBoxClicked(self):
+        self.convolutionCheckBox.setChecked(False)
+        self.medianFilterCheckBox.setChecked(False)
+        self.gaussianFilterCheckBox.setChecked(False)
+        self.edgesFilterCheckBox.setChecked(False)
+        self.gaussianHighpassCheckBox.setChecked(False)
+        self.redBandCheckBox.setChecked(False)
+        self.greenBandCheckBox.setChecked(False)
+        self.grayFilterCheckBox.setChecked(False)
+        self.mirrorFilterCheckBox.setChecked(False)
+        self.monoFilterCheckBox.setChecked(False)
+        if self.blueBandCheckBox.isChecked():
+            img = np.array(cv2.imread(self.viewer.imgPath))
+            filt = np.zeros(img.shape, dtype='uint8')
+            filt[:, :, 2] = img[:, :, 2]
+            pixmap = QPixmap.fromImage(self.operate(filt))
+        else:
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.updateImageView(pixmap= pixmap)
+    
+    
+    def grayFilterCheckBoxClicked(self):
+        self.convolutionCheckBox.setChecked(False)
+        self.medianFilterCheckBox.setChecked(False)
+        self.gaussianFilterCheckBox.setChecked(False)
+        self.edgesFilterCheckBox.setChecked(False)
+        self.gaussianHighpassCheckBox.setChecked(False)
+        self.redBandCheckBox.setChecked(False)
+        self.blueBandCheckBox.setChecked(False)
+        self.greenBandCheckBox.setChecked(False)
+        self.mirrorFilterCheckBox.setChecked(False)
+        self.monoFilterCheckBox.setChecked(False)
+        if self.grayFilterCheckBox.isChecked():
+            data = QImage(self.viewer.imgPath)
+            data = data.convertToFormat(QImage.Format_Grayscale8)
+            pixmap = QPixmap.fromImage(data)
+        else:
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.updateImageView(pixmap= pixmap)
+    
+    def mirrorFilterCheckBoxClicked(self):
+        self.convolutionCheckBox.setChecked(False)
+        self.medianFilterCheckBox.setChecked(False)
+        self.gaussianFilterCheckBox.setChecked(False)
+        self.edgesFilterCheckBox.setChecked(False)
+        self.gaussianHighpassCheckBox.setChecked(False)
+        self.redBandCheckBox.setChecked(False)
+        self.blueBandCheckBox.setChecked(False)
+        self.grayFilterCheckBox.setChecked(False)
+        self.greenBandCheckBox.setChecked(False)
+        self.monoFilterCheckBox.setChecked(False)
+        if self.mirrorFilterCheckBox.isChecked():
+            data = QImage(self.viewer.imgPath)
+            data = data.mirrored(True, False)
+            pixmap = QPixmap.fromImage(data)
+        else:
+            qImg = QImage(self.viewer.imgPath)
+            pixmap = QPixmap.fromImage(qImg)
+        self.updateImageView(pixmap= pixmap)
+    
+    def monoFilterCheckBoxClicked(self):
+        self.convolutionCheckBox.setChecked(False)
+        self.medianFilterCheckBox.setChecked(False)
+        self.gaussianFilterCheckBox.setChecked(False)
+        self.edgesFilterCheckBox.setChecked(False)
+        self.gaussianHighpassCheckBox.setChecked(False)
+        self.redBandCheckBox.setChecked(False)
+        self.blueBandCheckBox.setChecked(False)
+        self.grayFilterCheckBox.setChecked(False)
+        self.mirrorFilterCheckBox.setChecked(False)
+        self.greenBandCheckBox.setChecked(False)
+        if self.monoFilterCheckBox.isChecked():
+            data = QImage(self.viewer.imgPath)
+            data = data.convertToFormat(QImage.Format_Mono)
+            pixmap = QPixmap.fromImage(data)
+        else:
             qImg = QImage(self.viewer.imgPath)
             pixmap = QPixmap.fromImage(qImg)
         self.updateImageView(pixmap= pixmap)
@@ -840,12 +1035,10 @@ class EditingPanel(QWidget):
         file_dialog = QFileDialog(self, "Save PDF Report", "", "PDF Files (*.pdf);;All Files (*)", options=options)
         file_dialog.setDefaultSuffix('pdf')
         file_path, _ = file_dialog.getSaveFileName()
-
         if file_path:
             # Open a PDF file for writing
             file_path = file_path.split('.')[0]+'.pdf'
             c = canvas.Canvas(file_path, pagesize=letter)
-
             # Iterate through the images and add them to the PDF
             # Replace 'image_paths' with the actual list of image paths from your application
             image_paths = [self.viewer.imgPath]
@@ -855,16 +1048,11 @@ class EditingPanel(QWidget):
                 img_resolution = c.drawInlineImage(img_path, 0, 0, width=img_width, height=img_height)
                 scale_x = img_width / img_resolution[0]
                 scale_y = img_height / img_resolution[1]
-
                 c.scale(scale_x, scale_y)
-
                 # Add some space between images
                 c.showPage()
-
             # Save and close the PDF
             c.save()
-                # # Save and close the PDF
-                # c.save()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
