@@ -33,7 +33,7 @@ class FMVModel(QAbstractListModel):
         elif role == FMVModel.LineRole:
             return self._line_points
 
-    def updateData(self, polygon_points: list[QGeoCoordinate], line_points: list[list[QGeoCoordinate, QGeoCoordinate]]):
+    def updateData(self, polygon_points: 'list[QGeoCoordinate]', line_points: 'list[list[QGeoCoordinate, QGeoCoordinate]]'):
         self._polygon_points = polygon_points
         self._line_points = line_points
         self.dataChanged.emit(self.index(0), self.index(
