@@ -24,10 +24,11 @@ logging.basicConfig(
 
 
 class WatermarkItem(QGraphicsPixmapItem):
-    def __init__(self, scene: QGraphicsScene):
+    def __init__(self, scene: QGraphicsScene, parentDimensions: QSizeF):
         super().__init__()
 
         self.scene = scene
+        self.parentDimensions = parentDimensions
 
         self.setFlag(QGraphicsItem.ItemIsMovable)
         self.setFlag(QGraphicsItem.ItemIsSelectable)
@@ -115,6 +116,8 @@ class WatermarkItem(QGraphicsPixmapItem):
         self.reset()
         watermark_image = QPixmap(watermark_image_path)
         self.setPixmap(watermark_image)
+        shouldScaleDown: bool = watermark_image.width() > self.parentDimensions.width() or watermark_image.height() > (0.5 * self.parentDimensions.height())
+        if shouldScaleDown: self.setScale(0.75)
 
     def update_watermark_opacity(self, value):
         self.setOpacity(value / 100.0)
