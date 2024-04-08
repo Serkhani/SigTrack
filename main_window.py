@@ -24,6 +24,7 @@ from sigtrack.views.ui_form import Ui_MainWindow
 from sigtrack.views.settings import ThemeSelectWindow
 
 import sigtrack.resources.compiled.editing_icons_rc
+from sigtrack.utils.activate_license import activateLicense
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -94,7 +95,7 @@ class MainWindow(QMainWindow):
         self.ui.label.hide()
         # videoFile = "C:\\Users\\LENOVO\\Desktop\\Tracking Vessel.ts"
         # print(videoFile)
-        
+
         # The change happened here because the videoviewcondockwidget is no more just a widget but also a dockWidget
         if not filePath:
             # create dockwidget
@@ -349,40 +350,47 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    app.setWindowIcon(
-        QIcon(os.path.join(":/sigtrack_icon")))
 
-    # ======FOR SPLASH SCREEN======
+    isActive, message = activateLicense()
 
-    # Load the image for the splash screen
-    logger.info("Loading splash screen")
-    pixmap = QPixmap(os.path.join(":/sigtrack"))
+    if isActive:
+      app = QApplication(sys.argv)
+      app.setWindowIcon(
+          QIcon(os.path.join(":/sigtrack_icon")))
 
-    # Rotate and scale the image until it can't be seen
-    angle = 100
-    scale = 0.0
+      # ======FOR SPLASH SCREEN======
 
-    # Create the splash screen and show it
-    splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
-    transform = QTransform().rotate(angle).scale(scale, scale)
-    rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
-    splash.setPixmap(rotated)
-    splash.show()
+      # Load the image for the splash screen
+      logger.info("Loading splash screen")
+      pixmap = QPixmap(os.path.join(":/sigtrack"))
 
-    while scale < 1.0:
-        app.processEvents()
-        angle -= 1
-        scale += 0.01
-        transform = QTransform().rotate(angle).scale(scale, scale)
-        rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
-        splash.setPixmap(rotated)
+      # Rotate and scale the image until it can't be seen
+      angle = 100
+      scale = 0.0
 
-    # ======SPLASH SCREEN ENDED======
+      # Create the splash screen and show it
+      splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
+      transform = QTransform().rotate(angle).scale(scale, scale)
+      rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
+      splash.setPixmap(rotated)
+      splash.show()
 
-    widget = MainWindow()
-    widget.setWindowTitle("SigTrack")
-    # Close the splash screen and continue with the main application
-    splash.finish(widget)#Makes splash screen wait until the widget is loaded then it closes.
-    widget.show()
-    sys.exit(app.exec_())
+      while scale < 1.0:
+          app.processEvents()
+          angle -= 1
+          scale += 0.01
+          transform = QTransform().rotate(angle).scale(scale, scale)
+          rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
+          splash.setPixmap(rotated)
+
+      # ======SPLASH SCREEN ENDED======
+
+      widget = MainWindow()
+      widget.setWindowTitle("SigTrack")
+      # Close the splash screen and continue with the main application
+      splash.finish(widget)#Makes splash screen wait until the widget is loaded then it closes.
+      widget.show()
+      sys.exit(app.exec_())
+    else:
+      logger.error(message)
+
