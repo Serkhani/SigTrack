@@ -1,5 +1,7 @@
 # This Python file uses the following encoding: utf-8
 from sigtrack.models.image_models.colorComboBox import ColorComboBox
+from sigtrack.controllers.reportGenCon import ReportGenCon
+
 import logging
 
 from PySide2.QtWidgets import (
@@ -37,9 +39,6 @@ from PySide2.QtGui import (
     QKeySequence
 )
 
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
-
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     level=logging.DEBUG,
@@ -62,6 +61,12 @@ class EditingPanel(QWidget):
         self.viewer = viewer
         self.editingToolbar = QToolBar("Edit", self)
         self.editingToolbar.setOrientation(Qt.Vertical)
+        self.reportWindow = None
+        
+        # self.path_button.clicked.connect(self.select_path)
+        # self.report_path_button.clicked.connect(self.getImage)
+        # self.save_button.clicked.connect(self.save_pdf)
+
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.setSizePolicy(sizePolicy)
 
@@ -89,7 +94,8 @@ class EditingPanel(QWidget):
         self.watermarkAction.triggered.connect(self.watermarkbutton)
         # Add a button to generate the PDF report
         self.generate_pdf_btn = QPushButton('Generate PDF Report', self)
-        self.generate_pdf_btn.clicked.connect(self.generateReport)
+        # self.generate_pdf_btn.clicked.connect(self.generateReport)
+        self.generate_pdf_btn.clicked.connect(self.showReportWindowView)
 
 
         self.editingToolbar.addAction(self.undoAction)
@@ -693,37 +699,42 @@ class EditingPanel(QWidget):
         self.viewer.undoStack.clear()
         QWidget.closeEvent(self, event)
 
-    def generateReport(self):
-        # Get the file path and name from the user using QFileDialog
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        file_dialog = QFileDialog(self, "Save PDF Report", "", "PDF Files (*.pdf);;All Files (*)", options=options)
-        file_dialog.setDefaultSuffix('pdf')
-        file_path, _ = file_dialog.getSaveFileName()
+    # def generateReport(self):
+    #     # Get the file path and name from the user using QFileDialog
+    #     options = QFileDialog.Options()
+    #     options |= QFileDialog.DontUseNativeDialog
+    #     file_dialog = QFileDialog(self, "Save PDF Report", "", "PDF Files (*.pdf);;All Files (*)", options=options)
+    #     file_dialog.setDefaultSuffix('pdf')
+    #     file_path, _ = file_dialog.getSaveFileName()
 
-        if file_path:
-            # Open a PDF file for writing
-            file_path = file_path.split('.')[0]+'.pdf'
-            c = canvas.Canvas(file_path, pagesize=letter)
+    #     if file_path:
+    #         # Open a PDF file for writing
+    #         file_path = file_path.split('.')[0]+'.pdf'
+    #         # c = canvas.Canvas(file_path, pagesize=letter)
+    #         self.showReportWindowView()
 
-            # Iterate through the images and add them to the PDF
-            # Replace 'image_paths' with the actual list of image paths from your application
-            image_paths = [self.viewer.imgPath]
-            for img_path in image_paths:
-                # Calculate image size to fit on the page
-                img_width, img_height = letter
-                img_resolution = c.drawInlineImage(img_path, 0, 0, width=img_width, height=img_height)
-                scale_x = img_width / img_resolution[0]
-                scale_y = img_height / img_resolution[1]
+            # # Iterate through the images and add them to the PDF
+            # # Replace 'image_paths' with the actual list of image paths from your application
+            # image_paths = [self.viewer.imgPath]
+            # for img_path in image_paths:
+            #     # Calculate image size to fit on the page
+            #     img_width, img_height = letter
+            #     img_resolution = c.drawInlineImage(img_path, 0, 0, width=img_width, height=img_height)
+            #     scale_x = img_width / img_resolution[0]
+            #     scale_y = img_height / img_resolution[1]
 
-                c.scale(scale_x, scale_y)
-                #c.drawInlineImage(img_path, 100, 500, width=img_width, height=img_height)
+            #     c.scale(scale_x, scale_y)
+            #     #c.drawInlineImage(img_path, 100, 500, width=img_width, height=img_height)
 
-                # Add some space between images
-                c.showPage()
+            #     # Add some space between images
+            #     c.showPage()
 
-            # Save and close the PDF
-            c.save()
+            # # Save and close the PDF
+            # c.save()
+    
+    def showReportWindowView(self):
+        self.reportWindow = ReportGenCon(self.viewer)
+        self.reportWindow.view.exec_()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
