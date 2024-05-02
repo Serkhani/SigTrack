@@ -21,7 +21,7 @@ from sigtrack.views.imageview.ImageViewDockWidget import ImageViewDockWidget
 from sigtrack.views.mapview.MapViewDockWidget import MapWidget
 
 from sigtrack.controllers.videoviewCon import VideoViewConDockWidget
-
+from sigtrack.models.chat.map_display import MapDisplay
 from qt_material import apply_stylesheet
 from sigtrack.views.ui_form import Ui_MainWindow
 from sigtrack.views.settings import ThemeSelectWindow
@@ -67,6 +67,7 @@ class MainWindow(QMainWindow):
             self.zoomSelectionAction)
         self.ui.actionPan.triggered.connect(self.panAction)
         self.ui.actionMap.triggered.connect(self.mapAction)
+        # self.ui.actionWeather.triggered.connect(self.weatherAction)
         self.ui.actionImage.triggered.connect(self.imageAction)
         self.ui.actionVideo.triggered.connect(self.videoAction)
         self.ui.actionApp_Theme.triggered.connect(self.openThemeSettings)
@@ -164,6 +165,25 @@ class MainWindow(QMainWindow):
         mapView = MapWidget(self)
         dockWidget.setWidget(mapView)
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
+        
+        
+    def weatherAction(self):
+        """
+        Adds map dockwidget to central widget area
+        """
+        # # increment dockCount
+        # self.dockCount += 1
+        # # hide the label when there are views
+        # self.ui.label.hide()
+        # # create dock widget
+        # dockWidget = DockWidget(self)
+        # dockWidget.setWindowTitle("Weather")
+        # # creating map widget
+        # #        dockWidget.setWidget(self.mapView.webView)
+        # weatherView = MapWidget(self)
+        # dockWidget.setWidget(weatherView)
+        # self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
+        pass
 
     def chatAction(self):
         """
@@ -176,10 +196,11 @@ class MainWindow(QMainWindow):
         # create dock widget
         dockWidget = DockWidget(self)
         dockWidget.setWindowTitle("chat")
-        model = ItemModel()
-        view = ItemView(model)
-        controller = ItemController(model, view)
-        view.show()
+        # model = ItemModel()
+        # view = ItemView(model)
+        # controller = ItemController(model, view)
+        # view.show()
+        view  = MapDisplay()
         # chatView = MapWidget(self)
         dockWidget.setWidget(view)
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
