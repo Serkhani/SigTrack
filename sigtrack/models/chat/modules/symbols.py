@@ -4,6 +4,8 @@ from PySide2.QtGui import QIcon,QPixmap
 from PySide2.QtCore import QSize, Qt,Signal
 import sigtrack.models.chat.nato_icons_rc
 import sigtrack.models.chat.qt_icons_rc
+from sigtrack.models.chat.modules.icons_path import icons_name
+
 # import sigtrack.resources.icons.chat_icons.Nato_Icons
 #basedir = os.path.dirname(__file__)
 
@@ -33,20 +35,21 @@ class SymbolManager(QWidget):
                       "Unknown_Air", "Unknown_Land", "Unknown_Equipment",
                       "Unknown_Subsurface"]
 
-        for folder in subfolders:
+        # for folder in subfolders:
+        for i in range(len(icons_name)):
             image_layout = QGridLayout()
             tab = QWidget()
             tab.setLayout(image_layout)
 
             #images_folder =f":Nato_Icons/"
-            images_folder =f"sigtrack/models/chat/resources/Nato_Icons/{folder}/"
-            images = [(f":resources/Nato_Icons/{folder}/{img}", img) for img in os.listdir(images_folder) if img.endswith(".png")]
-            # images = []
-            print(images)
+            # images_folder =f"sigtrack/models/chat/resources/Nato_Icons/{folder}/"
+            # images = [(f":resources/Nato_Icons/{folder}/{img}", img) for img in os.listdir(images_folder) if img.endswith(".png")]
+            # # images = []
+            # print(images)
 
             row = 0
             col = 0
-            for img_path in images:
+            for img_path in icons_name[i]:
                 btn = QPushButton()
                 btn.setToolTip(img_path[1])
                 btn.setIcon(QIcon(img_path[0]))
@@ -65,7 +68,7 @@ class SymbolManager(QWidget):
             scroll_area.setWidgetResizable(True)
             scroll_area.setWidget(tab)
 
-            self.tab_widget.addTab(scroll_area, folder)
+            self.tab_widget.addTab(scroll_area, subfolders[i])
 
     def image_clicked(self, img_path):
         self.selected_image = img_path
