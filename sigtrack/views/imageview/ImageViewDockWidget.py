@@ -23,7 +23,7 @@ from PySide2.QtGui import (
     QPainterPath,
     QPainterPathStroker,
     QPixmap,
-    QImage    
+    QImage
 )
 
 
@@ -85,7 +85,8 @@ class ImageViewDockWidget(QGraphicsView):
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setDragMode(QGraphicsView.NoDrag)
 
-        self.watermark_item = WatermarkItem(self.scene)
+        parentDimensions = self.size()
+        self.watermark_item = WatermarkItem(self.scene, parentDimensions)
 
         # self.rect = self.scene.sceneRect()
         self.preview = None
