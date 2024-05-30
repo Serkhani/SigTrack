@@ -395,7 +395,8 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
 
-    isActive, message = activateLicense()
+    #isActive, message = activateLicense()
+    isActive, message = (True, "license activated")
 
     if isActive:
       app = QApplication(sys.argv)

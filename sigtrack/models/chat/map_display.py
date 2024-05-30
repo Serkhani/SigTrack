@@ -123,97 +123,11 @@ class MapDisplay(QMainWindow):
         for node_id, (latitude, longitude, short_name) in nodes_data.items():
             nodes_js_data += f"L.marker([{latitude}, {longitude}]).addTo(map).bindPopup('{short_name}');"
 
-        print(f"{nodes_js_data} +IOIO")
+        #print(f"{nodes_js_data} +IOIO")
 
-        # HTML content of the map
-        html_content = """
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Leaflet Map with Satellite and Terrain Layers</title>
-                <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-                <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css" />
-                <style>
-                    #map {
-                        height: 570px;
-                    }
-                </style>
-                </head>
-                <body>
-
-                <div id="map"></div>
-
-                <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-                <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
-                <script>
-                var map = L.map('map').setView([5.590039, -0.156270], 13);
-
-                // Satellite layer
-                var satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-                    maxZoom: 20,
-                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-                }).addTo(map);
-
-                // Terrain layer
-                var terrainLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-                maxZoom: 20,
-                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-                }).addTo(map);
-
-                var satelliteOceanLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-                    maxZoom: 20,
-                    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-                }).addTo(map);
-
-                  // OSM layer
-                var osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 20,
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                }).addTo(map); 
-
-                // Feature group for drawn items
-                var drawnItems = new L.FeatureGroup().addTo(map);
-                
-                // Feature group for nodes
-                var nodes = new L.FeatureGroup().addTo(map);
-
-                // Drawing tools
-                var drawControl = new L.Control.Draw({
-                    edit: {
-                    featureGroup: drawnItems
-                }
-                });
-                map.addControl(drawControl);
-
-                // Layers control
-                var baseLayers = {
-                    "Satellite": satelliteLayer,
-                    "Terrain": terrainLayer,
-                    "Hybrid":satelliteOceanLayer,
-                    "OSM": osmLayer 
-                };
-                
-                
-                var overlays = {
-                    "Drawn Items": drawnItems,
-                    "Nodes": nodes
-                };
-
-                L.control.layers(baseLayers, overlays).addTo(map);
-
-
-
-                // Plotting nodes
-                {nodes_js_data}
-
-                </script>
-
-                </body>
-                </html>
-                """
-
+        #with open('lora_map.html', 'r') as file:
+        with open('lora_map.html', 'r') as file:
+            html_content = file.read()
         html_contents = html_content.replace("{nodes_js_data}", nodes_js_data)
         self.web_view.setHtml(html_contents)
 
