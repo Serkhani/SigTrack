@@ -96,7 +96,7 @@ class SymbolManager(QWidget):
             images_folder =f"sigtrack/models/chat/resources/Nato_Icons/{folder}/"
             images = [(f":/resources/Nato_Icons/{folder}/{img}", img) for img in os.listdir(images_folder) if img.endswith(".png")]
             # images = []
-            print(images)
+            # print(images)
 
             row = 0
             col = 0
