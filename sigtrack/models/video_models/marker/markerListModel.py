@@ -43,8 +43,8 @@ from datetime import datetime
 #         return color
     
     
-# from PyQt5.QtCore import Qt, QModelIndex, QAbstractListModel
-# from PyQt5.QtGui import QColor
+# from PySide2.QtCore import Qt, QModelIndex, QAbstractListModel
+# from PySide2.QtGui import QColor
 
 class MarkerListModel(QAbstractListModel):
     def __init__(self):

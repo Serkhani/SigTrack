@@ -12,6 +12,8 @@ from PySide2.QtWidgets import (QApplication, QDockWidget, QFileDialog, QLabel,
                                QMainWindow, QMessageBox, QSplashScreen)
 from sigtrack.controllers.chatCon import ItemController
 from sigtrack.models.chat.ChatModel import ItemModel
+from sigtrack.video.manager.QgsManager import FmvManager
+from qgis.utils import iface
 from sigtrack.views.chat.ChatView import ItemView
 
 from sigtrack.views.constants import PHOTO_EXTENSIONS
@@ -42,6 +44,7 @@ class MainWindow(QMainWindow):
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.iface = iface
 
         self.setDockOptions(_DOCK_OPTS)  # defines docking behaviour
 
@@ -87,6 +90,12 @@ class MainWindow(QMainWindow):
     def openThemeSettings(self):
         window = ThemeSelectWindow(self)
         window.show()
+        
+    # def createDockWidget(self):
+    #     """ Create Manager Video QDockWidget """
+    #     self._FMVManager = FmvManager(self.iface, fmv=self)
+    #     self.iface.addDockWidget(Qt.BottomDockWidgetArea, self._FMVManager)
+
 
     def videoAction(self, filePath=""):
         """Adds video dockwidget to central widget area
@@ -116,7 +125,8 @@ class MainWindow(QMainWindow):
             dockWidget.setWidget(label)
         else:
             # Create the videoviewdockwidget
-            dockWidget = VideoViewConDockWidget(filePath, self)
+            dockWidget = FmvManager(self.iface, fmv=self)
+            # dockWidget = VideoViewConDockWidget(filePath, self)
 
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
@@ -266,7 +276,7 @@ class MainWindow(QMainWindow):
             caption="Select image(s)",
             # \\3months Vac\\Soko Aerial\\Building QGIS plugins with Python\\Images",
             dir="C:\\Users\\LENOVO\\Desktop",
-            filter="Video (*.mp4 *.ts *.mov)",
+            filter="Video (*.mp4 *.ts *.mov *.mpg)",
         )
         if not self.findChild(MapWidget):
             self.mapAction()
@@ -395,7 +405,8 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
 
-    isActive, message = activateLicense()
+    isActive, message = True, ""
+    # isActive, message = activateLicense()
 
     if isActive:
       app = QApplication(sys.argv)

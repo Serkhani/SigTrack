@@ -27,12 +27,6 @@ from pprint import pformat
 from .element import Element
 from .klvparser import KLVParser
 
-try:
-    from pydevd import *
-except ImportError:
-    None
-
-
 class SetParser(Element):
     """Parsable Element. Not intended to be used directly. Always as super class."""
 

@@ -36,12 +36,6 @@ from .common import (
 )
 from .element import Element
 
-try:
-    from pydevd import *
-except ImportError:
-    None
-
-
 class ElementParser(Element):
     """Construct a Element Parser base class.
 

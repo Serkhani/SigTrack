@@ -31,12 +31,6 @@ from .elementparser import (
 from .setparser import SetParser
 from .streamparser import StreamParser
 
-try:
-    from pydevd import *
-except ImportError:
-    None
-
-
 class UnknownElement(UnknownElement):
     pass
 

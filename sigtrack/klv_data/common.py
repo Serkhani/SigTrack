@@ -25,12 +25,6 @@ from datetime import timezone
 from struct import pack
 from struct import unpack
 
-try:
-    from pydevd import *
-except ImportError:
-    None
-
-
 def datetime_to_bytes(value):
     """Return bytes representing UTC time in microseconds."""
     return pack(">Q", int(value.timestamp() * 1e6))

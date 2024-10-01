@@ -82,3 +82,6 @@ output.bin
 __pycache__/
 *.code-workspace
 sigtract_dev/
+*_rc.py
+license.key
+loraChat2.db
