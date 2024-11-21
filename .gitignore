@@ -79,3 +79,4 @@ output.bin
 __pycache__/
 *.code-workspace
 sigtract_dev/
+.env/
