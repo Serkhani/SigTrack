@@ -5,7 +5,7 @@ from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from model import FlightModel
-from airplane_api_wrapper import AirplanesApiWrapper
+from sigtrack.utils.airplane_api_wrapper import AirplanesApiWrapper
 import map_rc
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
