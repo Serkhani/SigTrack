@@ -4,7 +4,7 @@ from PySide6.QtCore import QUrl, QTimer
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from model import FlightModel
+from sigtrack.models.flight_models.flightmodel import FlightModel
 from sigtrack.utils.airplane_api_wrapper import AirplanesApiWrapper
 import map_rc
 if __name__ == "__main__":
