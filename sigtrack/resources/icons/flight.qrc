@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file alias="drone">map_view/drone.png</file>
-        <file alias="map">../../views/flightview/flightmap.qml</file>
+        <file alias="flightmap">../../views/flightview/flightmap.qml</file>
     </qresource>
 </RCC>

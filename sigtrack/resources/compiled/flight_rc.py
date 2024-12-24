@@ -6,6 +6,249 @@
 from PySide6 import QtCore
 
 qt_resource_data = b"\
+\x00\x00\x0f\x10\
+i\
+mport QtQuick 2.\
+15\x0d\x0aimport QtQui\
+ck.Controls 2.15\
+\x0d\x0aimport QtLocat\
+ion \x0d\x0aimport QtP\
+ositioning \x0d\x0a\x0d\x0aA\
+pplicationWindow\
+ {\x0d\x0a    visible:\
+ true\x0d\x0a    width\
+: 1024\x0d\x0a    heig\
+ht: 768\x0d\x0a    tit\
+le: \x22Flight Trac\
+ker\x22\x0d\x0a    Plugin\
+ {\x0d\x0a            \
+id: osmPlugin\x0d\x0a \
+           name:\
+ \x22osm\x22\x0d\x0a\x0d\x0a      \
+      PluginPara\
+meter {\x0d\x0a       \
+         name: \x22\
+osm.mapping.prov\
+idersrepository.\
+disabled\x22\x0d\x0a     \
+           value\
+: \x22true\x22\x0d\x0a      \
+      }\x0d\x0a       \
+     PluginParam\
+eter {\x0d\x0a        \
+        name: \x22o\
+sm.mapping.provi\
+dersrepository.a\
+ddress\x22\x0d\x0a       \
+         value: \
+\x22http://maps-red\
+irect.qt.io/osm/\
+5.8/\x22\x0d\x0a         \
+   }\x0d\x0a        }\x0d\
+\x0a    Map {\x0d\x0a    \
+    anchors.fill\
+: parent\x0d\x0a      \
+  id: map\x0d\x0a     \
+   plugin: osmPl\
+ugin\x0d\x0a        ce\
+nter: QtPosition\
+ing.coordinate(5\
+.658735, -0.1849\
+61)\x0d\x0a        // \
+zoomLevel: 2\x0d\x0a  \
+      property g\
+eoCoordinate sta\
+rtCentroid\x0d\x0a\x0d\x0a  \
+      PinchHandl\
+er {\x0d\x0a          \
+  id: pinch\x0d\x0a   \
+         target:\
+ null\x0d\x0a         \
+   onActiveChang\
+ed: if (active) \
+{\x0d\x0a             \
+   map.startCent\
+roid = map.toCoo\
+rdinate(pinch.ce\
+ntroid.position,\
+ false)\x0d\x0a       \
+     }\x0d\x0a        \
+    onScaleChang\
+ed: (delta) => {\
+\x0d\x0a              \
+  map.zoomLevel \
++= Math.log2(del\
+ta)\x0d\x0a           \
+     map.alignCo\
+ordinateToPoint(\
+map.startCentroi\
+d, pinch.centroi\
+d.position)\x0d\x0a   \
+         }\x0d\x0a    \
+        onRotati\
+onChanged: (delt\
+a) => {\x0d\x0a       \
+         map.bea\
+ring -= delta\x0d\x0a \
+               m\
+ap.alignCoordina\
+teToPoint(map.st\
+artCentroid, pin\
+ch.centroid.posi\
+tion)\x0d\x0a         \
+   }\x0d\x0a          \
+  grabPermission\
+s: PointerHandle\
+r.TakeOverForbid\
+den\x0d\x0a        }\x0d\x0a\
+        WheelHan\
+dler {\x0d\x0a        \
+    id: wheel\x0d\x0a \
+           // wo\
+rkaround for QTB\
+UG-87646 / QTBUG\
+-112394 / QTBUG-\
+112432:\x0d\x0a       \
+     // Magic Mo\
+use pretends to \
+be a trackpad bu\
+t doesn't work w\
+ith PinchHandler\
+\x0d\x0a            //\
+ and we don't ye\
+t distinguish mi\
+ce and trackpads\
+ on Wayland eith\
+er\x0d\x0a            \
+acceptedDevices:\
+ Qt.platform.plu\
+ginName === \x22coc\
+oa\x22 || Qt.platfo\
+rm.pluginName ==\
+= \x22wayland\x22\x0d\x0a   \
+                \
+          ? Poin\
+terDevice.Mouse \
+| PointerDevice.\
+TouchPad\x0d\x0a      \
+                \
+       : Pointer\
+Device.Mouse\x0d\x0a  \
+          rotati\
+onScale: 1/120\x0d\x0a\
+            prop\
+erty: \x22zoomLevel\
+\x22\x0d\x0a        }\x0d\x0a  \
+      DragHandle\
+r {\x0d\x0a           \
+ id: drag\x0d\x0a     \
+       target: n\
+ull\x0d\x0a           \
+ onTranslationCh\
+anged: (delta) =\
+> map.pan(-delta\
+.x, -delta.y)\x0d\x0a \
+       }\x0d\x0a      \
+   MapItemView {\
+\x0d\x0a       \x0d\x0a     \
+       model: fl\
+ightModel\x0d\x0a     \
+       anchors.f\
+ill: parent\x0d\x0a   \
+        delegate\
+:\x0d\x0a            M\
+apQuickItem {\x0d\x0a \
+               c\
+oordinate: QtPos\
+itioning.coordin\
+ate(model.lat, m\
+odel.lon)\x0d\x0a     \
+           \x0d\x0a   \
+             anc\
+horPoint.x: dron\
+eImg.width/2\x0d\x0a  \
+              an\
+chorPoint.y: dro\
+neImg.height/2\x0d\x0a\
+                \
+// transform: Ro\
+tation {\x0d\x0a      \
+          //    \
+ origin.x: drone\
+Img.width/2\x0d\x0a   \
+             // \
+    origin.y: dr\
+oneImg.height/2\x0d\
+\x0a               \
+ //     angle: m\
+odel.track\x0d\x0a    \
+            // }\
+\x0d\x0a              \
+   MouseArea{\x0d\x0a \
+           ancho\
+rs.fill: parent\x0d\
+\x0a            onC\
+licked: {\x0d\x0a     \
+           conso\
+le.log(model.fli\
+ght)\x0d\x0a          \
+      console.lo\
+g(model.lat)\x0d\x0a  \
+              co\
+nsole.log(model.\
+lon)\x0d\x0a          \
+      console.lo\
+g(model.alt)\x0d\x0a  \
+              co\
+nsole.log(model.\
+ownOp)\x0d\x0a        \
+        console.\
+log(model.track)\
+\x0d\x0a            }\x0d\
+\x0a        }\x0d\x0a    \
+            sour\
+ceItem: Image {\x0d\
+\x0a               \
+     \x0d\x0a         \
+           id: d\
+roneImg\x0d\x0a       \
+             pro\
+perty alias rota\
+tionAngle: rotat\
+ion.angle\x0d\x0a\x0d\x0a   \
+                \
+ width: 70\x0d\x0a    \
+                \
+height: 70\x0d\x0a    \
+                \
+transform: \x0d\x0a   \
+                \
+ [Rotation {\x0d\x0a  \
+                \
+      id: rotati\
+on\x0d\x0a            \
+            orig\
+in.x: droneImg.w\
+idth/2\x0d\x0a        \
+                \
+origin.y: droneI\
+mg.height/2\x0d\x0a   \
+                \
+     angle: mode\
+l.track\x0d\x0a\x0d\x0a     \
+               }\
+]\x0d\x0a             \
+       source:  \
+'qrc:/drone'\x0d\x0a  \
+              }\x0d\
+\x0a            }\x0d\x0a\
+    \x0d\x0afunction u\
+pdatePositionAnd\
+Rotation(angleDe\
+g)\x0d\x0a{\x0d\x0a    image\
+.rotationAngle =\
+ angleDeg\x0d\x0a}\x0d\x0a\x0d\x0a\
+    }\x0d\x0a}\x0d\x0a    }\
 \x00\x00\x18\xd3\
 \x89\
 PNG\x0d\x0a\x1a\x0a\x00\x00\x00\x0dIHDR\x00\
@@ -406,269 +649,26 @@ c\x17`\xeb\xca\xd3 \xca\xe8-w\x81\xcb\x1b\xe6\xbe\
 \x00\x00\x00\x00\x00\x00\x00\x00\xc0\x06\xf6\xec\xf9\x7fR\xe5\
 \x01\xd6\xaa0\x85R\x00\x00\x00\x00IEND\xaeB\
 `\x82\
-\x00\x00\x0f\x10\
-i\
-mport QtQuick 2.\
-15\x0d\x0aimport QtQui\
-ck.Controls 2.15\
-\x0d\x0aimport QtLocat\
-ion \x0d\x0aimport QtP\
-ositioning \x0d\x0a\x0d\x0aA\
-pplicationWindow\
- {\x0d\x0a    visible:\
- true\x0d\x0a    width\
-: 1024\x0d\x0a    heig\
-ht: 768\x0d\x0a    tit\
-le: \x22Flight Trac\
-ker\x22\x0d\x0a    Plugin\
- {\x0d\x0a            \
-id: osmPlugin\x0d\x0a \
-           name:\
- \x22osm\x22\x0d\x0a\x0d\x0a      \
-      PluginPara\
-meter {\x0d\x0a       \
-         name: \x22\
-osm.mapping.prov\
-idersrepository.\
-disabled\x22\x0d\x0a     \
-           value\
-: \x22true\x22\x0d\x0a      \
-      }\x0d\x0a       \
-     PluginParam\
-eter {\x0d\x0a        \
-        name: \x22o\
-sm.mapping.provi\
-dersrepository.a\
-ddress\x22\x0d\x0a       \
-         value: \
-\x22http://maps-red\
-irect.qt.io/osm/\
-5.8/\x22\x0d\x0a         \
-   }\x0d\x0a        }\x0d\
-\x0a    Map {\x0d\x0a    \
-    anchors.fill\
-: parent\x0d\x0a      \
-  id: map\x0d\x0a     \
-   plugin: osmPl\
-ugin\x0d\x0a        ce\
-nter: QtPosition\
-ing.coordinate(5\
-.658735, -0.1849\
-61)\x0d\x0a        // \
-zoomLevel: 2\x0d\x0a  \
-      property g\
-eoCoordinate sta\
-rtCentroid\x0d\x0a\x0d\x0a  \
-      PinchHandl\
-er {\x0d\x0a          \
-  id: pinch\x0d\x0a   \
-         target:\
- null\x0d\x0a         \
-   onActiveChang\
-ed: if (active) \
-{\x0d\x0a             \
-   map.startCent\
-roid = map.toCoo\
-rdinate(pinch.ce\
-ntroid.position,\
- false)\x0d\x0a       \
-     }\x0d\x0a        \
-    onScaleChang\
-ed: (delta) => {\
-\x0d\x0a              \
-  map.zoomLevel \
-+= Math.log2(del\
-ta)\x0d\x0a           \
-     map.alignCo\
-ordinateToPoint(\
-map.startCentroi\
-d, pinch.centroi\
-d.position)\x0d\x0a   \
-         }\x0d\x0a    \
-        onRotati\
-onChanged: (delt\
-a) => {\x0d\x0a       \
-         map.bea\
-ring -= delta\x0d\x0a \
-               m\
-ap.alignCoordina\
-teToPoint(map.st\
-artCentroid, pin\
-ch.centroid.posi\
-tion)\x0d\x0a         \
-   }\x0d\x0a          \
-  grabPermission\
-s: PointerHandle\
-r.TakeOverForbid\
-den\x0d\x0a        }\x0d\x0a\
-        WheelHan\
-dler {\x0d\x0a        \
-    id: wheel\x0d\x0a \
-           // wo\
-rkaround for QTB\
-UG-87646 / QTBUG\
--112394 / QTBUG-\
-112432:\x0d\x0a       \
-     // Magic Mo\
-use pretends to \
-be a trackpad bu\
-t doesn't work w\
-ith PinchHandler\
-\x0d\x0a            //\
- and we don't ye\
-t distinguish mi\
-ce and trackpads\
- on Wayland eith\
-er\x0d\x0a            \
-acceptedDevices:\
- Qt.platform.plu\
-ginName === \x22coc\
-oa\x22 || Qt.platfo\
-rm.pluginName ==\
-= \x22wayland\x22\x0d\x0a   \
-                \
-          ? Poin\
-terDevice.Mouse \
-| PointerDevice.\
-TouchPad\x0d\x0a      \
-                \
-       : Pointer\
-Device.Mouse\x0d\x0a  \
-          rotati\
-onScale: 1/120\x0d\x0a\
-            prop\
-erty: \x22zoomLevel\
-\x22\x0d\x0a        }\x0d\x0a  \
-      DragHandle\
-r {\x0d\x0a           \
- id: drag\x0d\x0a     \
-       target: n\
-ull\x0d\x0a           \
- onTranslationCh\
-anged: (delta) =\
-> map.pan(-delta\
-.x, -delta.y)\x0d\x0a \
-       }\x0d\x0a      \
-   MapItemView {\
-\x0d\x0a       \x0d\x0a     \
-       model: fl\
-ightModel\x0d\x0a     \
-       anchors.f\
-ill: parent\x0d\x0a   \
-        delegate\
-:\x0d\x0a            M\
-apQuickItem {\x0d\x0a \
-               c\
-oordinate: QtPos\
-itioning.coordin\
-ate(model.lat, m\
-odel.lon)\x0d\x0a     \
-           \x0d\x0a   \
-             anc\
-horPoint.x: dron\
-eImg.width/2\x0d\x0a  \
-              an\
-chorPoint.y: dro\
-neImg.height/2\x0d\x0a\
-                \
-// transform: Ro\
-tation {\x0d\x0a      \
-          //    \
- origin.x: drone\
-Img.width/2\x0d\x0a   \
-             // \
-    origin.y: dr\
-oneImg.height/2\x0d\
-\x0a               \
- //     angle: m\
-odel.track\x0d\x0a    \
-            // }\
-\x0d\x0a              \
-   MouseArea{\x0d\x0a \
-           ancho\
-rs.fill: parent\x0d\
-\x0a            onC\
-licked: {\x0d\x0a     \
-           conso\
-le.log(model.fli\
-ght)\x0d\x0a          \
-      console.lo\
-g(model.lat)\x0d\x0a  \
-              co\
-nsole.log(model.\
-lon)\x0d\x0a          \
-      console.lo\
-g(model.alt)\x0d\x0a  \
-              co\
-nsole.log(model.\
-ownOp)\x0d\x0a        \
-        console.\
-log(model.track)\
-\x0d\x0a            }\x0d\
-\x0a        }\x0d\x0a    \
-            sour\
-ceItem: Image {\x0d\
-\x0a               \
-     \x0d\x0a         \
-           id: d\
-roneImg\x0d\x0a       \
-             pro\
-perty alias rota\
-tionAngle: rotat\
-ion.angle\x0d\x0a\x0d\x0a   \
-                \
- width: 70\x0d\x0a    \
-                \
-height: 70\x0d\x0a    \
-                \
-transform: \x0d\x0a   \
-                \
- [Rotation {\x0d\x0a  \
-                \
-      id: rotati\
-on\x0d\x0a            \
-            orig\
-in.x: droneImg.w\
-idth/2\x0d\x0a        \
-                \
-origin.y: droneI\
-mg.height/2\x0d\x0a   \
-                \
-     angle: mode\
-l.track\x0d\x0a\x0d\x0a     \
-               }\
-]\x0d\x0a             \
-       source:  \
-'qrc:/drone'\x0d\x0a  \
-              }\x0d\
-\x0a            }\x0d\x0a\
-    \x0d\x0afunction u\
-pdatePositionAnd\
-Rotation(angleDe\
-g)\x0d\x0a{\x0d\x0a    image\
-.rotationAngle =\
- angleDeg\x0d\x0a}\x0d\x0a\x0d\x0a\
-    }\x0d\x0a}\x0d\x0a    }\
 "
 
 qt_resource_name = b"\
+\x00\x09\
+\x0f\xdfi\xc0\
+\x00f\
+\x00l\x00i\x00g\x00h\x00t\x00m\x00a\x00p\
 \x00\x05\
 \x00k\x96E\
 \x00d\
 \x00r\x00o\x00n\x00e\
-\x00\x03\
-\x00\x00s\x80\
-\x00m\
-\x00a\x00p\
 "
 
 qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x02\x00\x00\x00\x01\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00\x10\x00\x00\x00\x00\x00\x01\x00\x00\x18\xd7\
-\x00\x00\x01\x93\xe9H\x03\x96\
-\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
+\x00\x00\x00\x18\x00\x00\x00\x00\x00\x01\x00\x00\x0f\x14\
 \x00\x00\x01\x93:\x86\xf4-\
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
+\x00\x00\x01\x93\xe9H\x03\x96\
 "
 
 def qInitResources():
