@@ -17,6 +17,7 @@ from sigtrack.views.chat.ChatView import ItemView
 from sigtrack.views.constants import PHOTO_EXTENSIONS
 from sigtrack.views.constants import _DOCK_OPTS, _DOCK_POSITIONS
 from sigtrack.views.dockWidget import DockWidget
+from sigtrack.views.flightview.FlightViewDockWidget import FlightWidget
 from sigtrack.views.imageview.ImageViewDockWidget import ImageViewDockWidget
 from sigtrack.views.mapview.MapViewDockWidget import MapWidget
 
@@ -73,6 +74,7 @@ class MainWindow(QMainWindow):
         self.ui.actionVideo.triggered.connect(self.videoAction)
         self.ui.actionApp_Theme.triggered.connect(self.openThemeSettings)
         self.ui.actionChat.triggered.connect(self.chatAction)
+        self.ui.actionFlight.triggered.connect(self.flightAction)
         self.setCentralWidget(self.ui.label)
 
         self.map = MapWidget(self)
@@ -202,6 +204,26 @@ class MainWindow(QMainWindow):
         # controller = ItemController(model, view)
         # view.show()
         view  = MapDisplay()
+        # chatView = MapWidget(self)
+        dockWidget.setWidget(view)
+        self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
+        
+    def flightAction(self):
+        """
+        Adds flight dockwidget to central widget area
+        """
+        # increment dockCount
+        self.dockCount += 1
+        # hide the label when there are views
+        self.ui.label.hide()
+        # create dock widget
+        dockWidget = DockWidget(self)
+        dockWidget.setWindowTitle("flight")
+        # model = ItemModel()
+        # view = ItemView(model)
+        # controller = ItemController(model, view)
+        # view.show()
+        view  = FlightWidget()
         # chatView = MapWidget(self)
         dockWidget.setWidget(view)
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
