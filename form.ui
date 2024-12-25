@@ -52,7 +52,7 @@
        <string>Add a View</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignmentFlag::AlignCenter</set>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -146,6 +146,7 @@
     <addaction name="separator"/>
     <addaction name="menuSettings"/>
     <addaction name="actionChat"/>
+    <addaction name="actionFlight"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -369,6 +370,17 @@
   <action name="actionChat">
    <property name="text">
     <string>Chat</string>
+   </property>
+   <property name="shortcut">
+    <string>F4</string>
+   </property>
+  </action>
+  <action name="actionFlight">
+   <property name="text">
+    <string>Flight</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
  </widget>
