@@ -1,7 +1,7 @@
-from PySide2.QtWidgets import (QWidget, QVBoxLayout,QLabel,QHBoxLayout,
+from PySide6.QtWidgets import (QWidget, QVBoxLayout,QLabel,QHBoxLayout,
                                QPushButton)
-from PySide2.QtGui import QPixmap, QFont
-from PySide2.QtCore import Qt 
+from PySide6.QtGui import QPixmap, QFont
+from PySide6.QtCore import Qt 
 from datetime import datetime
 import requests
 

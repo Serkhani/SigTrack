@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtWidgets import (
+from PySide6.QtWidgets import (
     QFileDialog,
     QGraphicsView,
     QGraphicsScene,
@@ -10,7 +10,7 @@ from PySide2.QtWidgets import (
     QUndoStack
 )
 
-from PySide2.QtCore import (
+from PySide6.QtCore import (
     Qt,
     Signal,
     QLineF,
@@ -19,7 +19,7 @@ from PySide2.QtCore import (
     QCoreApplication,
 )
 
-from PySide2.QtGui import (
+from PySide6.QtGui import (
     QPainterPath,
     QPainterPathStroker,
     QPixmap,

@@ -1,7 +1,7 @@
 import os
-from PySide2.QtWidgets import (QWidget,QTabWidget,QVBoxLayout, QPushButton,QGridLayout,QScrollArea)
-from PySide2.QtGui import QIcon,QPixmap
-from PySide2.QtCore import QSize, Qt,Signal
+from PySide6.QtWidgets import (QWidget,QTabWidget,QVBoxLayout, QPushButton,QGridLayout,QScrollArea)
+from PySide6.QtGui import QIcon,QPixmap
+from PySide6.QtCore import QSize, Qt,Signal
 import sigtrack.models.chat.nato_icons_rc
 import sigtrack.models.chat.qt_icons_rc
 from sigtrack.models.chat.modules.icons_path import icons_name

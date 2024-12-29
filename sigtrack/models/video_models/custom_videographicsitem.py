@@ -1,6 +1,6 @@
-from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
-from PySide2.QtCore import Qt
-from PySide2.QtGui import QColor
+from PySide6.QtMultimediaWidgets import QGraphicsVideoItem
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor
 
 from sigtrack.models.video_models.marker.video_marker import VideoMarker
 

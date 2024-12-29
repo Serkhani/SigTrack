@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
-from PySide2.QtCore import Qt
-from PySide2.QtWidgets import QGraphicsTextItem, QGraphicsItem
-from PySide2.QtGui import QTextBlockFormat, QTextCursor
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QGraphicsTextItem, QGraphicsItem
+from PySide6.QtGui import QTextBlockFormat, QTextCursor
 from sigtrack.models.image_models.undo_redo_command import DeleteCommand
 
 class TextItem(QGraphicsTextItem):

@@ -1,6 +1,6 @@
-from PySide2.QtCore import Qt, QSize, QRect, QModelIndex
-from PySide2.QtGui import QMouseEvent, QPainter
-from PySide2.QtWidgets import QItemDelegate, QStyleOptionButton, QApplication, QStyleOptionViewItem, QStyle
+from PySide6.QtCore import Qt, QSize, QRect, QModelIndex
+from PySide6.QtGui import QMouseEvent, QPainter
+from PySide6.QtWidgets import QItemDelegate, QStyleOptionButton, QApplication, QStyleOptionViewItem, QStyle
 
 class RemoveButtonDelegate(QItemDelegate):
     def __init__(self, listview, videographicsview,parent=None):

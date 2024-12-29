@@ -1,5 +1,5 @@
-from PySide2.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QListWidget, QLineEdit, QPushButton, QRadioButton
-from PySide2.QtGui import QIcon
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QListWidget, QLineEdit, QPushButton, QRadioButton
+from PySide6.QtGui import QIcon
 from pubsub import pub
 from sigtrack.models.chat.item_model import ItemModel
 import sigtrack.models.chat.qt_icons_rc

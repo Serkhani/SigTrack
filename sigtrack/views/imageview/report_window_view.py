@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QDialog, QPushButton, QLabel, QLineEdit, QFormLayout, QVBoxLayout, QWidget, QTextEdit, QHBoxLayout, QSpacerItem
+from PySide6.QtWidgets import QDialog, QPushButton, QLabel, QLineEdit, QFormLayout, QVBoxLayout, QWidget, QTextEdit, QHBoxLayout, QSpacerItem
 class ReportWindowView(QDialog):
     def __init__(self, parent=None):
         super(ReportWindowView, self).__init__(parent)

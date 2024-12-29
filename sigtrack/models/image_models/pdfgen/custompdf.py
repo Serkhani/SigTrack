@@ -1,6 +1,6 @@
 from fpdf import FPDF, XPos, YPos
-from PySide2.QtGui import QImage
-from PySide2.QtCore import QBuffer, QIODevice
+from PySide6.QtGui import QImage
+from PySide6.QtCore import QBuffer, QIODevice
 import sigtrack.resources.compiled.editing_icons_rc
 
 

@@ -1,6 +1,6 @@
 import socket
 import threading
-from PySide2.QtCore import Signal, QObject
+from PySide6.QtCore import Signal, QObject
 
 class ChatClient(QObject):
     receivedSignal = Signal(str)

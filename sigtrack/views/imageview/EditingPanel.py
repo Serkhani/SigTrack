@@ -4,7 +4,7 @@ from sigtrack.controllers.reportGenCon import ReportGenCon
 
 import logging
 
-from PySide2.QtWidgets import (
+from PySide6.QtWidgets import (
     QDockWidget,
     QGraphicsView,
     QVBoxLayout,
@@ -25,13 +25,13 @@ from PySide2.QtWidgets import (
     QFileDialog
 )
 
-from PySide2.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QRectF,
     QCoreApplication
 )
 
-from PySide2.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QPixmap,
     QImage,

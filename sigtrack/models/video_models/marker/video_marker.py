@@ -1,6 +1,6 @@
-from PySide2.QtWidgets import QGraphicsItem, QLabel, QGraphicsPixmapItem, QGraphicsScene
-from PySide2.QtGui import QColor, QPixmap
-from PySide2.QtCore import QUrl, QRect
+from PySide6.QtWidgets import QGraphicsItem, QLabel, QGraphicsPixmapItem, QGraphicsScene
+from PySide6.QtGui import QColor, QPixmap
+from PySide6.QtCore import QUrl, QRect
 
 from sigtrack.models.video_models.marker.marker_indicator import MarkerIndicator
 import sigtrack.resources.compiled.vid_icons_rc

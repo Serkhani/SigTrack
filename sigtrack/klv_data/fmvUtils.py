@@ -5,10 +5,10 @@ import json
 from math import sin, atan, tan, sqrt, radians, pi, degrees
 import os
 import shutil
-from PySide2.QtCore import QSettings, QUrl, QEventLoop
-from PySide2.QtGui import QImage
-from PySide2.QtNetwork import QNetworkRequest, QNetworkAccessManager
-from PySide2.QtWidgets import QFileDialog
+from PySide6.QtCore import QSettings, QUrl, QEventLoop
+from PySide6.QtGui import QImage
+from PySide6.QtNetwork import QNetworkRequest, QNetworkAccessManager
+from PySide6.QtWidgets import QFileDialog
 import subprocess
 from .element import UnknownElement
 from .streamparser import StreamParser

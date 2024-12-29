@@ -1,5 +1,5 @@
-from PySide2.QtCore import (QCoreApplication)
-from PySide2.QtWidgets import (
+from PySide6.QtCore import (QCoreApplication)
+from PySide6.QtWidgets import (
     QUndoCommand,
     
 )

@@ -1,6 +1,6 @@
-from PySide2.QtWidgets import QGraphicsRectItem, QGraphicsSceneMouseEvent, QColorDialog
-from PySide2.QtGui import QColor, QBrush
-from PySide2.QtCore import QRectF
+from PySide6.QtWidgets import QGraphicsRectItem, QGraphicsSceneMouseEvent, QColorDialog
+from PySide6.QtGui import QColor, QBrush
+from PySide6.QtCore import QRectF
 
 class MarkerIndicator(QGraphicsRectItem):
     """

@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QTableWidget, QTableWidgetItem
 from sigtrack.models.chat.item_model import ItemModel
 class Peers(QWidget):
     def __init__(self,interface,model:ItemModel):

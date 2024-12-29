@@ -1,7 +1,7 @@
-from PySide2.QtMultimedia import QMediaPlayer
-from PySide2.QtWidgets import QDockWidget, QMessageBox, QStyle
-from PySide2.QtCore import QUrl, Qt, Slot, QRectF, QSizeF
-from PySide2.QtGui import QCloseEvent, QResizeEvent, QShowEvent, QPainter
+from PySide6.QtMultimedia import QMediaPlayer
+from PySide6.QtWidgets import QDockWidget, QMessageBox, QStyle
+from PySide6.QtCore import QUrl, Qt, Slot, QRectF, QSizeF
+from PySide6.QtGui import QCloseEvent, QResizeEvent, QShowEvent, QPainter
 
 from sigtrack.klv_data.element import UnknownElement
 from sigtrack.klv_data.streamparser import StreamParser

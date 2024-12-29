@@ -1,6 +1,6 @@
 import os
 import subprocess
-from PySide2.QtWidgets import  QDialog, QLineEdit, QPushButton, QFormLayout, QMessageBox, QHBoxLayout, QFileDialog
+from PySide6.QtWidgets import  QDialog, QLineEdit, QPushButton, QFormLayout, QMessageBox, QHBoxLayout, QFileDialog
 
 class Multiplexor(QDialog):
     def __init__(self, parent=None):

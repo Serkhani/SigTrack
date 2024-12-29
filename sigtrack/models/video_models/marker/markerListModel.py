@@ -1,5 +1,5 @@
-from PySide2.QtCore import (Qt, QAbstractListModel, QModelIndex)
-from PySide2.QtGui import QColor
+from PySide6.QtCore import (Qt, QAbstractListModel, QModelIndex)
+from PySide6.QtGui import QColor
 from datetime import datetime
 
 # class MarkerListModel(QAbstractListModel):

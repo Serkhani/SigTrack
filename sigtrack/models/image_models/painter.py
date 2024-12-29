@@ -1,5 +1,5 @@
-from PySide2.QtCore import Qt
-from PySide2.QtGui import (QPainter, QBrush, QPen, QFont, QColor)
+from PySide6.QtCore import Qt
+from PySide6.QtGui import (QPainter, QBrush, QPen, QFont, QColor)
 
 
 class Painter(QPainter):

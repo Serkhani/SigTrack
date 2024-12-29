@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QFileDialog, QWidget, QMessageBox
+from PySide6.QtWidgets import QFileDialog, QWidget, QMessageBox
 from sigtrack.models.image_models.pdfgen.custompdf import CustomPDF
 from PIL import ImageQt
 

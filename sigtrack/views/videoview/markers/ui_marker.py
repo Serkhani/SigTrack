@@ -1,5 +1,5 @@
-from PySide2.QtWidgets import QHBoxLayout, QGraphicsView, QLabel, QPushButton, QGraphicsScene
-from PySide2.QtCore import Qt
+from PySide6.QtWidgets import QHBoxLayout, QGraphicsView, QLabel, QPushButton, QGraphicsScene
+from PySide6.QtCore import Qt
 
 from sigtrack.models.video_models.marker.marker_indicator import MarkerIndicator
 

@@ -1,6 +1,6 @@
-from PySide2.QtWidgets import QGraphicsView, QGraphicsScene, QGridLayout
-from PySide2.QtGui import QResizeEvent, QShowEvent, QColor
-from PySide2.QtCore import Qt, QSizeF
+from PySide6.QtWidgets import QGraphicsView, QGraphicsScene, QGridLayout
+from PySide6.QtGui import QResizeEvent, QShowEvent, QColor
+from PySide6.QtCore import Qt, QSizeF
  
 from sigtrack.models.video_models.custom_videographicsitem import VideoGraphicsItem
 from sigtrack.controllers.markerpopupCon import MarkerPopUpCon

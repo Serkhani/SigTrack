@@ -1,6 +1,6 @@
-from PySide2.QtCore import QObject, QUrl, Signal, Slot
-from PySide2.QtPositioning import QGeoCoordinate
-from PySide2.QtQuickWidgets import QQuickWidget
+from PySide6.QtCore import QObject, QUrl, Signal, Slot
+from PySide6.QtPositioning import QGeoCoordinate
+from PySide6.QtQuickWidgets import QQuickWidget
 
 from sigtrack.models.map_models.DroneModel import DroneModel
 from sigtrack.models.map_models.FMVModel import FMVModel

@@ -1,11 +1,11 @@
-from PySide2.QtWidgets import (
+from PySide6.QtWidgets import (
     QApplication, QMainWindow, QListWidget, QTextEdit, QLineEdit, QPushButton,
     QHBoxLayout, QVBoxLayout, QWidget, QDockWidget, QToolBar, QStackedWidget, QComboBox,
     QLabel, QSizePolicy, QToolButton, QMdiArea, QRadioButton
 )
 
-from PySide2.QtCore import Qt, QSize, Slot
-from PySide2.QtGui import QIcon
+from PySide6.QtCore import Qt, QSize, Slot
+from PySide6.QtGui import QIcon
 
 from sigtrack.models.chat.ChatModel import ChatClient
 

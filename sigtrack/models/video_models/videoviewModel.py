@@ -1,8 +1,8 @@
-from PySide2.QtMultimedia import QMediaPlayer, QMediaContent
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QMessageBox, QPushButton, QStyle, QSizePolicy, QGraphicsView, QGraphicsScene
-from PySide2.QtCore import QUrl, QTimer, Qt, Slot
-from PySide2.QtGui import QCloseEvent
-from PySide2.QtMultimediaWidgets import QGraphicsVideoItem
+from PySide6.QtMultimedia import QMediaPlayer, QMediaContent
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QMessageBox, QPushButton, QStyle, QSizePolicy, QGraphicsView, QGraphicsScene
+from PySide6.QtCore import QUrl, QTimer, Qt, Slot
+from PySide6.QtGui import QCloseEvent
+from PySide6.QtMultimediaWidgets import QGraphicsVideoItem
 
 from sigtrack.klv_data.element import UnknownElement
 from sigtrack.klv_data.streamparser import StreamParser
