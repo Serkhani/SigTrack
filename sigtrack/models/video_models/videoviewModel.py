@@ -1,4 +1,4 @@
-from PySide6.QtMultimedia import QMediaPlayer, QMediaContent
+from PySide6.QtMultimedia import QMediaPlayer
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QMessageBox, QPushButton, QStyle, QSizePolicy, QGraphicsView, QGraphicsScene
 from PySide6.QtCore import QUrl, QTimer, Qt, Slot
 from PySide6.QtGui import QCloseEvent

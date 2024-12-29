@@ -3,14 +3,14 @@ from PySide6.QtPositioning import QGeoCoordinate
 from PySide6.QtQuickWidgets import QQuickWidget
 
 from sigtrack.models.flight_models.flightmodel import FlightModel
-import sigtrack.resources.compiled.map_rc
+import sigtrack.resources.compiled.flight_rc
 from sigtrack.utils.airplane_api_wrapper import AirplanesApiWrapper
 from sigtrack.views.mapview.MapViewDockWidget import MapWidget
 
 
 class FlightWidget(QQuickWidget):
     def __init__(self, mainWindow, parent=None):
-        super(MapWidget, self).__init__(parent, resizeMode=QQuickWidget.SizeRootObjectToView)
+        super(FlightWidget, self).__init__(parent, resizeMode=QQuickWidget.SizeRootObjectToView)
         self.mainWindow = mainWindow
 
         api_wrapper = AirplanesApiWrapper()

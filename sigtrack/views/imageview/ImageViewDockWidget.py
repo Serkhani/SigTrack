@@ -7,7 +7,7 @@ from PySide6.QtWidgets import (
     QGraphicsPathItem,
     QGraphicsEllipseItem,
     QGraphicsRectItem,
-    QUndoStack
+    # QUndoStack
 )
 
 from PySide6.QtCore import (
@@ -23,7 +23,8 @@ from PySide6.QtGui import (
     QPainterPath,
     QPainterPathStroker,
     QPixmap,
-    QImage
+    QImage, 
+    QUndoStack
 )
 
 

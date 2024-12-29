@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (
     QToolBar,
     QPushButton,
     QColorDialog,
-    QAction,
+    # QAction,
     QSizePolicy,
     QFileDialog
 )
@@ -35,6 +35,7 @@ from PySide6.QtGui import (
     QIcon,
     QPixmap,
     QImage,
+    QAction,
     QFont,
     QKeySequence
 )

@@ -223,7 +223,7 @@ class MainWindow(QMainWindow):
         # view = ItemView(model)
         # controller = ItemController(model, view)
         # view.show()
-        view  = FlightWidget()
+        view  = FlightWidget(self)
         # chatView = MapWidget(self)
         dockWidget.setWidget(view)
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
@@ -417,7 +417,8 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
 
-    isActive, message = activateLicense()
+    # isActive, message = activateLicense()
+    isActive, message = True, ""
 
     if isActive:
       app = QApplication(sys.argv)
@@ -456,7 +457,7 @@ if __name__ == "__main__":
       # Close the splash screen and continue with the main application
       splash.finish(widget)#Makes splash screen wait until the widget is loaded then it closes.
       widget.show()
-      sys.exit(app.exec_())
+      sys.exit(app.exec())
     else:
       logger.error(message)
 
