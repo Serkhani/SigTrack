@@ -3,11 +3,11 @@ import QtQuick.Controls 2.15
 import QtLocation 
 import QtPositioning 
 
-ApplicationWindow {
-    visible: true
-    width: 1024
-    height: 768
-    title: "Flight Tracker"
+Rectangle {
+    // visible: true
+    // width: 1024
+    // height: 768
+    // title: "Flight Tracker"
     Plugin {
             id: osmPlugin
             name: "osm"

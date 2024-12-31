@@ -41,4 +41,5 @@ class AirplanesApiWrapper(QObject):
             }
             for item in flights
         ]
+        print(formatted_data)
         self.dataFetched.emit(formatted_data)

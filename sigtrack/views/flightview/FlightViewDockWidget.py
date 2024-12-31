@@ -13,16 +13,16 @@ class FlightWidget(QQuickWidget):
         super(FlightWidget, self).__init__(parent, resizeMode=QQuickWidget.SizeRootObjectToView)
         self.mainWindow = mainWindow
 
-        api_wrapper = AirplanesApiWrapper()
-        model = FlightModel()
-        api_wrapper.dataFetched.connect(model.updateFlights)
-        api_wrapper.errorOccurred.connect(lambda error: print(f"Error: {error}"))
-        self.rootContext().setContextProperty("flightModel", model)
+        self.api_wrapper = AirplanesApiWrapper()
+        self.model = FlightModel()
+        self.api_wrapper.dataFetched.connect(self.model.updateFlights)
+        self.api_wrapper.errorOccurred.connect(lambda error: print(f"Error: {error}"))
+        self.rootContext().setContextProperty("flightModel", self.model)
 
         self.setSource(QUrl('qrc://:/flightmap'))
         self.mainWindow.map = self
         
         # Timer to fetch data every second
-        timer = QTimer()
-        timer.timeout.connect(api_wrapper.fetch_flights)
-        timer.start(1000)  # 1-second interval
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.api_wrapper.fetch_flights)
+        self.timer.start(1000)  # 1-second interval
