@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtLocation 
 import QtPositioning 
+import "../../views/flightview/js_file.js" as App
 
 Rectangle {
     // visible: true
@@ -77,16 +78,16 @@ Rectangle {
                 //     angle: model.track
                 // }
                  MouseArea{
-            anchors.fill: parent
-            onClicked: {
-                console.log(model.flight)
-                console.log(model.lat)
-                console.log(model.lon)
-                console.log(model.alt)
-                console.log(model.ownOp)
-                console.log(model.track)
-            }
-        }
+                    anchors.fill: parent
+                    onClicked: {
+                        console.log(model.flight)
+                        console.log(model.lat)
+                        console.log(model.lon)
+                        console.log(model.alt)
+                        console.log(model.ownOp)
+                        console.log(model.track)
+                    }
+                }
                 sourceItem: Image {
                     
                     id: droneImg
@@ -105,12 +106,39 @@ Rectangle {
                     source:  'qrc:/drone'
                 }
             }
+    Column {
     
-function updatePositionAndRotation(angleDeg)
-{
-    image.rotationAngle = angleDeg
+    anchors {
+        top: parent.top
+        right: parent.right
+        margins: 10
+    }
+    spacing: 10
+
+    TextField {
+        id: latTextField
+        placeholderText: "Lat"
+    }
+
+    TextField {
+        id: lonTextField
+        placeholderText: "Lon"
+    }
+
+    TextField {
+        id: radiusTextField
+        placeholderText: "Radius"
+    }
+
+    Button {
+        text: "Submit"
+        onClicked: {
+           App.update_url([latTextField.text, lonTextField.text, radiusTextField.text])
+        }
+    }
 }
 
-    }
+
+        }
 }
-    }
+}

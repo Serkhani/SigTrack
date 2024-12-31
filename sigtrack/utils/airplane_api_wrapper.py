@@ -16,9 +16,12 @@ class AirplanesApiWrapper(QObject):
     def __init__(self, parent=None):
         super().__init__(parent)
         self._network_manager = QNetworkAccessManager()
+        self.api_url = API_URL
+        self.lat, self.lon, self.radius = self.api_url.split('/')[-3:]
+        
 
     def fetch_flights(self):
-        request = QNetworkRequest(QUrl(API_URL))
+        request = QNetworkRequest(QUrl(self.api_url))
         reply = self._network_manager.get(request)
         reply.finished.connect(lambda: self._handle_reply(reply))
 
@@ -38,8 +41,15 @@ class AirplanesApiWrapper(QObject):
                 "alt_baro": item.get("alt_baro", 0.0),
                 "track": item.get("track", 0.0),
                 "ownOp": item.get("ownOp", "Unknown"),
+                # "url": [lat, lon, radius]
             }
             for item in flights
         ]
-        print(formatted_data)
+        # print(formatted_data)
         self.dataFetched.emit(formatted_data)
+        
+    def _update_api_url(self, props:list):
+        
+        self.api_url = f"https://api.airplanes.live/v2/point/{props[0] if props[0] else self.lat}/{props[1] if props[1] else self.lon}/{props[2] if props[2] else self.radius}"
+        
+        print(self.api_url)

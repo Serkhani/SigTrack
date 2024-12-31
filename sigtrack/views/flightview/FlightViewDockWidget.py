@@ -7,7 +7,20 @@ import sigtrack.resources.compiled.flight_rc
 from sigtrack.utils.airplane_api_wrapper import AirplanesApiWrapper
 from sigtrack.views.mapview.MapViewDockWidget import MapWidget
 
+class iceController(QObject):
+    update_url = Signal(list)
 
+    def __init__(self):
+        QObject.__init__(self)
+
+    @Slot(str)
+    def showImage(self, url):
+        self.update_url.emit(url)
+
+    @Slot(str)
+    def log(self, s):
+        print(s)
+        
 class FlightWidget(QQuickWidget):
     def __init__(self, mainWindow, parent=None):
         super(FlightWidget, self).__init__(parent, resizeMode=QQuickWidget.SizeRootObjectToView)
@@ -18,6 +31,10 @@ class FlightWidget(QQuickWidget):
         self.api_wrapper.dataFetched.connect(self.model.updateFlights)
         self.api_wrapper.errorOccurred.connect(lambda error: print(f"Error: {error}"))
         self.rootContext().setContextProperty("flightModel", self.model)
+        self.ice = iceController()
+        self.rootContext().setContextProperty('PyConsole', self.ice)
+        self.rootContext().setContextProperty('ice', self.ice)
+        self.ice.update_url.connect(self.api_wrapper._update_api_url)
 
         self.setSource(QUrl('qrc://:/flightmap'))
         self.mainWindow.map = self

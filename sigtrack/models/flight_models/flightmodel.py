@@ -7,6 +7,7 @@ class FlightModel(QAbstractListModel):
     AltitudeRole = Qt.UserRole + 4
     OperatorRole = Qt.UserRole + 5
     TrackRole = Qt.UserRole + 6
+    # URLRole = Qt.UserRole + 7
 
     def __init__(self, flights=None):
         super(FlightModel, self).__init__(flights)
@@ -30,6 +31,8 @@ class FlightModel(QAbstractListModel):
                 return flight.get("ownOp", "Unknown")
             elif role == self.TrackRole:
                 return flight.get("track", 0.0)
+            # elif role == self.URLRole:
+            #     return flight.get("url", 0.0)
         return ""
 
     def roleNames(self):
@@ -40,6 +43,7 @@ class FlightModel(QAbstractListModel):
             self.AltitudeRole: b"alt",
             self.OperatorRole: b"ownOp",
             self.TrackRole: b"track",
+            # self.URLRole: b"url",
         }
 
     def updateFlights(self, flights):
