@@ -26,3 +26,8 @@ class FlightWidget(QQuickWidget):
         self.timer = QTimer()
         self.timer.timeout.connect(self.api_wrapper.fetch_flights)
         self.timer.start(1000)  # 1-second interval
+        
+    def closeEvent(self, event):
+        self.timer.stop()
+        self.api_wrapper.blockSignals(True)
+        super().closeEvent(event)
