@@ -1,4 +1,4 @@
-from PySide6.QtMultimedia import QMediaPlayer
+from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel, QMessageBox, QPushButton, QStyle, QSizePolicy, QGraphicsView, QGraphicsScene
 from PySide6.QtCore import QUrl, QTimer, Qt, Slot
 from PySide6.QtGui import QCloseEvent
@@ -26,9 +26,11 @@ class VideoViewModel(QWidget):
         self.klv_folder = os.getcwd()
         self.filePath = filePath
         self.mainWindow = mainWindow
-        self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
-        self.mediaPlayer.error.connect(self.handleError)
+        self.mediaPlayer = QMediaPlayer()
+        self.audioOutput = QAudioOutput()
+        self.mediaPlayer.errorOccurred.connect(self.handleError)
         # self.graphicsView = VideoGraphicsView()
+        self.mediaPlayer.setAudioOutput(self.audioOutput)
         self.graphicsView = VideoGraphicsView(self)
         self.mediaPlayer.setVideoOutput(self.graphicsView.videoGraphicsItem)
     

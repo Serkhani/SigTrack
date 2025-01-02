@@ -3,10 +3,12 @@
 // import QtPositioning
 // import QtLocation
 // import QtQuick.Controls.Basic 2.15
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtPositioning 5.15
-import QtLocation 5.15
+// import QtQuick 2.15
+// import QtQuick.Controls.Basic
+import QtQuick
+import QtQuick.Controls.Basic
+import QtPositioning
+import QtLocation
 import "../../views/mapview/application.js" as App
 
 Rectangle {
@@ -103,12 +105,19 @@ Rectangle {
         topPadding: 5
         spacing: 5
         Button {
+            id: zoomInBtn
+            text: qsTr("+")
             contentItem: Text {
-                text: "+"
+                text: zoomInBtn.text
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
+                opacity: enabled ? 1.0 : 0.3
+                color: control.down ? "#17a81a" : "#21be2b"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
                 font.pointSize: 24
-                color: "white"
+                // color: "white"
             }
             onClicked: {
                 map.zoomLevel += 1
@@ -116,16 +125,31 @@ Rectangle {
             width: 50
             height: 30
             background: Rectangle {
-                color: "#8572a8"
+                // color: "#8572a8"
+                implicitWidth: 100
+                implicitHeight: 40
+                opacity: enabled ? 1 : 0.3
+                border.color: control.down ? "#17a81a" : "#21be2b"
+                border.width: 1
+                radius: 2
+
             }
         }
         Button {
+            
+            id: zoomOutBtn
+            text: qsTr("-")
             contentItem: Text {
-                text: "-"
+                text: zoomOutBtn.text
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
+                opacity: enabled ? 1.0 : 0.3
+                color: control.down ? "#17a81a" : "#21be2b"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
                 font.pointSize: 24
-                color: "white"
+                // color: "white"
             }
             onClicked: {
                 map.zoomLevel -= 1
@@ -133,8 +157,14 @@ Rectangle {
             width: 50
             height: 30
             background: Rectangle {
-                color: "#8572a8"
-            }
+            implicitWidth: 100
+            implicitHeight: 40
+            opacity: enabled ? 1 : 0.3
+            border.color: control.down ? "#17a81a" : "#21be2b"
+            border.width: 1
+            radius: 2
+        }
+
         }
     }
     // group of items that will show on the map

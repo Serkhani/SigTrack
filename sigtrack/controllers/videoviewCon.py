@@ -25,13 +25,13 @@ class VideoViewConDockWidget(QDockWidget):
         # self.ui_video.graphicsView.setScene(self.model.scene)
         self.ui_video.playBtn.clicked.connect(self.play)
         self.ui_video.stopBtn.clicked.connect(self.stop)
-        self.ui_video.volumeSlider.valueChanged.connect( self.model.mediaPlayer.setVolume)
+        self.ui_video.volumeSlider.valueChanged.connect( self.model.mediaPlayer.audioOutput().setVolume)
         self.ui_video.multiplexBtn.clicked.connect(self.model.showMultiplexor)
         self.ui_video.timeSlider.sliderMoved.connect(self.model.setPosition)
         self.ui_video.fmvBtn.clicked.connect(self.model.fmv)
         self.ui_video.vidMarkerBtn.clicked.connect(self.setMarkerWidgetVisibility)
-        self.ui_video.volumeSlider.setValue(self.model.mediaPlayer.volume())
-        self.ui_video.volumeSlider.valueChanged.connect(self.model.mediaPlayer.setVolume)
+        self.ui_video.volumeSlider.setValue(self.model.mediaPlayer.audioOutput().volume())
+        self.ui_video.volumeSlider.valueChanged.connect(self.model.mediaPlayer.audioOutput().setVolume)
         self.ui_video.volBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaVolume))
         self.ui_video.volBtn.setDisabled(True)
         self.ui_video.stopBtn.setIcon(self.style().standardIcon(QStyle.SP_MediaStop))
@@ -39,7 +39,8 @@ class VideoViewConDockWidget(QDockWidget):
         self.model.mediaPlayer.positionChanged.connect(self.updateTime)
         if self.filePath:
             media_content = QUrl(self.filePath)
-            self.model.mediaPlayer.setMedia(media_content)
+            # self.model.mediaPlayer.setMedia(media_content)
+            self.model.mediaPlayer.setSource(media_content)
             self.ui_video.playBtn.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaPlay))
     
@@ -51,7 +52,7 @@ class VideoViewConDockWidget(QDockWidget):
     def play(self):
         if not self.filePath:
             return
-        if self.model.mediaPlayer.state() == QMediaPlayer.PlayingState:
+        if self.model.mediaPlayer.playbackState() == QMediaPlayer.PlaybackState.PlayingState:
             self.model.mediaPlayer.pause()
             self.ui_video.playBtn.setIcon(
                 self.style().standardIcon(QStyle.SP_MediaPlay))
@@ -63,7 +64,7 @@ class VideoViewConDockWidget(QDockWidget):
 
     @Slot()
     def ensure_stopped(self):
-        if self.model.mediaPlayer.state() != QMediaPlayer.StoppedState:
+        if self.model.mediaPlayer.playbackState() != QMediaPlayer.PlaybackState.StoppedState:
             self.model.mediaPlayer.stop()
         
     def show_status_message(self, message):
@@ -104,7 +105,7 @@ class VideoViewConDockWidget(QDockWidget):
         """
         progress_in_seconds = progress / 1000
         # print(f"progress_in_seconds: {progress_in_seconds}")
-        if self.model.mediaPlayer.state() == QMediaPlayer.PausedState:
+        if self.model.mediaPlayer.playbackState() == QMediaPlayer.PlaybackState.PausedState:
             self.updateDurationInfo(progress_in_seconds, True)
         else:
             self.updateDurationInfo(progress_in_seconds)
