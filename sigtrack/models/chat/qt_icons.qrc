@@ -89,5 +89,21 @@
     <file>resources/qt_icons/weather_icon.svg</file>
     <file>resources/qt_icons/wind_speed.svg</file>
     <file>resources/qt_icons/wind_speed_icon.svg</file>
+    <file>resources/qt_icons/broadcast_black.svg</file>
+    <file>resources/qt_icons/broadcast_white.svg</file>
+    <file>resources/qt_icons/map_black.svg</file>
+    <file>resources/qt_icons/map_white.svg</file>
+    <file>resources/qt_icons/message_black.svg</file>
+    <file>resources/qt_icons/message_white.svg</file>
+    <file>resources/qt_icons/moon_white.svg</file>
+    <file>resources/qt_icons/moon.svg</file>
+    <file>resources/qt_icons/peer_black.svg</file>
+    <file>resources/qt_icons/peer_white.svg</file>
+    <file>resources/qt_icons/sun_black.svg</file>
+    <file>resources/qt_icons/sun_white.svg</file>
+    <file>resources/qt_icons/symbol_white.svg</file>
+    <file>resources/qt_icons/symbol_black.svg</file>
+    <file>resources/qt_icons/weather_black.svg</file>
+    <file>resources/qt_icons/weather_white.svg</file>
   </qresource>
 </RCC>
