@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        #map {
+            height: 100vh;
+        }
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            left: 65px;
+            z-index: 1000;
+            padding: 2px;
+        }
+        #search{
+            position: absolute;
+            top: 45px;
+            left: 55px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+            z-index: 1000;
+        }
+
+        .center{
+            position: absolute;
+            bottom: 50px;
+            right: 10px;
+            z-index: 1000;
+            background-color: white;
+            padding: 4px;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+        }
+        i{
+            font-size: 25px;
+            text-align: center;
+        }
+        .route-btn {
+            position: absolute;
+            bottom: 110px;
+            right: 10px;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: black;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .form-el input {
+            width: calc(100% - 22px);
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-el label {
+            margin: 5px 0;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+        .modal-footer button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .modal-footer button.cancel {
+            background-color: #ccc;
+        }
+        .modal-footer button.submit {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .hidden{
+            display: none;
+        }
+        .suggestions{
+            position: absolute;
+            left: 60px;
+            top: 90px;
+            z-index: 1001;
+            border: 1px solid #ccc;
+            border-top: none;
+            background-color: white;
+            width: 300px;
+        }
+
+        .suggestions ul{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .suggestions ul li{
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .suggestions ul li:hover{
+            background-color: #f0f0f0;
+        }
+        .description-display{
+           width: 200px;
+           word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div id="map">
+        <form id="form">
+            <input type="search" placeholder="Enter Location" id="search" name="location">
+            <div id="suggestions" class="suggestions" style="display: none;">
+                <ul></ul>
+            </div>
+        </form>
+        <button id="center" class="center">
+            <i class="fa fa-compass"></i>
+        </button>
+        <button id="route-btn" class="route-btn">Get Route</button>
+    </div>
+
+    <div id="route-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="route-form" class="form-el">
+                <label for="start">Starting Point:</label>
+                <input type="text" id="start" name="start" placeholder="Enter starting location">
+                <div id="start-suggestions" class="suggestions" style="display: none;">
+                    <ul></ul>
+                </div>
+
+                <label for="end">Destination:</label>
+                <input type="text" id="end" name="end" placeholder="Enter destination">
+                <div id="end-suggestions" class="suggestions" style="display: none;">
+                    <ul></ul>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="cancel">Cancel</button>
+                    <button type="submit" class="submit">Get Route</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="markerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form class="form-el" id="description-form">
+                <label for="des">Description:</label>
+                <input type="text" id="description-input" placeholder="Enter marker comment">
+                <div class="modal-footer">
+                    <button type="button" class="cancel">Cancel</button>
+                    <button type="submit" class="submit">Add Description</button>
+                </div>
+            </form>
+        </div>
+    </div>
+<button id="toggleDraw" class="toggle-btn"><i class="fa fa-pencil" style="font-size:20px;"></i></button>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+<script>
+
+    const routeBtnEl = document.getElementById("route-btn");
+    const modalEl = document.getElementById("route-modal");
+    const closeEl = document.querySelectorAll(".close");
+    const cancelBtnEl = document.querySelectorAll(".cancel");
+    const routeFormEl = document.getElementById("route-form");
+    const formEl = document.getElementById("form");
+    const centerEl = document.getElementById("center");
+    const startSuggestions = document.getElementById("start-suggestions")
+    const endSuggestions = document.getElementById("end-suggestions")
+    const searchEl = document.getElementById("search")
+    const suggestionEl = document.getElementById("suggestions")
+    const startEl = document.getElementById("start")
+    const endEl = document.getElementById("end")
+    const submitBtnEl = document.querySelector(".submit")
+    const  markerModalEl = document.getElementById("markerModal")
+    const descriptionFormEl = document.getElementById("description-form")
+    const descriptionInputEl = document.getElementById("description-input")
+
+    let droppedImageLatLng
+
+    let routeLayer;
+
+
+    const map = L.map("map").setView([7.866, -1.604], 7);
+
+    let iconUrl = "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png"
+
+    // Base Layers
+    const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    });
+
+    const satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+
+    const terrainLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+
+    const satelliteOceanLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+
+    const googleStreets = L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+
+    // Adding Error Handling for Tile Layers
+    osmLayer.on('tileerror', (error) => console.error("Error loading OSM tiles:", error));
+    satelliteLayer.on('tileerror', (error) => console.error("Error loading Satellite tiles:", error));
+
+    // Add the base layers to a control
+    const baseLayers = {
+        "OSM": osmLayer,
+        "Satellite": satelliteLayer,
+        "Terrain": terrainLayer,
+        "Hybrid": satelliteOceanLayer,
+        "Street": googleStreets
+    };
+
+    const drawnItems = new L.FeatureGroup();
+
+    const drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        }
+    });
+
+    map.addControl(drawControl);
+    drawnItems.addTo(map);
+
+    // Toggle Draw Control
+    let drawControlEnabled = true;
+    document.getElementById("toggleDraw").addEventListener("click", () => {
+        if (drawControlEnabled) {
+            map.removeControl(drawControl);
+            formEl.classList.add("hidden")
+        } else {
+            map.addControl(drawControl);
+            formEl.classList.remove("hidden")
+
+        }
+        drawControlEnabled = !drawControlEnabled;
+    });
+
+    // Add Layer Controls
+    L.control.layers(baseLayers, { "Drawn Items": drawnItems }).addTo(map);
+
+    // Event listener for drawing events
+    map.on("draw:created", (e) => {
+        drawnItems.addLayer(e.layer);
+    });
+
+    // Drag and Drop Event for Markers with Custom Icons
+    document.getElementById("map").addEventListener("dragover", (event) => {
+        event.preventDefault();
+    });
+
+    document.getElementById("map").addEventListener("drop", (event) => {
+        event.preventDefault();
+
+        if (event.dataTransfer.types.includes("Files")) {
+            const file = event.dataTransfer.files[0];
+            if (file && file.type.startsWith("image/")) {
+                const imageURL = URL.createObjectURL(file);
+                const offsetX = event.clientX - event.target.getBoundingClientRect().left;
+                const offsetY = event.clientY - event.target.getBoundingClientRect().top;
+                droppedImageLatLng = map.containerPointToLatLng(L.point(offsetX, offsetY));
+
+                showMarkerModal(imageURL)
+            }
+        }
+    });
+
+    const showMarkerModal = (imageURL) => {
+            markerModalEl.style.display = 'flex';
+            descriptionFormEl.onsubmit = function (e) {
+                e.preventDefault();
+                const description = descriptionInputEl.value.trim();
+                if (description) {
+                    addMarker(droppedImageLatLng, imageURL, description);
+                    markerModalEl.style.display = 'none';
+                    descriptionInputEl.value = '';
+                } else {
+                    alert("Description cannot be empty");
+                }
+            };
+        };
+
+        const addMarker = (latlng, imageURL, description) => {
+            const customIcon = L.icon({
+                iconUrl: imageURL,
+                iconSize: [40, 40],
+                iconAnchor: [20, 40],
+                popupAnchor: [1, -34]
+            });
+
+            const marker = L.marker(latlng, {
+                draggable: true,
+                icon: customIcon
+            }).addTo(map).bindPopup(`<p  class="description-display"><strong>Description:</strong> ${description}</p> Latitude: ${latlng.lat}<br>Longitude: ${latlng.lng}`).openPopup();
+
+            marker.on('drag', (event) => {
+                const newLatLng = event.target.getLatLng();
+                marker.setPopupContent(`<p class="description-display"><strong>Description:</strong> ${description}</p> Latitude: ${newLatLng.lat}<br>Longitude: ${newLatLng.lng}`).openPopup();
+            });
+
+            marker.on("contextmenu", () => {
+                map.removeLayer(marker);
+            });
+        };
+
+    osmLayer.addTo(map);  // Adding a default base layer
+
+    const showSuggestions = (element, suggestions)=>{
+        const ul = element.querySelector("ul")
+        ul.innerHtml = ""
+        suggestions.forEach(suggestion =>{
+            const li = document.createElement("li"); 
+            li.textContent = suggestion.display_name
+            li.addEventListener("click", (event)=>{
+                element.style.display = "none"
+                const input = element.previousElementSibling
+                input.value = suggestion.name
+                const cords = [parseFloat(suggestion.lat), parseFloat(suggestion.lon)]
+                map.setView[cords,13]
+                
+
+            const marker = L.marker(cords,{
+                iconUrl : iconUrl, 
+                iconSize: [25, 41],
+                iconAnchor: [12,41],
+                popupAnchor: [1, -34]
+            }).addTo(map).bindPopup(`
+                Latitude: ${cords[0]}<br>
+                Longitudde: ${cords[1]}<br>
+            `).openPopup()
+
+            marker.on("contextmenu", (event)=>{
+                map.removeLayer(marker)
+            })
+
+
+            })
+        ul.appendChild(li)
+            
+        })
+        element.style.display = "block"
+    }
+
+    const fetchSuggestions = async  (query, callback) =>{
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json`);
+        const data = await response.json();
+        callback(data)
+    }
+
+   formEl.addEventListener("submit", (event)=>{
+    event.preventDefault()
+   })
+
+    let latlngToPlaceMarker;
+
+    document.getElementById("map").addEventListener("keydown",(event)=>{
+        if (event.key === "m" && latlngToPlaceMarker){
+
+            const marker = L.marker(latlngToPlaceMarker,{
+                draggable: true
+            }).addTo(map).bindPopup(`
+                Latitude: ${latlngToPlaceMarker.lat}<br>
+                Longitudde: ${latlngToPlaceMarker.lng}<br>
+            `).openPopup()
+
+            marker.on("drag",(event)=>{
+                const newLatLng = event.target.getLatLng()
+                marker.setPopupContent(`
+                Latitude: ${newLatLng.lat}<br>
+                Longitudde: ${newLatLng.lng}<br>
+                `).openPopup()
+            })
+
+            marker.on("contextmenu", (event)=>{
+                map.removeLayer(marker)
+            })
+
+            latlngToPlaceMarker = null
+        }
+    })
+
+    map.on("click", (event)=>{
+        latlngToPlaceMarker = event.latlng
+    })
+
+    centerEl.addEventListener("click", (event)=>{
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            map.setView([latitude, longitude], 15);
+
+            const marker = L.marker([latitude, longitude], {
+                }).addTo(map).bindPopup(`Latitude: ${latitude}<br>Longitude: ${longitude}`).openPopup();
+
+
+
+        });
+    });
+
+
+    const fetchCoordinates = async (location) => {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json`);
+            const data = await response.json();
+            return data.length > 0 ? [parseFloat(data[0].lat), parseFloat(data[0].lon)] : null;
+        };
+
+        const fetchRoute = async (start, end) => {
+            const startCoords = await fetchCoordinates(start);
+            const endCoords = await fetchCoordinates(end);
+
+            if (!startCoords || !endCoords) {
+                alert('Invalid locations provided.');
+                return;
+            }
+
+            const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${startCoords[1]},${startCoords[0]};${endCoords[1]},${endCoords[0]}?overview=full&geometries=geojson`);
+            const data = await response.json();
+
+            if (data.routes && data.routes.length > 0) {
+                const route = data.routes[0];
+                if (routeLayer) {
+                    map.removeLayer(routeLayer);
+                }
+                routeLayer = L.geoJSON(route.geometry).addTo(map);
+                map.fitBounds(routeLayer.getBounds());
+            } else {
+                alert('Route not found.');
+            }
+        };
+
+        routeBtnEl.addEventListener("click", () => {
+            modalEl.style.display = "flex";
+        });
+
+       closeEl.forEach((el)=>{
+        el.addEventListener("click", (event)=>{
+            modalEl.style.display ="none"
+            markerModalEl.style.display = "none"
+        })
+       })
+
+        cancelBtnEl.forEach((el)=>{
+            el.addEventListener("click", (event)=>{
+                modalEl.style.display ="none"
+                markerModalEl.style.display = "none"
+            })
+        })
+
+        routeFormEl.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const startLocation = routeFormEl.elements.start.value;
+            const endLocation = routeFormEl.elements.end.value;
+
+            if (!startLocation || !endLocation) {
+                alert('Please provide both starting point and destination.');
+                return;
+            }
+
+            await fetchRoute(startLocation, endLocation);
+
+            modalEl.style.display = "none";
+        });
+
+
+        searchEl.addEventListener("input", async ( event)=>{
+            const query = event.target.value 
+            if(query.length > 1){
+                fetchSuggestions(query, (suggestions) =>{
+                    showSuggestions(suggestionEl, suggestions)
+                })
+            }else{
+                suggestionEl.style.display = "none"
+            }
+
+        })
+
+        startEl.addEventListener("input", async ( event)=>{
+            const query = event.target.value 
+            if(query.length > 1){
+                fetchSuggestions(query, (suggestions) =>{
+                    showSuggestions(startSuggestions, suggestions)
+                })
+            }else{
+                startSuggestions.style.display = "none"
+            }
+
+        })
+
+        endEl.addEventListener("input", async ( event)=>{
+            const query = event.target.value 
+            if(query.length > 1){
+                fetchSuggestions(query, (suggestions) =>{
+                    showSuggestions(endSuggestions, suggestions)
+                })
+            }else{
+                endSuggestions.style.display = "none"
+            }
+
+        })
+
+        window.addEventListener("click", (event) => {
+            if (event.target === modalEl) {
+                modalEl.style.display = "none";
+            }
+        });
+
+        // plotting nodes
+        {nodes_js_data}
+
+
+</script>
+</body>
+</html>

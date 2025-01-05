@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Map</title>
+    <style>
+      /* 
+        * Always set the map height explicitly to define the size of the div element
+        * that contains the map. 
+        */
+      #map {
+        height: 100vh;
+      }
+
+      /* 
+        * Optional: Makes the sample page fill the window. 
+        */
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <!-- Load the Google Maps API -->
+    <script>
+      function initMap() {
+        // The location of the center of the map
+        const center = { lat: 7.866, lng: -1.604 };
+
+
+        // The map, centered at the center location
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 8,
+          center: center,
+        });
+      }
+    </script>
+
+    <!-- Load the Google Maps API script -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkw3a_XLgmpbUFB1yuuNj3o5cFlhP7HCo&callback=initMap">
+    </script>
+  </body>
+</html>
+       
+        
+        <!--"AIzaSyDkw3a_XLgmpbUFB1yuuNj3o5cFlhP7HCo"-->

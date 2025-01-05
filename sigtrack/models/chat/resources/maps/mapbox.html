@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapbox</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        .map-overlay { position: absolute; top: 10px; right: 10px; background: white; padding: 10px; z-index: 1; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.3); }
+        .map-overlay button { margin-top: 10px; display: block; width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="map-overlay" id="style-switcher">
+        <!-- <label><input type="radio" name="style" value="mapbox://styles/mapbox/satellite-v9" checked> Satellite</label><br> -->
+        <label><input type="radio" name="style" value="mapbox://styles/eddyblaze7/cm5zek40w002j01scd63q6mnu" > Satellite</label><br>
+        <label><input type="radio" name="style" value="mapbox://styles/eddyblaze7/cm5zdjqjx001601seakph8vne"> Night View</label><br>
+        <label><input type="radio" name="style" value="mapbox://styles/eddyblaze7/cm5zevd77001q01qwhv9kgqyq"> Street</label><br>
+        <label><input type="radio" name="style" value="mapbox://styles/eddyblaze7/cm5zf6kzq002d01s7am420di8"> Outdoor</label><br>
+        <label><input type="radio" name="style" value="mapbox://styles/eddyblaze7/cm60jrly3004a01sfdm3j06ur"> Hybrid</label><br>
+        <label><input type="radio" name="style" value="mapbox://styles/eddyblaze7/cm60m5px3004v01s77dtn2gf9"> Contour</label><br>
+        <button id="toggle-3d">Toggle 3D View</button>
+    </div>
+
+    <script>
+        var mapBoxToken = 'pk.eyJ1IjoiZWRkeWJsYXplNyIsImEiOiJjbTV6YndnbzUwMThpMmpzNnlsMmZwbGU4In0.6yuXh-j9Z4s2oOfkP4jq8g';
+        // var mapBoxToken ='sk.eyJ1IjoiZWRkeWJsYXplNyIsImEiOiJjbTYwa20zb24wYzN4MmpzY3phZXVjM2NmIn0.ObFqr1_zRmLwIezZ26FMfw';
+        
+        mapboxgl.accessToken = mapBoxToken;
+
+        const mapEl = document.getElementById("map")
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/ichigok360/clw9akfuz004x01qr6t799nyl',
+            projection: 'globe',
+            center: [-0.15404453334815532, 5.585929127647153], // lng, lat 
+            zoom: 3
+        });
+
+        const styleSwitcher = document.getElementById('style-switcher');
+        styleSwitcher.addEventListener('change', (event) => {
+            const style = event.target.value;
+            map.setStyle(style);
+        });
+
+        let is3DView = false;
+        const toggle3DButton = document.getElementById('toggle-3d');
+
+        toggle3DButton.addEventListener('click', () => {
+            if (is3DView) {
+                map.easeTo({ pitch: 0, bearing: 0 });
+            } else {
+                map.easeTo({ pitch: 75, bearing: 0 });
+            }
+            is3DView = !is3DView;
+        });
+
+        const marker1 = new mapboxgl.Marker()
+        .setLngLat([12.554729, 55.70651])
+        .addTo(map);
+
+
+        let latlng
+        map.on('click', (e) => {
+            console.log(e);
+            const { lngLat} = e
+            console.log(lngLat)
+            
+            mapEl.addEventListener("keydown", (event)=>{
+                if(event.key === "m"){
+                    const marker1 = new mapboxgl.Marker()
+                .setLngLat([lngLat.lng, lngLat.lat])
+                .addTo(map);
+                }
+            })
+        });
+
+        // plotting nodes
+        {nodes_js_data}
+    </script>
+</body>
+</html>
