@@ -10,7 +10,8 @@ class WeatherApp(QWidget):
         super().__init__()
         self.setWindowTitle("Weather App")
 
-        self.setStyleSheet("background-color: #f0f0f0;")
+        self.setStyleSheet("background-color: #D3D3D3;")
+        #self.setStyleSheet("background-color: #212529;") #D3D3D3;
 
         self.layout = QVBoxLayout()
         self.setLayout(self.layout)
@@ -30,7 +31,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(temperature_layout)
 
         temperature_icon = QLabel()
-        temperature_icon.setPixmap(QPixmap(":/qt_icons/temperature_icon.svg").scaled(30, 30))
+        temperature_icon.setPixmap(QPixmap("qt_icons/temperature_icon.svg").scaled(30, 30))
         temperature_layout.addWidget(temperature_icon)
 
         self.temperature_label = QLabel()
@@ -40,7 +41,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(humidity_layout)
 
         humidity_icon = QLabel()
-        humidity_icon.setPixmap(QPixmap(":/qt_icons/humidity_icon.svg").scaled(30, 30))
+        humidity_icon.setPixmap(QPixmap("qt_icons/humidity_icon.svg").scaled(30, 30))
         humidity_layout.addWidget(humidity_icon)
 
         self.humidity_label = QLabel()
@@ -50,7 +51,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(wind_speed_layout)
 
         wind_icon = QLabel()
-        wind_icon.setPixmap(QPixmap(":/qt_icons/wind_speed_icon.svg").scaled(30, 30))
+        wind_icon.setPixmap(QPixmap("qt_icons/wind_speed_icon.svg").scaled(30, 30))
         wind_speed_layout.addWidget(wind_icon)
 
         self.wind_speed_label = QLabel()
@@ -60,7 +61,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(pressure_layout)
 
         pressure_icon = QLabel()
-        pressure_icon.setPixmap(QPixmap(":/qt_icons/air_pressure.svg").scaled(30, 30))
+        pressure_icon.setPixmap(QPixmap("qt_icons/air_pressure.svg").scaled(30, 30))
         pressure_layout.addWidget(pressure_icon)
 
         self.pressure_label = QLabel()
@@ -70,7 +71,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(sea_level_layout)
 
         sea_level_icon = QLabel()
-        sea_level_icon.setPixmap(QPixmap(":/qt_icons/sea-level.svg").scaled(30, 30))
+        sea_level_icon.setPixmap(QPixmap("qt_icons/sea-level.svg").scaled(30, 30))
         sea_level_layout.addWidget(sea_level_icon)
 
         self.sea_level_label = QLabel()
@@ -80,7 +81,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(ground_level_layout)
 
         ground_level_icon = QLabel()
-        ground_level_icon.setPixmap(QPixmap(":/qt_icons/sea-level.svg").scaled(30, 30))
+        ground_level_icon.setPixmap(QPixmap("qt_icons/sea-level.svg").scaled(30, 30))
         ground_level_layout.addWidget(ground_level_icon)
 
         self.ground_level_label = QLabel()
@@ -90,7 +91,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(visibility_layout)
 
         visibility_icon = QLabel()
-        visibility_icon.setPixmap(QPixmap(":/qt_icons/visibility.svg").scaled(30, 30))
+        visibility_icon.setPixmap(QPixmap("qt_icons/visibility.svg").scaled(30, 30))
         visibility_layout.addWidget(visibility_icon)
 
         self.visibility_label = QLabel()
@@ -100,7 +101,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(gust_layout)
 
         gust_icon = QLabel()
-        gust_icon.setPixmap(QPixmap(":/qt_icons/gust.svg").scaled(30, 30))
+        gust_icon.setPixmap(QPixmap("qt_icons/gust.svg").scaled(30, 30))
         gust_layout.addWidget(gust_icon)
 
         self.gust_label = QLabel()
@@ -110,7 +111,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(clouds_layout)
 
         clouds_icon = QLabel()
-        clouds_icon.setPixmap(QPixmap(":/qt_icons/weather_icon.svg").scaled(30, 30))
+        clouds_icon.setPixmap(QPixmap("qt_icons/weather_icon.svg").scaled(30, 30))
         clouds_layout.addWidget(clouds_icon)
 
         self.clouds_label = QLabel()
@@ -120,7 +121,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(country_layout)
 
         country_icon = QLabel()
-        country_icon.setPixmap(QPixmap(":/qt_icons/country-flag.svg").scaled(30, 30))
+        country_icon.setPixmap(QPixmap("qt_icons/country-flag.svg").scaled(30, 30))
         country_layout.addWidget(country_icon)
 
         self.country_label = QLabel()
@@ -130,7 +131,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(sunrise_layout)
 
         sunrise_icon = QLabel()
-        sunrise_icon.setPixmap(QPixmap(":/qt_icons/sunrise.svg").scaled(30, 30))
+        sunrise_icon.setPixmap(QPixmap("qt_icons/sunrise.svg").scaled(30, 30))
         sunrise_layout.addWidget(sunrise_icon)
 
         self.sunrise_label = QLabel()
@@ -140,7 +141,7 @@ class WeatherApp(QWidget):
         self.layout.addLayout(sunset_layout)
 
         sunset_icon = QLabel()
-        sunset_icon.setPixmap(QPixmap(":/qt_icons/sunset.svg").scaled(30, 30))
+        sunset_icon.setPixmap(QPixmap("qt_icons/sunset.svg").scaled(30, 30))
         sunset_layout.addWidget(sunset_icon)
 
         self.sunset_label = QLabel()

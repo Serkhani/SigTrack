@@ -73,6 +73,28 @@ class SymbolManager(QWidget):
     def image_clicked(self, img_path):
         self.selected_image = img_path
         # self.accept()
+        
+    def dragEnterEvent(self, event):
+        #if event.mimeData().hasFormat("application/x-icon"):
+        if event.mimeData().hasFormat("image/png"):
+            event.acceptProposedAction()
+
+    def dropEvent(self, event):
+        pos = event.pos()  # In PySide6, use 'pos' instead of 'position'
+        
+        # Calculate the (x, y) point on the map widget
+        widget_width = self.width()
+        widget_height = self.height()
+
+        # Map screen coordinates to Leaflet map coordinates
+        # This simple approach assumes a consistent zoom level and center point.
+        longitude = (pos.x() / widget_width) * 360 - 180
+        latitude = 90 - (pos.y() / widget_height) * 180
+        
+        print(f"Dropped at screen point ({pos.x()}, {pos.y()})")
+        print(f"Converted to geographical coordinates: latitude = {latitude}, longitude = {longitude}")
+
+        event.acceptProposedAction()
 
 # class SymbolManager(QWidget):
 #     #image_clicked = Signal(QPixmap)
