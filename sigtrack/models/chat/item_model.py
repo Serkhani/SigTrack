@@ -1,8 +1,9 @@
 from PySide6.QtCore import QObject, Signal
-import sqlite3, time
+import time
 
+import sqlite3
 class ItemModel(QObject):
-    itemsChanged = Signal(list)
+    itemsChanged =Signal(list)
 
     def __init__(self):
         super(ItemModel, self).__init__()
@@ -46,11 +47,23 @@ class ItemModel(QObject):
 
         print("Tables created successfully")
 
-    def add_nodeInfo(self,node_id:str,short_name:str,long_name:str,modell:str):
-        self.cursor.execute("INSERT into nodes (node_id, short_name,long_name,modell) VALUES (?,?,?,?)", (node_id,short_name,long_name, modell))
-        self.connection.commit()
-        # cursor  = self.cursor.execute("SELECT node_id, short_name, long_name, modell from nodes")
-        # print(cursor)
+    # def add_nodeInfo(self,node_id:str,short_name:str,long_name:str,modell:str):
+    #     self.cursor.execute("INSERT into nodes (node_id, short_name,long_name,modell) VALUES (?,?,?,?)", (node_id,short_name,long_name, modell))
+    #     self.connection.commit()
+    #     # cursor  = self.cursor.execute("SELECT node_id, short_name, long_name, modell from nodes")
+    #     # print(cursor)
+    
+    def add_nodeInfo(self, node_id, short_name, long_name, modell):
+    # Check if the node_id already exists in the table
+        self.cursor.execute("SELECT 1 FROM nodes WHERE node_id = ?", (node_id,))
+        if self.cursor.fetchone() is None:
+            # Insert only if node_id doesn't exist
+            self.cursor.execute("INSERT INTO nodes (node_id, short_name, long_name, modell) VALUES (?,?,?,?)", 
+                                (node_id, short_name, long_name, modell))
+            self.connection.commit()
+        else:
+            print(f"Node with node_id {node_id} already exists.")
+
 
     # def add_message(self, short_name, message):
     #     timestamp = int(time.time())  # Current timestamp
