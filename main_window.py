@@ -422,6 +422,29 @@ if __name__ == "__main__":
 
     if isActive:
       app = QApplication(sys.argv)
+      stylesheet ="""
+    QPushButton {
+    background-color: #3498db;
+    color: white;
+    font-size: 14px;
+    padding: 10px;
+    border: 10px;
+    border-radius: 5px;
+    }
+
+    QPushButton:hover {
+        background-color: #2980b9;
+    }
+
+    QMainWindow {
+        background-color: #D3D3D3;  
+        border: 4px solid #bdc3c7;
+        
+    }
+    
+    """
+    
+      app.setStyleSheet(stylesheet)
       app.setWindowIcon(
           QIcon(os.path.join(":/sigtrack_icon")))
 
