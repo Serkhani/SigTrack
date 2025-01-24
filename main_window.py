@@ -24,12 +24,12 @@ from sigtrack.views.mapview.MapViewDockWidget import MapWidget
 
 from sigtrack.controllers.videoviewCon import VideoViewConDockWidget
 from sigtrack.models.chat.map_display import MapDisplay
-from qt_material import apply_stylesheet
 from sigtrack.views.ui_form import Ui_MainWindow
 from sigtrack.views.settings import ThemeSelectWindow
 
 import sigtrack.resources.compiled.editing_icons_rc
 from sigtrack.utils.activate_license import activateLicense
+from qt_material import apply_stylesheet
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(

@@ -47,58 +47,85 @@ Rectangle {
     }
     property variant locationTC: QtPositioning.coordinate(7.9465, 1.0232)
     property int zoomLevel: 6
-    // property bool mousePressed: false
-    // property point lastMousePos
+
+    property bool mousePressed: false
+    property point lastMousePos
     Map {
         id: map
         anchors.fill: parent
         plugin: osmPlugin
         center: locationTC
         zoomLevel: 6
-        // property geoCoordinate startCentroid
+        property geoCoordinate startCentroid
 
-    //     PinchHandler {
-    //         id: pinch
-    //         target: null
-    //         onActiveChanged: if (active) {
-    //         map.startCentroid = map.toCoordinate(pinch.centroid.position, false)
-    //     }
-    //     onScaleChanged: (delta) => {
-    //     map.zoomLevel += Math.log2(delta)
-    //     map.alignCoordinateToPoint(map.startCentroid, pinch.centroid.position)
-    //     }
-    //     onRotationChanged: (delta) => {
-    //     map.bearing -= delta
-    //     map.alignCoordinateToPoint(map.startCentroid, pinch.centroid.position)
-    //     }
-    //     grabPermissions: PointerHandler.TakeOverForbidden
-    // }
+        PinchHandler {
+            id: pinch
+            target: null
+            onActiveChanged: if (active) {
+            map.startCentroid = map.toCoordinate(pinch.centroid.position, false)
+        }
+        onScaleChanged: (delta) => {
+        map.zoomLevel += Math.log2(delta)
+        map.alignCoordinateToPoint(map.startCentroid, pinch.centroid.position)
+        }
+        onRotationChanged: (delta) => {
+        map.bearing -= delta
+        map.alignCoordinateToPoint(map.startCentroid, pinch.centroid.position)
+        }
+        grabPermissions: PointerHandler.TakeOverForbidden
+    }
     // WheelHandler {
     //     id: wheel
     //     // workaround for QTBUG-87646 / QTBUG-112394 / QTBUG-112432:
     //     // Magic Mouse pretends to be a trackpad but doesn't work with PinchHandler
     //     // and we don't yet distinguish mice and trackpads on Wayland either
-    //     acceptedDevices: Qt.platform.pluginName === "cocoa" || Qt.platform.pluginName === "wayland"
-    //     ? PointerDevice.Mouse | PointerDevice.TouchPad
-    //     : PointerDevice.Mouse
+    //     // acceptedDevices: Qt.platform.pluginName === "cocoa" || Qt.platform.pluginName === "wayland"
+    //     // ? PointerDevice.Mouse | PointerDevice.TouchPad
+    //     // : PointerDevice.Mouse
     //     rotationScale: 1/120
+    //     acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
     //     property: "zoomLevel"
+
     // }
-    // DragHandler {
-    //     id: drag
-    //     target: null
-    //     onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
-    // }
-    // Shortcut {
-    //     enabled: map.zoomLevel < map.maximumZoomLevel
-    //     sequence: StandardKey.ZoomIn
-    //     onActivated: map.zoomLevel = Math.round(map.zoomLevel + 1)
-    // }
-    // Shortcut {
-    //     enabled: map.zoomLevel > map.minimumZoomLevel
-    //     sequence: StandardKey.ZoomOut
-    //     onActivated: map.zoomLevel = Math.round(map.zoomLevel - 1)
-    // }
+    WheelHandler {
+    id: wheel
+    acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+    rotationScale: 1/120
+    property: "zoomLevel"
+
+    // onWheel: {
+        // // Calculate new zoom level
+        // let newZoomLevel = map.zoomLevel + wheel.angleDelta.y / 120;
+
+        // // Clamp zoom level within allowed range
+        // newZoomLevel = Math.max(map.minimumZoomLevel, Math.min(map.maximumZoomLevel, newZoomLevel));
+
+//         // Get the geographical coordinate at the mouse position
+//         let pointerCoord = map.toCoordinate(wheel.position, false)
+
+//         // Update the map's center to the pointer location
+//         map.center = pointerCoord
+
+//         // Update the map's zoom level
+//         // map.zoomLevel = newZoomLevel;
+//     }
+}
+
+    DragHandler {
+        id: drag
+        target: null
+        onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
+    }
+    Shortcut {
+        enabled: map.zoomLevel < map.maximumZoomLevel
+        sequence: StandardKey.ZoomIn
+        onActivated: map.zoomLevel = Math.round(map.zoomLevel + 1)
+    }
+    Shortcut {
+        enabled: map.zoomLevel > map.minimumZoomLevel
+        sequence: StandardKey.ZoomOut
+        onActivated: map.zoomLevel = Math.round(map.zoomLevel - 1)
+    }
     Column {
         anchors.right: parent.right
         rightPadding: 5
@@ -112,9 +139,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 opacity: enabled ? 1.0 : 0.3
-                color: control.down ? "#17a81a" : "#21be2b"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+                color: zoomInBtn.down ? "#17a81a" : "#21be2b"
                 elide: Text.ElideRight
                 font.pointSize: 24
                 // color: "white"
@@ -129,7 +154,7 @@ Rectangle {
                 implicitWidth: 100
                 implicitHeight: 40
                 opacity: enabled ? 1 : 0.3
-                border.color: control.down ? "#17a81a" : "#21be2b"
+                border.color: zoomInBtn.down ? "#17a81a" : "#21be2b"
                 border.width: 1
                 radius: 2
 
@@ -144,9 +169,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 opacity: enabled ? 1.0 : 0.3
-                color: control.down ? "#17a81a" : "#21be2b"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
+                color: zoomOutBtn.down ? "#17a81a" : "#21be2b"
                 elide: Text.ElideRight
                 font.pointSize: 24
                 // color: "white"
@@ -160,7 +183,7 @@ Rectangle {
             implicitWidth: 100
             implicitHeight: 40
             opacity: enabled ? 1 : 0.3
-            border.color: control.down ? "#17a81a" : "#21be2b"
+            border.color: zoomOutBtn.down ? "#17a81a" : "#21be2b"
             border.width: 1
             radius: 2
         }
@@ -375,6 +398,7 @@ Rectangle {
     //             map.center.longitude - dx / map.pixelSize)
     //             lastMousePos = Qt.point(mouse.x, mouse.y)
     //             event.accepted = true
+
     //         }
     //     }
     // }
@@ -408,14 +432,7 @@ ComboBox {
     {
         map.activeMapType = map.supportedMapTypes[index]
     }
-    model: [
-        "Street Map"
-        , "Cycle Map"
-        , "Transit Map"
-        , "Night Transit Map"
-        , "Terrain Map"
-        , "Hiking Map"
-    ]
+    model: map.supportedMapTypes.map(type => type.name)
     currentIndex: 0
     onCurrentIndexChanged: setMapType(currentIndex)
 }

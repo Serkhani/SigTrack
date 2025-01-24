@@ -6,8 +6,8 @@ from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkRe
 import json
 from pprint import pprint
 
-# API_URL = "https://api.airplanes.live/v2/point/5.658735/-0.184961/250"
-API_URL = "https://api.airplanes.live/v2/point/39.742043/-104.991531/250"
+API_URL = "https://api.airplanes.live/v2/point/5.658735/-0.184961/250"
+# API_URL = "https://api.airplanes.live/v2/point/39.742043/-104.991531/250"
 
 class AirplanesApiWrapper(QObject):
     errorOccurred = Signal(str)
