@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (QApplication, QDockWidget, QFileDialog, QLabel,
                                QMainWindow, QMessageBox, QSplashScreen)
 from sigtrack.controllers.chatCon import ItemController
 from sigtrack.models.chat.ChatModel import ItemModel
+from sigtrack.models.streaming.streaming_model import StreamingObject
 from sigtrack.views.chat.ChatView import ItemView
 
 from sigtrack.views.constants import PHOTO_EXTENSIONS
@@ -75,6 +76,7 @@ class MainWindow(QMainWindow):
         self.ui.actionApp_Theme.triggered.connect(self.openThemeSettings)
         self.ui.actionChat.triggered.connect(self.chatAction)
         self.ui.actionFlight.triggered.connect(self.flightAction)
+        self.ui.actionStreaming.triggered.connect(self.streamingAction)
         self.setCentralWidget(self.ui.label)
 
         self.map = MapWidget(self)
@@ -226,6 +228,29 @@ class MainWindow(QMainWindow):
         view  = FlightWidget(self)
         # chatView = MapWidget(self)
         dockWidget.setWidget(view)
+        self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
+    
+    def streamingAction(self):
+        """
+        Adds flight dockwidget to central widget area
+        """
+        # increment dockCount
+        self.dockCount += 1
+        # hide the label when there are views
+        self.ui.label.hide()
+        # create dock widget
+        dockWidget = DockWidget(self)
+        dockWidget.setWindowTitle("streaming")
+        
+        ui = StreamingObject()
+        
+        # MainWindow = QtWidgets.QMainWindow()
+        # ui = ()
+        # dockWidget = QDockWidget(MainWindow)
+        ui.setupUi(dockWidget)
+        # MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), dockWidget)
+        # MainWindow.show()
+        # dockWidget.setWidget(view)
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def getDockIndex(self):

@@ -147,6 +147,7 @@
     <addaction name="menuSettings"/>
     <addaction name="actionChat"/>
     <addaction name="actionFlight"/>
+    <addaction name="actionStreaming"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -381,6 +382,11 @@
    </property>
    <property name="shortcut">
     <string>F5</string>
+   </property>
+  </action>
+  <action name="actionStreaming">
+   <property name="text">
+    <string>Streaming</string>
    </property>
   </action>
  </widget>
