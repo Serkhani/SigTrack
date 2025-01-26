@@ -1,14 +1,8 @@
-// import QtQuick
-// import QtQuick.Controls
-// import QtPositioning
-// import QtLocation
-// import QtQuick.Controls.Basic 2.15
-// import QtQuick 2.15
-// import QtQuick.Controls.Basic
 import QtQuick
 import QtQuick.Controls.Basic
 import QtPositioning
 import QtLocation
+import Qt.labs.animation
 import "../../views/mapview/application.js" as App
 
 Rectangle {
@@ -16,26 +10,6 @@ Rectangle {
     Plugin {
         id: osmPlugin
         name: "osm"
-        // name: "esri"
-        // name: "mapboxgl"
-        // preferred: ["esri", "osm"]
-        // PluginParameter {
-        //     name: "osm.mapping.providersrepository.disabled"
-        //     value: "false"
-        // }
-        // PluginParameter {
-        //     name: "osm.mapping.providersrepository.address"
-        //     // value: "http://maps-redirect.qt.io/osm/5.8/"
-        //     // value: "https://tile.thunderforest.com/cycle/"
-        //     // value: "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/8/136/74"
-        // }
-        // PluginParameter { name: "osm.useragent"; value: "My great Qt OSM application" }
-        // PluginParameter { name: "osm.mapping.host"; value: "http://osm.tile.server.address/" }
-        // PluginParameter { name: "osm.mapping.copyright"; value: "Soko Aerial Robotics" }
-        // PluginParameter { name: "osm.routing.host"; value: "http://osrm.server.address/viaroute" }
-        // PluginParameter { name: "osm.geocoding.host"; value: "http://geocoding.server.address" }
-        // PluginParameter { name: "osm.places.host"; value: "http://geocoding.server.address" }
-
         PluginParameter {
             name: "osm.mapping.providersrepository.disabled"
             value: "true"
@@ -45,77 +19,129 @@ Rectangle {
             value: "http://maps-redirect.qt.io/osm/5.8/"
         }
     }
-    property variant locationTC: QtPositioning.coordinate(7.9465, 1.0232)
-    property int zoomLevel: 6
-
-    property bool mousePressed: false
-    property point lastMousePos
     Map {
         id: map
         anchors.fill: parent
         plugin: osmPlugin
-        center: locationTC
-        zoomLevel: 6
-        property geoCoordinate startCentroid
+        center: QtPositioning.coordinate(5.658735, -0.184961)
+
+        width: parent.width
+        height: parent.height
+        tilt: tiltHandler.persistentTranslation.y / -5
+        property bool pinchAdjustingZoom: false
+        BoundaryRule on zoomLevel {
+            id: br
+            minimum: map.minimumZoomLevel
+            maximum: map.maximumZoomLevel
+        }
+        onZoomLevelChanged: {
+            br.returnToBounds();
+            if (!pinchAdjustingZoom) resetPinchMinMax()
+        }
+
+        function resetPinchMinMax() {
+            pinch.persistentScale = 1
+            pinch.scaleAxis.minimum = Math.pow(2, parent.minimumZoomLevel - map.zoomLevel + 1)
+            pinch.scaleAxis.maximum = Math.pow(2, parent.maximumZoomLevel - map.zoomLevel - 1)
+        }
 
         PinchHandler {
             id: pinch
             target: null
+            property real rawBearing: 0
+            property geoCoordinate startCentroid
             onActiveChanged: if (active) {
-            map.startCentroid = map.toCoordinate(pinch.centroid.position, false)
+                flickAnimation.stop()
+                pinch.startCentroid = map.toCoordinate(pinch.centroid.position, false)
+            } else {
+                flickAnimation.restart(centroid.velocity)
+                map.resetPinchMinMax()
+            }
+            onScaleChanged: (delta) => {
+                map.pinchAdjustingZoom = true
+                map.zoomLevel += Math.log2(delta)
+                map.alignCoordinateToPoint(pinch.startCentroid, pinch.centroid.position)
+                map.pinchAdjustingZoom = false
+            }
+            onRotationChanged: (delta) => {
+                pinch.rawBearing -= delta
+                // snap to 0° if we're close enough
+                map.bearing = (Math.abs(pinch.rawBearing) < 5) ? 0 : pinch.rawBearing
+                map.alignCoordinateToPoint(pinch.startCentroid, pinch.centroid.position)
+            }
+            grabPermissions: PointerHandler.TakeOverForbidden
         }
-        onScaleChanged: (delta) => {
-        map.zoomLevel += Math.log2(delta)
-        map.alignCoordinateToPoint(map.startCentroid, pinch.centroid.position)
+        WheelHandler {
+            id: wheel
+            // workaround for QTBUG-87646 / QTBUG-112394 / QTBUG-112432:
+            // Magic Mouse pretends to be a trackpad but doesn't work with PinchHandler
+            // and we don't yet distinguish mice and trackpads on Wayland either
+            acceptedDevices: Qt.platform.pluginName === "cocoa" || Qt.platform.pluginName === "wayland"
+                             ? PointerDevice.Mouse | PointerDevice.TouchPad
+                             : PointerDevice.Mouse
+            onWheel: (event) => {
+                const loc = map.toCoordinate(wheel.point.position)
+                switch (event.modifiers) {
+                    case Qt.NoModifier:
+                        map.zoomLevel += event.angleDelta.y / 120
+                        break
+                    case Qt.ShiftModifier:
+                        map.bearing += event.angleDelta.y / 15
+                        break
+                    case Qt.ControlModifier:
+                        map.tilt += event.angleDelta.y / 15
+                        break
+                }
+                map.alignCoordinateToPoint(loc, wheel.point.position)
+            }
         }
-        onRotationChanged: (delta) => {
-        map.bearing -= delta
-        map.alignCoordinateToPoint(map.startCentroid, pinch.centroid.position)
+        DragHandler {
+            id: drag
+            signal flickStarted // for autotests only
+            signal flickEnded
+            target: null
+            onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
+            onActiveChanged: if (active) {
+                flickAnimation.stop()
+            } else {
+                flickAnimation.restart(centroid.velocity)
+            }
         }
-        grabPermissions: PointerHandler.TakeOverForbidden
-    }
-    // WheelHandler {
-    //     id: wheel
-    //     // workaround for QTBUG-87646 / QTBUG-112394 / QTBUG-112432:
-    //     // Magic Mouse pretends to be a trackpad but doesn't work with PinchHandler
-    //     // and we don't yet distinguish mice and trackpads on Wayland either
-    //     // acceptedDevices: Qt.platform.pluginName === "cocoa" || Qt.platform.pluginName === "wayland"
-    //     // ? PointerDevice.Mouse | PointerDevice.TouchPad
-    //     // : PointerDevice.Mouse
-    //     rotationScale: 1/120
-    //     acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-    //     property: "zoomLevel"
 
-    // }
-    WheelHandler {
-    id: wheel
-    acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-    rotationScale: 1/120
-    property: "zoomLevel"
+        property vector3d animDest
+        onAnimDestChanged: if (flickAnimation.running) {
+            const delta = Qt.vector2d(animDest.x - flickAnimation.animDestLast.x, animDest.y - flickAnimation.animDestLast.y)
+            map.pan(-delta.x, -delta.y)
+            flickAnimation.animDestLast = animDest
+        }
 
-    // onWheel: {
-        // // Calculate new zoom level
-        // let newZoomLevel = map.zoomLevel + wheel.angleDelta.y / 120;
+        Vector3dAnimation on animDest {
+            id: flickAnimation
+            property vector3d animDestLast
+            from: Qt.vector3d(0, 0, 0)
+            duration: 500
+            easing.type: Easing.OutQuad
+            onStarted: drag.flickStarted()
+            onStopped: drag.flickEnded()
 
-        // // Clamp zoom level within allowed range
-        // newZoomLevel = Math.max(map.minimumZoomLevel, Math.min(map.maximumZoomLevel, newZoomLevel));
+            function restart(vel) {
+                stop()
+                map.animDest = Qt.vector3d(0, 0, 0)
+                animDestLast = Qt.vector3d(0, 0, 0)
+                to = Qt.vector3d(vel.x / duration * 100, vel.y / duration * 100, 0)
+                start()
+            }
+        }
 
-//         // Get the geographical coordinate at the mouse position
-//         let pointerCoord = map.toCoordinate(wheel.position, false)
-
-//         // Update the map's center to the pointer location
-//         map.center = pointerCoord
-
-//         // Update the map's zoom level
-//         // map.zoomLevel = newZoomLevel;
-//     }
-}
-
-    DragHandler {
-        id: drag
-        target: null
-        onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
-    }
+        DragHandler {
+            id: tiltHandler
+            minimumPointCount: 2
+            maximumPointCount: 2
+            target: null
+            xAxis.enabled: false
+            grabPermissions: PointerHandler.TakeOverForbidden
+            onActiveChanged: if (active) flickAnimation.stop()
+        }
     Shortcut {
         enabled: map.zoomLevel < map.maximumZoomLevel
         sequence: StandardKey.ZoomIn
@@ -224,56 +250,6 @@ Rectangle {
                 }
             }
         }
-        //                 MapItemView {
-        //     model: markermodel
-        //     delegate: MapQuickItem {
-        //         coordinate: model.position_marker
-        //         anchorPoint.x: image.width/2
-        //         anchorPoint.y: image.height
-
-        //         sourceItem: Item {
-        //             id: tooltipContainer
-
-        //             // Tooltip MouseArea
-        //             MouseArea { propagateComposedEvents: true
-        //                 id: markerMouseArea
-        //                 objectName: "buttonMouseArea"
-        //                 anchors.fill: parent
-        //                 hoverEnabled: true
-        //                 onClicked: {
-        //                     App.showImage(model.imgPath)
-        //                 }
-        //             }
-
-        //             // Tooltip Rectangle
-        //             Rectangle {
-        //                 id: tooltip
-        //                 width: Math.min(contentWidth + 16, image.width * 0.5) // Limit width to 50% of the image width
-        //                 height: Math.min(contentHeight + 16, image.height * 0.5) // Limit height to 50% of the image height
-        //                 color: "lightyellow"
-        //                 border.color: "black"
-        //                 border.width: 1
-        //                 radius: 4
-
-        //                 // Tooltip Text
-        //                 Text {
-        //                     anchors.centerIn: parent
-        //                     text: qsTr(model.tooltip)
-        //                     font.pixelSize: 14
-        //                     wrapMode: Text.Wrap
-        //                 }
-
-        //                 // Position the tooltip within the parent image
-        //                 x: markerMouseArea.containsMouse ? -width - 8 : image.width + 8
-        //                 y: markerMouseArea.containsMouse ? -height - 8 : image.height + 8
-
-        //                 // Hide the tooltip when not hovered
-        //                 visible: markerMouseArea.containsMouse
-        //             }
-        //         }
-        //     }
-        // }
-
         // path traversed by the drone
         MapItemView {
             model: dronemodel
@@ -377,53 +353,6 @@ Rectangle {
             }
         }
     }
-    // MouseArea {
-    //     propagateComposedEvents: true
-    //     anchors.fill: parent
-    //     onPressed: {
-    //         mousePressed = true
-    //         lastMousePos = Qt.point(mouse.x, mouse.y)
-    //         event.accepted = true
-    //     }
-    //     onReleased: {
-    //         mousePressed = false
-    //         event.accepted = true
-    //     }
-    //     onPositionChanged: {
-    //         if (mousePressed)
-    //         {
-    //             var dx = mouse.x - lastMousePos.x
-    //             var dy = mouse.y - lastMousePos.y
-    //             map.center = QtPositioning.coordinate(map.center.latitude - dy / map.pixelSize,
-    //             map.center.longitude - dx / map.pixelSize)
-    //             lastMousePos = Qt.point(mouse.x, mouse.y)
-    //             event.accepted = true
-
-    //         }
-    //     }
-    // }
-
-    // Touch events (for touch devices)
-    // onTouchPressed: {
-    //     mousePressed = true
-    //     lastMousePos = Qt.point(touchPoints[0].x, touchPoints[0].y)
-    //     event.accepted = true
-    // }
-    // onTouchReleased: {
-    //     mousePressed = false
-    //     event.accepted = true
-    // }
-    // onTouchUpdated: {
-    //     if (mousePressed && touchPoints.length === 1)
-    //     {
-    //         var dx = touchPoints[0].x - lastMousePos.x
-    //         var dy = touchPoints[0].y - lastMousePos.y
-    //         map.center = QtPositioning.coordinate(map.center.latitude - dy / map.pixelCoordinateAt(0, 0).latitudePerPixel,
-    //         map.center.longitude - dx / map.pixelCoordinateAt(0, 0).longitudePerPixel)
-    //         lastMousePos = Qt.point(touchPoints[0].x, touchPoints[0].y)
-    //         event.accepted = true
-    //     }
-    // }
 }
 
 ComboBox {
