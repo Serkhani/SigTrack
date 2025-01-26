@@ -13,6 +13,31 @@ import "../../views/mapview/application.js" as App
 
 Rectangle {
     id: rectangle
+//     Plugin {
+//     id: herePlugin
+// // GiUN_4L8BA4g7VP8H7JvyA
+// // 0UkfUkOWcuKOJl44gpyjsqtnpZQO-jCCSr53pUzAwIdISJLNd7iTetC_MmA0rrZVPplxfXdi73KF8CnuYNcqZA
+//     name: "here"
+//     parameters: [
+//         PluginParameter {
+//             name: "here.app_id"
+//             value: "pImRQYN55MDCWPrhMlMz"
+//         },
+//         PluginParameter {
+//             name: "here.token"
+//             value: "ll4wz9OgFeLy08ElhzVfZ3QDk1V35LqMJnD5I9CimRE"
+//         }
+//     ]
+// }
+//   Plugin {
+//         id: mapbox
+//         name: "mapbox"
+//         PluginParameter {
+//             name: "mapbox.access_token"
+//             value: "pk.eyJ1Ijoic2Vya2hhbmkiLCJhIjoiY201ZDluYnM0MmppNTJrczJ6M3Z2a2ZqOSJ9.TUP4GZ15D462LkUy5PUcWQ"
+//         }
+
+//     }
     Plugin {
         id: osmPlugin
         name: "osm"
@@ -54,6 +79,8 @@ Rectangle {
         id: map
         anchors.fill: parent
         plugin: osmPlugin
+        // plugin: herePlugin
+        // plugin: mapbox
         center: locationTC
         zoomLevel: 6
         property geoCoordinate startCentroid
@@ -425,6 +452,45 @@ Rectangle {
     //     }
     // }
 }
+//   Map {
+//         id: mapOverlay
+//         anchors.fill: parent
+//         plugin: Plugin { name: "itemsoverlay" }
+//         // gesture.enabled: false
+//         center: map.center
+//         color: 'transparent' // Necessary to make this map transparent
+//         minimumFieldOfView: map.minimumFieldOfView
+//         maximumFieldOfView: map.maximumFieldOfView
+//         minimumTilt: map.minimumTilt
+//         maximumTilt: map.maximumTilt
+//         minimumZoomLevel: map.minimumZoomLevel
+//         maximumZoomLevel: map.maximumZoomLevel
+//         zoomLevel: map.zoomLevel
+//         tilt: map.tilt;
+//         bearing: map.bearing
+//         fieldOfView: map.fieldOfView
+//         z: map.z + 1
+
+//         MapCircle {
+//             id: circle
+//             center: QtPositioning.coordinate(44, 10)
+//             radius: 200000
+//             border.width: 5
+
+//             MouseArea {
+//                 anchors.fill: parent
+//                 drag.target: parent
+//             }
+//         }
+
+//         // The code below enables SSAA
+//         layer.enabled: true
+//         layer.smooth: true
+//         property int w : mapOverlay.width
+//         property int h : mapOverlay.height
+//         property int pr: Screen.devicePixelRatio
+//         layer.textureSize: Qt.size(w  * 2 * pr, h * 2 * pr)
+//     }
 
 ComboBox {
     id: mapTypeComboBox
