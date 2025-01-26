@@ -190,37 +190,37 @@ Rectangle {
                             source:  'qrc:/drone'
                         }
                     }
-            Column {
-                anchors {
-                    top: parent.top
-                    right: parent.right
-                    margins: 10
-                }
-                spacing: 10
+}
+    Column {
+        anchors {
+            top: parent.top
+            right: parent.right
+            margins: 10
+        }
+        spacing: 10
 
-                TextField {
-                    id: latTextField
-                    placeholderText: "Lat"
-                }
+        TextField {
+            id: latTextField
+            placeholderText: "Lat"
+        }
 
-                TextField {
-                    id: lonTextField
-                    placeholderText: "Lon"
-                }
+        TextField {
+            id: lonTextField
+            placeholderText: "Lon"
+        }
 
-                TextField {
-                    id: radiusTextField
-                    placeholderText: "Radius"
-                }
+        TextField {
+            id: radiusTextField
+            placeholderText: "Radius"
+        }
 
-                Button {
-                    text: "Submit"
-                    onClicked: {
-                    App.update_url([latTextField.text, lonTextField.text, radiusTextField.text])
-                    }
-                }
+        Button {
+            text: "Submit"
+            onClicked: {
+            App.update_url([latTextField.text, lonTextField.text, radiusTextField.text])
             }
         }
+    }
 }
 ComboBox {
     id: mapTypeComboBox
