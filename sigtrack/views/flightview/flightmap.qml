@@ -141,4 +141,79 @@ Rectangle {
 
         }
 }
+ComboBox {
+    id: mapTypeComboBox
+    function setMapType(index)
+    {
+        map.activeMapType = map.supportedMapTypes[index]
+    }
+    model: map.supportedMapTypes.map(type => type.name)
+    currentIndex: 0
+    onCurrentIndexChanged: setMapType(currentIndex)
+}
+Column {
+    anchors.top: mapTypeComboBox.bottom
+        anchors.left: parent.left
+        rightPadding: 5
+        topPadding: 5
+        spacing: 5
+        Button {
+            id: zoomInBtn
+            text: qsTr("+")
+            contentItem: Text {
+                text: zoomInBtn.text
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                opacity: enabled ? 1.0 : 0.3
+                color: zoomInBtn.down ? "#17a81a" : "#21be2b"
+                elide: Text.ElideRight
+                font.pointSize: 24
+                // color: "white"
+            }
+            onClicked: {
+                map.zoomLevel += 1
+            }
+            width: 50
+            height: 30
+            background: Rectangle {
+                // color: "#8572a8"
+                implicitWidth: 100
+                implicitHeight: 40
+                opacity: enabled ? 1 : 0.3
+                border.color: zoomInBtn.down ? "#17a81a" : "#21be2b"
+                border.width: 1
+                radius: 2
+
+            }
+        }
+        Button {
+            
+            id: zoomOutBtn
+            text: qsTr("-")
+            contentItem: Text {
+                text: zoomOutBtn.text
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                opacity: enabled ? 1.0 : 0.3
+                color: zoomOutBtn.down ? "#17a81a" : "#21be2b"
+                elide: Text.ElideRight
+                font.pointSize: 24
+                // color: "white"
+            }
+            onClicked: {
+                map.zoomLevel -= 1
+            }
+            width: 50
+            height: 30
+            background: Rectangle {
+            implicitWidth: 100
+            implicitHeight: 40
+            opacity: enabled ? 1 : 0.3
+            border.color: zoomOutBtn.down ? "#17a81a" : "#21be2b"
+            border.width: 1
+            radius: 2
+        }
+
+        }
+    }
 }
