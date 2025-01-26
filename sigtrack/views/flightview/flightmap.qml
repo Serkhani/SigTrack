@@ -106,6 +106,7 @@ Rectangle {
             signal flickStarted // for autotests only
             signal flickEnded
             target: null
+            enabled: !radiusSelector.enabled
             onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
             onActiveChanged: if (active) {
                 flickAnimation.stop()
@@ -148,49 +149,88 @@ Rectangle {
             grabPermissions: PointerHandler.TakeOverForbidden
             onActiveChanged: if (active) flickAnimation.stop()
         }
-    
-        MapItemView {
-            model: flightModel
+
+        // Circle to show the selected radius
+        Rectangle {
+            id: radiusCircle
+            visible: false
+            width: radius * 2
+            height: radius * 2
+            radius: 0
+            border.color: "red"
+            border.width: 2
+            color: "transparent"
+            x: map.center.x - radius
+            y: map.center.y - radius
+        }
+
+        // MouseArea to handle radius selection
+        MouseArea {
+            id: radiusSelector
             anchors.fill: parent
-            delegate: MapQuickItem {
-                        coordinate: QtPositioning.coordinate(model.lat, model.lon)
-                        
-                        anchorPoint.x: droneImg.width/2
-                        anchorPoint.y: droneImg.height/2
-                        // transform: Rotation {
-                        //     origin.x: droneImg.width/2
-                        //     origin.y: droneImg.height/2
-                        //     angle: model.track
-                        // }
-                        MouseArea{
-                            anchors.fill: parent
-                            onClicked: {
-                                console.log(model.flight)
-                                console.log(model.lat)
-                                console.log(model.lon)
-                                console.log(model.alt)
-                                console.log(model.ownOp)
-                                console.log(model.track)
-                            }
-                        }
-                        sourceItem: Image {
-                            id: droneImg
-                            property alias rotationAngle: rotation.angle
-                            width: 70
-                            height: 70
-                            transform: 
-                            [
-                                Rotation {
-                                    id: rotation
-                                    origin.x: droneImg.width/2
-                                    origin.y: droneImg.height/2
-                                    angle: model.track
-                                }
-                            ]
-                            source:  'qrc:/drone'
-                        }
-                    }
-}
+            enabled: false
+            property real startX: 0
+            property real startY: 0
+            property real endX: 0
+            property real endY: 0
+            property real radius: 0 // Radius in nautical miles
+            property var centerCoordinate: map.center
+
+            onPressed: (mouse) => {
+                startX = mouse.x
+                startY = mouse.y
+                radiusCircle.visible = true
+                radiusCircle.x = mouse.x - radiusCircle.radius
+                radiusCircle.y = mouse.y - radiusCircle.radius
+            }
+
+            onPositionChanged: (mouse) => {
+                endX = mouse.x
+                endY = mouse.y
+
+                // Convert pixel distance to nautical miles
+                const startCoord = map.toCoordinate(Qt.point(startX, startY))
+                const endCoord = map.toCoordinate(Qt.point(endX, endY))
+                const distanceMeters = startCoord.distanceTo(endCoord)
+                const distanceNauticalMiles = distanceMeters / 1852 // Convert meters to nautical miles
+                radius = Math.min(distanceNauticalMiles, 250) // Limit radius to 250 nautical miles
+
+                // Calculate the radius in pixels
+                const radiusPixels = metersToPixels(distanceMeters, startCoord.latitude, map.zoomLevel)
+                radiusCircle.radius = radiusPixels
+                radiusCircle.x = startX - radiusCircle.radius
+                radiusCircle.y = startY - radiusCircle.radius
+            }
+
+            onReleased: (mouse) => {
+                // Calculate the center coordinate and radius
+                centerCoordinate = map.toCoordinate(Qt.point(startX, startY))
+                radius = Math.min(radius, 250) // Ensure radius does not exceed 250 nautical miles
+
+                // Update the text fields
+                latTextField.text = centerCoordinate.latitude.toFixed(6)
+                lonTextField.text = centerCoordinate.longitude.toFixed(6)
+                radiusTextField.text = radius.toFixed(2)
+                
+                App.update_url([latTextField.text, lonTextField.text, radiusTextField.text])
+
+                // Hide the circle
+                radiusCircle.visible = false
+                radiusSelector.enabled = false
+            }
+
+            // Function to convert meters to pixels based on latitude and zoom level
+            function metersToPixels(meters, latitude, zoomLevel) {
+                // Earth's circumference in meters
+                const earthCircumference = 40075000
+                // Calculate the scale in meters per pixel
+                const scale = (earthCircumference * Math.cos(latitude * Math.PI / 180)) / Math.pow(2, zoomLevel + 8)
+                // Convert meters to pixels
+                return meters / scale
+            }
+        }
+    }
+
     Column {
         anchors {
             top: parent.top
@@ -217,23 +257,32 @@ Rectangle {
         Button {
             text: "Submit"
             onClicked: {
-            App.update_url([latTextField.text, lonTextField.text, radiusTextField.text])
+                App.update_url([latTextField.text, lonTextField.text, radiusTextField.text])
+            }
+        }
+
+        // Button to enable radius selection
+        Button {
+            text: "Select Radius"
+            enabled: !radiusSelector.enabled
+            onClicked: {
+                radiusSelector.enabled = true
             }
         }
     }
-}
-ComboBox {
-    id: mapTypeComboBox
-    function setMapType(index)
-    {
-        map.activeMapType = map.supportedMapTypes[index]
+
+    ComboBox {
+        id: mapTypeComboBox
+        function setMapType(index) {
+            map.activeMapType = map.supportedMapTypes[index]
+        }
+        model: map.supportedMapTypes.map(type => type.name)
+        currentIndex: 0
+        onCurrentIndexChanged: setMapType(currentIndex)
     }
-    model: map.supportedMapTypes.map(type => type.name)
-    currentIndex: 0
-    onCurrentIndexChanged: setMapType(currentIndex)
-}
-Column {
-    anchors.top: mapTypeComboBox.bottom
+
+    Column {
+        anchors.top: mapTypeComboBox.bottom
         anchors.left: parent.left
         rightPadding: 5
         topPadding: 5
@@ -249,7 +298,6 @@ Column {
                 color: zoomInBtn.down ? "#17a81a" : "#21be2b"
                 elide: Text.ElideRight
                 font.pointSize: 24
-                // color: "white"
             }
             onClicked: {
                 map.zoomLevel += 1
@@ -257,18 +305,15 @@ Column {
             width: 50
             height: 30
             background: Rectangle {
-                // color: "#8572a8"
                 implicitWidth: 100
                 implicitHeight: 40
                 opacity: enabled ? 1 : 0.3
                 border.color: zoomInBtn.down ? "#17a81a" : "#21be2b"
                 border.width: 1
                 radius: 2
-
             }
         }
         Button {
-            
             id: zoomOutBtn
             text: qsTr("-")
             contentItem: Text {
@@ -279,7 +324,6 @@ Column {
                 color: zoomOutBtn.down ? "#17a81a" : "#21be2b"
                 elide: Text.ElideRight
                 font.pointSize: 24
-                // color: "white"
             }
             onClicked: {
                 map.zoomLevel -= 1
@@ -287,14 +331,13 @@ Column {
             width: 50
             height: 30
             background: Rectangle {
-            implicitWidth: 100
-            implicitHeight: 40
-            opacity: enabled ? 1 : 0.3
-            border.color: zoomOutBtn.down ? "#17a81a" : "#21be2b"
-            border.width: 1
-            radius: 2
-        }
-
+                implicitWidth: 100
+                implicitHeight: 40
+                opacity: enabled ? 1 : 0.3
+                border.color: zoomOutBtn.down ? "#17a81a" : "#21be2b"
+                border.width: 1
+                radius: 2
+            }
         }
     }
 }
