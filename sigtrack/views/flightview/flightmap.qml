@@ -229,6 +229,49 @@ Rectangle {
                 return meters / scale
             }
         }
+
+        MapItemView {
+            model: flightModel
+            anchors.fill: parent
+            delegate: MapQuickItem {
+                        coordinate: QtPositioning.coordinate(model.lat, model.lon)
+                        
+                        anchorPoint.x: droneImg.width/2
+                        anchorPoint.y: droneImg.height/2
+                        // transform: Rotation {
+                        //     origin.x: droneImg.width/2
+                        //     origin.y: droneImg.height/2
+                        //     angle: model.track
+                        // }
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked: {
+                                console.log(model.flight)
+                                console.log(model.lat)
+                                console.log(model.lon)
+                                console.log(model.alt)
+                                console.log(model.ownOp)
+                                console.log(model.track)
+                            }
+                        }
+                        sourceItem: Image {
+                            id: droneImg
+                            property alias rotationAngle: rotation.angle
+                            width: 70
+                            height: 70
+                            transform: 
+                            [
+                                Rotation {
+                                    id: rotation
+                                    origin.x: droneImg.width/2
+                                    origin.y: droneImg.height/2
+                                    angle: model.track
+                                }
+                            ]
+                            source:  'qrc:/drone'
+                        }
+                    }
+}
     }
 
     Column {
@@ -270,7 +313,6 @@ Rectangle {
             }
         }
     }
-
     ComboBox {
         id: mapTypeComboBox
         function setMapType(index) {
