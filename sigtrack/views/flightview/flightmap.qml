@@ -1,7 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtLocation 
-import QtPositioning 
+import QtQuick
+import QtQuick.Controls
+import QtLocation
+import QtPositioning
+import Qt.labs.animation
 import "../../views/flightview/js_file.js" as App
 
 Rectangle {
@@ -22,46 +23,132 @@ Rectangle {
             value: "http://maps-redirect.qt.io/osm/5.8/"
         }
     }
+    Component.onCompleted: map.resetPinchMinMax()
+
     Map {
         anchors.fill: parent
         id: map
         plugin: osmPlugin
         center: QtPositioning.coordinate(5.658735, -0.184961)
         zoomLevel: 2
-        // property geoCoordinate startCentroid
+        width: parent.width
+        height: parent.height
+        tilt: tiltHandler.persistentTranslation.y / -5
+        property bool pinchAdjustingZoom: false
+        BoundaryRule on zoomLevel {
+            id: br
+            minimum: map.minimumZoomLevel
+            maximum: map.maximumZoomLevel
+        }
+        onZoomLevelChanged: {
+            br.returnToBounds();
+            if (!pinchAdjustingZoom) resetPinchMinMax()
+        }
 
-        // PinchHandler {
-        //     id: pinch
-        //     target: null
-        //     onActiveChanged: if (active) {
-        //         map.startCentroid = map.toCoordinate(pinch.centroid.position, false)
-        //     }
-        //     onScaleChanged: (delta) => {
-        //         map.zoomLevel += Math.log2(delta)
-        //         map.alignCoordinateToPoint(map.startCentroid, pinch.centroid.position)
-        //     }
-        //     onRotationChanged: (delta) => {
-        //         map.bearing -= delta
-        //         map.alignCoordinateToPoint(map.startCentroid, pinch.centroid.position)
-        //     }
-        //     grabPermissions: PointerHandler.TakeOverForbidden
-        // }
-        // WheelHandler {
-        //     id: wheel
-        //     // workaround for QTBUG-87646 / QTBUG-112394 / QTBUG-112432:
-        //     // Magic Mouse pretends to be a trackpad but doesn't work with PinchHandler
-        //     // and we don't yet distinguish mice and trackpads on Wayland either
-        //     acceptedDevices: Qt.platform.pluginName === "cocoa" || Qt.platform.pluginName === "wayland"
-        //                      ? PointerDevice.Mouse | PointerDevice.TouchPad
-        //                      : PointerDevice.Mouse
-        //     rotationScale: 1/120
-        //     property: "zoomLevel"
-        // }
-        // DragHandler {
-        //     id: drag
-        //     target: null
-        //     onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
-        // }
+        function resetPinchMinMax() {
+            pinch.persistentScale = 1
+            pinch.scaleAxis.minimum = Math.pow(2, parent.minimumZoomLevel - map.zoomLevel + 1)
+            pinch.scaleAxis.maximum = Math.pow(2, parent.maximumZoomLevel - map.zoomLevel - 1)
+        }
+
+        PinchHandler {
+            id: pinch
+            target: null
+            property real rawBearing: 0
+            property geoCoordinate startCentroid
+            onActiveChanged: if (active) {
+                flickAnimation.stop()
+                pinch.startCentroid = map.toCoordinate(pinch.centroid.position, false)
+            } else {
+                flickAnimation.restart(centroid.velocity)
+                map.resetPinchMinMax()
+            }
+            onScaleChanged: (delta) => {
+                map.pinchAdjustingZoom = true
+                map.zoomLevel += Math.log2(delta)
+                map.alignCoordinateToPoint(pinch.startCentroid, pinch.centroid.position)
+                map.pinchAdjustingZoom = false
+            }
+            onRotationChanged: (delta) => {
+                pinch.rawBearing -= delta
+                // snap to 0° if we're close enough
+                map.bearing = (Math.abs(pinch.rawBearing) < 5) ? 0 : pinch.rawBearing
+                map.alignCoordinateToPoint(pinch.startCentroid, pinch.centroid.position)
+            }
+            grabPermissions: PointerHandler.TakeOverForbidden
+        }
+        WheelHandler {
+            id: wheel
+            // workaround for QTBUG-87646 / QTBUG-112394 / QTBUG-112432:
+            // Magic Mouse pretends to be a trackpad but doesn't work with PinchHandler
+            // and we don't yet distinguish mice and trackpads on Wayland either
+            acceptedDevices: Qt.platform.pluginName === "cocoa" || Qt.platform.pluginName === "wayland"
+                             ? PointerDevice.Mouse | PointerDevice.TouchPad
+                             : PointerDevice.Mouse
+            onWheel: (event) => {
+                const loc = map.toCoordinate(wheel.point.position)
+                switch (event.modifiers) {
+                    case Qt.NoModifier:
+                        map.zoomLevel += event.angleDelta.y / 120
+                        break
+                    case Qt.ShiftModifier:
+                        map.bearing += event.angleDelta.y / 15
+                        break
+                    case Qt.ControlModifier:
+                        map.tilt += event.angleDelta.y / 15
+                        break
+                }
+                map.alignCoordinateToPoint(loc, wheel.point.position)
+            }
+        }
+        DragHandler {
+            id: drag
+            signal flickStarted // for autotests only
+            signal flickEnded
+            target: null
+            onTranslationChanged: (delta) => map.pan(-delta.x, -delta.y)
+            onActiveChanged: if (active) {
+                flickAnimation.stop()
+            } else {
+                flickAnimation.restart(centroid.velocity)
+            }
+        }
+
+        property vector3d animDest
+        onAnimDestChanged: if (flickAnimation.running) {
+            const delta = Qt.vector2d(animDest.x - flickAnimation.animDestLast.x, animDest.y - flickAnimation.animDestLast.y)
+            map.pan(-delta.x, -delta.y)
+            flickAnimation.animDestLast = animDest
+        }
+
+        Vector3dAnimation on animDest {
+            id: flickAnimation
+            property vector3d animDestLast
+            from: Qt.vector3d(0, 0, 0)
+            duration: 500
+            easing.type: Easing.OutQuad
+            onStarted: drag.flickStarted()
+            onStopped: drag.flickEnded()
+
+            function restart(vel) {
+                stop()
+                map.animDest = Qt.vector3d(0, 0, 0)
+                animDestLast = Qt.vector3d(0, 0, 0)
+                to = Qt.vector3d(vel.x / duration * 100, vel.y / duration * 100, 0)
+                start()
+            }
+        }
+
+        DragHandler {
+            id: tiltHandler
+            minimumPointCount: 2
+            maximumPointCount: 2
+            target: null
+            xAxis.enabled: false
+            grabPermissions: PointerHandler.TakeOverForbidden
+            onActiveChanged: if (active) flickAnimation.stop()
+        }
+    
         MapItemView {
             model: flightModel
             anchors.fill: parent
