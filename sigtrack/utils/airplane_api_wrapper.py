@@ -1,10 +1,7 @@
 import sys
-from PySide6.QtCore import QTimer, QUrl, Qt, QAbstractListModel, QModelIndex, QObject, Signal, Slot
-from PySide6.QtGui import QGuiApplication
-from PySide6.QtQml import QQmlApplicationEngine
+from PySide6.QtCore import QUrl, QObject, Signal
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 import json
-from pprint import pprint
 
 API_URL = "https://api.airplanes.live/v2/point/5.658735/-0.184961/250"
 # API_URL = "https://api.airplanes.live/v2/point/39.742043/-104.991531/250"
@@ -24,6 +21,7 @@ class AirplanesApiWrapper(QObject):
         request = QNetworkRequest(QUrl(self.api_url))
         reply = self._network_manager.get(request)
         reply.finished.connect(lambda: self._handle_reply(reply))
+        reply.errorOccurred.connect(lambda error: self.errorOccurred.emit(error))
 
     def _handle_reply(self, reply):
         reply.deleteLater()
