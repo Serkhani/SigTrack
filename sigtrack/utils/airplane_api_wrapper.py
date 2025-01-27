@@ -25,25 +25,54 @@ class AirplanesApiWrapper(QObject):
 
     def _handle_reply(self, reply):
         reply.deleteLater()
-        if reply.error()!=QNetworkReply.NoError:
+        if reply.error() != QNetworkReply.NoError:
             self.errorOccurred.emit(reply.errorString())
             return
 
+        # Read and decode the reply data
         data = json.loads(reply.readAll().data().decode())
+        
+        # Extract the list of flights
         flights = data.get("ac", [])
+        
+        # Format the data for the model
         formatted_data = [
             {
-                "flight": item.get("flight", "Unknown"),
+                "hex": item.get("hex", "Unknown"),
+                "type": item.get("type", "Unknown"),
+                "flight": item.get("flight", "Unknown").strip(),
+                "registration": item.get("r", "Unknown"),
+                "aircraft_type": item.get("t", "Unknown"),
+                "description": item.get("desc", "Unknown"),
+                "operator": item.get("ownOp", "Unknown"),
+                "year": item.get("year", "Unknown"),
+                "alt_baro": item.get("alt_baro", 0.0),
+                "alt_geom": item.get("alt_geom", 0.0),
+                "ground_speed": item.get("gs", 0.0),
+                "track": item.get("track", 0.0),
+                "baro_rate": item.get("baro_rate", 0.0),
+                "geom_rate": item.get("geom_rate", 0.0),
+                "squawk": item.get("squawk", "Unknown"),
+                "emergency": item.get("emergency", "none"),
+                "category": item.get("category", "Unknown"),
+                "nav_qnh": item.get("nav_qnh", 0.0),
+                "nav_altitude_mcp": item.get("nav_altitude_mcp", 0.0),
+                "nav_heading": item.get("nav_heading", 0.0),
                 "lat": item.get("lat", 0.0),
                 "lon": item.get("lon", 0.0),
-                "alt_baro": item.get("alt_baro", 0.0),
-                "track": item.get("track", 0.0),
-                "ownOp": item.get("ownOp", "Unknown"),
-                # "url": [lat, lon, radius]
+                "nic": item.get("nic", 0),
+                "rc": item.get("rc", 0),
+                "seen_pos": item.get("seen_pos", 0.0),
+                "messages": item.get("messages", 0),
+                "seen": item.get("seen", 0.0),
+                "rssi": item.get("rssi", 0.0),
+                "distance": item.get("dst", 0.0),
+                "direction": item.get("dir", 0.0),
             }
             for item in flights
         ]
-        # print(formatted_data)
+        
+        # Emit the formatted data
         self.dataFetched.emit(formatted_data)
         
     def _update_api_url(self, props:list):

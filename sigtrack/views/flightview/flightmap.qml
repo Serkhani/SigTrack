@@ -202,7 +202,7 @@ Rectangle {
             onReleased: (mouse) => {
                 // Calculate the center coordinate and radius
                 centerCoordinate = map.toCoordinate(Qt.point(startX, startY))
-                radius = Math.min(radius, 250) // Ensure radius does not exceed 250 nautical miles
+                // radius = Math.min(radius, 250) // Ensure radius does not exceed 250 nautical miles
 
                 // Update the text fields
                 latTextField.text = centerCoordinate.latitude.toFixed(6)
@@ -231,41 +231,167 @@ Rectangle {
             model: flightModel
             anchors.fill: parent
             delegate: MapQuickItem {
-                    coordinate: QtPositioning.coordinate(model.lat, model.lon)
-                    anchorPoint.x: droneImg.width/2
-                    anchorPoint.y: droneImg.height/2
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            console.log(model.flight)
-                            console.log(model.lat)
-                            console.log(model.lon)
-                            console.log(model.alt)
-                            console.log(model.ownOp)
-                            console.log(model.track)
-                        }
-                    }
-                    sourceItem: Image {
+                coordinate: QtPositioning.coordinate(model.lat, model.lon)
+                anchorPoint.x: droneImg.width / 2
+                anchorPoint.y: droneImg.height / 2
+
+                sourceItem: Item {
+                    id: delegateItem
+                    width: droneImg.width
+                    height: droneImg.height
+
+                    Image {
                         id: droneImg
                         property alias rotationAngle: rotation.angle
                         width: 70
                         height: 70
-                        transform: 
-                        [
+                        transform: [
                             Rotation {
                                 id: rotation
-                                origin.x: droneImg.width/2
-                                origin.y: droneImg.height/2
+                                origin.x: droneImg.width / 2
+                                origin.y: droneImg.height / 2
                                 angle: model.track
                             }
                         ]
-                        source:  'qrc:/drone'
+                        source: 'qrc:/drone'
                     }
+
+                    // Tooltip to show flight details on hover
+                    Rectangle {
+                        id: tooltip
+                        visible: false
+                        width: flightDetailsColumn.implicitWidth + 20
+                        height: flightDetailsColumn.implicitHeight + 20
+                        color: "white"
+                        border.color: "black"
+                        border.width: 1
+                        opacity: 0.9
+                        z: model.rowCount + 1 
+                        anchors {
+                            bottom: droneImg.top
+                            horizontalCenter: droneImg.horizontalCenter
+                            bottomMargin: 10
+                        }
+
+                        Column {
+                            id: flightDetailsColumn
+                            anchors.centerIn: parent
+                            spacing: 5
+                            padding: 10
+                            Text { text: "Hex Code: " + model.hex }
+                            Text { text: "Type: " + model.type }
+                            Text { text: "Flight Number: " + model.flight }
+                            Text { text: "Registration: " + model.registration }
+                            Text { text: "Aircraft Type: " + model.aircraft_type }
+                            Text { text: "Description: " + model.description }
+                            Text { text: "Operator: " + model.operator }
+                            Text { text: "Year of Manufacture: " + model.year }
+                            Text { text: "Altitude (Barometric): " + model.alt_baro + " ft" }
+                            Text { text: "Altitude (Geometric): " + model.alt_geom + " ft" }
+                            Text { text: "Ground Speed: " + model.ground_speed + " knots" }
+                            Text { text: "Track Angle: " + model.track + "°" }
+                            Text { text: "Barometric Rate of Climb/Descent: " + model.baro_rate + " ft/min" }
+                            Text { text: "Geometric Rate of Climb/Descent: " + model.geom_rate + " ft/min" }
+                            Text { text: "Squawk Code: " + model.squawk }
+                            Text { text: "Emergency: " + model.emergency }
+                            Text { text: "Category: " + model.category }
+                            Text { text: "Navigation QNH: " + model.nav_qnh + " hPa" }
+                            Text { text: "Navigation Altitude (MCP): " + model.nav_altitude_mcp + " ft" }
+                            Text { text: "Navigation Heading: " + model.nav_heading + "°" }
+                            Text { text: "Latitude: " + model.lat }
+                            Text { text: "Longitude: " + model.lon }
+                            Text { text: "NIC (Navigation Integrity Category): " + model.nic }
+                            Text { text: "RC (Navigation Containment Radius): " + model.rc + " m" }
+                            Text { text: "Time Since Last Position Update: " + model.seen_pos + " sec" }
+                            Text { text: "Messages Received: " + model.messages }
+                            Text { text: "Time Since Last Message: " + model.seen + " sec" }
+                            Text { text: "RSSI (Signal Strength): " + model.rssi + " dBm" }
+                            Text { text: "Distance from Observer: " + model.distance + " NM" }
+                            Text { text: "Direction from Observer: " + model.direction + "°" }
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true // Enable hover events
+                        onEntered: {
+                            tooltip.visible = true // Show tooltip on hover
+                        }
+                        onExited: {
+                            tooltip.visible = false // Hide tooltip when mouse leaves
+                        }
+                    }
+                }
             }
         }
     }
+    // Flight Details Panel
+    // Flight Details Panel
+// Rectangle {
+//     id: flightDetailsPanel
+//     visible: false
+//     width: 300
+//     height: parent.height
+//     color: "white"
+//     border.color: "black"
+//     border.width: 1
+//     anchors {
+//         // top: parent.top
+//         right: parent.right
+//         bottom: parent.bottom
+//         margins: 10
+//     }
 
-     Column {
+//     property var flight: null
+
+//     ListView {
+//         id: detailsList
+//         anchors.fill: parent
+//         spacing: 10
+
+//         model:
+
+//         delegate: Item {
+//             height: 40
+//             Row {
+//                 spacing: 10
+//                 Text {
+//                     text: name + ":"
+//                     font.bold: true
+//                 }
+//                 Text {
+//                     text: value
+//                 }
+//             }
+//         }
+//     }
+
+//     // Close button
+//     Button {
+//         anchors {
+//             top: parent.top
+//             right: parent.right
+//             margins: 5
+//         }
+//         text: "X"
+//         onClicked: flightDetailsPanel.visible = false
+//     }
+
+    // onFlightChanged: {
+    //     flightDetailsModel.clear(); // Clear the model first
+    //     if (flight) {
+    //         flightDetailsModel.append({ name: "Flight", value: flight.flight });
+    //         flightDetailsModel.append({ name: "Altitude", value: flight.alt_baro + " ft" });
+    //         flightDetailsModel.append({ name: "Speed", value: flight.ground_speed + " kts" });
+    //         flightDetailsModel.append({ name: "Operator", value: flight.operator });
+    //         flightDetailsModel.append({ name: "Aircraft", value: flight.aircraft_type });
+    //         flightDetailsModel.append({ name: "Registration", value: flight.registration });
+    //     }
+    // }
+// }
+
+
+    Column {
         anchors {
             top: parent.top
             right: parent.right
@@ -306,6 +432,7 @@ Rectangle {
 
         // Button to enable radius selection
         Button {
+            id: radiusBtn
             text: "Select Radius"
             enabled: !radiusSelector.enabled
             onClicked: {
