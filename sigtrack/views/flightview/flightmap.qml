@@ -193,7 +193,8 @@ Rectangle {
                 const endCoord = map.toCoordinate(Qt.point(endX, endY))
                 const distanceMeters = startCoord.distanceTo(endCoord)
                 const distanceNauticalMiles = distanceMeters / 1852 // Convert meters to nautical miles
-                radius = Math.min(distanceNauticalMiles, 250) // Limit radius to 250 nautical miles
+                // radius = Math.min(distanceNauticalMiles, 250) // Limit radius to 250 nautical miles
+                radius = distanceNauticalMiles
 
                 // Calculate the radius in pixels
                 const radiusPixels = metersToPixels(distanceMeters, startCoord.latitude, map.zoomLevel)
