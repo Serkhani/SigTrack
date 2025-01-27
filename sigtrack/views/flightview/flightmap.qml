@@ -6,10 +6,6 @@ import Qt.labs.animation
 import "../../views/flightview/js_file.js" as App
 
 Rectangle {
-    // visible: true
-    // width: 1024
-    // height: 768
-    // title: "Flight Tracker"
     Plugin {
         id: osmPlugin
         name: "osm"
@@ -235,47 +231,41 @@ Rectangle {
             model: flightModel
             anchors.fill: parent
             delegate: MapQuickItem {
-                        coordinate: QtPositioning.coordinate(model.lat, model.lon)
-                        
-                        anchorPoint.x: droneImg.width/2
-                        anchorPoint.y: droneImg.height/2
-                        // transform: Rotation {
-                        //     origin.x: droneImg.width/2
-                        //     origin.y: droneImg.height/2
-                        //     angle: model.track
-                        // }
-                        MouseArea{
-                            anchors.fill: parent
-                            onClicked: {
-                                console.log(model.flight)
-                                console.log(model.lat)
-                                console.log(model.lon)
-                                console.log(model.alt)
-                                console.log(model.ownOp)
-                                console.log(model.track)
-                            }
-                        }
-                        sourceItem: Image {
-                            id: droneImg
-                            property alias rotationAngle: rotation.angle
-                            width: 70
-                            height: 70
-                            transform: 
-                            [
-                                Rotation {
-                                    id: rotation
-                                    origin.x: droneImg.width/2
-                                    origin.y: droneImg.height/2
-                                    angle: model.track
-                                }
-                            ]
-                            source:  'qrc:/drone'
+                    coordinate: QtPositioning.coordinate(model.lat, model.lon)
+                    anchorPoint.x: droneImg.width/2
+                    anchorPoint.y: droneImg.height/2
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            console.log(model.flight)
+                            console.log(model.lat)
+                            console.log(model.lon)
+                            console.log(model.alt)
+                            console.log(model.ownOp)
+                            console.log(model.track)
                         }
                     }
-}
+                    sourceItem: Image {
+                        id: droneImg
+                        property alias rotationAngle: rotation.angle
+                        width: 70
+                        height: 70
+                        transform: 
+                        [
+                            Rotation {
+                                id: rotation
+                                origin.x: droneImg.width/2
+                                origin.y: droneImg.height/2
+                                angle: model.track
+                            }
+                        ]
+                        source:  'qrc:/drone'
+                    }
+            }
+        }
     }
 
-    Column {
+     Column {
         anchors {
             top: parent.top
             right: parent.right
@@ -286,11 +276,15 @@ Rectangle {
         TextField {
             id: latTextField
             placeholderText: "Lat"
+            onTextChanged: validateInput()
+            color: isValidLatitude(latTextField.text) ? "black" : "red"
         }
 
         TextField {
             id: lonTextField
             placeholderText: "Lon"
+            onTextChanged: validateInput()
+            color: isValidLongitude(lonTextField.text) ? "black" : "red"
         }
 
         TextField {
@@ -300,8 +294,13 @@ Rectangle {
 
         Button {
             text: "Submit"
+            enabled: isValidLatitude(latTextField.text) && isValidLongitude(lonTextField.text)
             onClicked: {
-                App.update_url([latTextField.text, lonTextField.text, radiusTextField.text])
+                if (isValidLatitude(latTextField.text) && isValidLongitude(lonTextField.text)) {
+                    App.update_url([latTextField.text, lonTextField.text, radiusTextField.text])
+                } else {
+                    console.log("Invalid latitude or longitude values.")
+                }
             }
         }
 
@@ -313,6 +312,23 @@ Rectangle {
                 radiusSelector.enabled = true
             }
         }
+    }
+     // Function to validate latitude
+    function isValidLatitude(lat) {
+        const num = parseFloat(lat)
+        return !isNaN(num) && num >= -90 && num <= 90 || lat==""
+    }
+
+    // Function to validate longitude
+    function isValidLongitude(lon) {
+        const num = parseFloat(lon)
+        return !isNaN(num) && num >= -180 && num <= 180 || lon==""
+    }
+
+    // Function to validate input and update text color
+    function validateInput() {
+        latTextField.color = isValidLatitude(latTextField.text) ? "black" : "red"
+        lonTextField.color = isValidLongitude(lonTextField.text) ? "black" : "red"
     }
     ComboBox {
         id: mapTypeComboBox
