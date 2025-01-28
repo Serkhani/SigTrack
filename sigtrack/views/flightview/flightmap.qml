@@ -20,11 +20,17 @@ Rectangle {
         }
     }
     Component.onCompleted: map.resetPinchMinMax()
-
+    Plugin {
+        id: herePlugin
+        name: "here"
+        PluginParameter { name: "here.apiKey"; value: "ll4wz9OgFeLy08ElhzVfZ3QDk1V35LqMJnD5I9CimRE" }
+    }
+    
     Map {
         anchors.fill: parent
         id: map
         plugin: osmPlugin
+        // plugin: herePlugin
         center: QtPositioning.coordinate(5.658735, -0.184961)
         zoomLevel: 2
         width: parent.width
