@@ -443,61 +443,61 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
 
     # isActive, message = activateLicense()
-    isActive, message = True, ""
+    isActive, message = False, "No license key file found"
 
+    app = QApplication(sys.argv)
+    stylesheet ="""
+QPushButton {
+background-color: #3498db;
+color: white;
+font-size: 14px;
+padding: 10px;
+border: 10px;
+border-radius: 5px;
+}
+
+QPushButton:hover {
+    background-color: #2980b9;
+}
+
+QMainWindow {
+    background-color: #D3D3D3;  
+    border: 4px solid #bdc3c7;
+    
+}
+
+"""
+
+    app.setStyleSheet(stylesheet)
+    app.setWindowIcon(
+        QIcon(os.path.join(":/sigtrack_icon")))
+
+    # ======FOR SPLASH SCREEN======
+
+    # Load the image for the splash screen
+    logger.info("Loading splash screen")
+    pixmap = QPixmap(os.path.join(":/sigtrack"))
+
+    # Rotate and scale the image until it can't be seen
+    angle = 100
+    scale = 0.0
+
+    # Create the splash screen and show it
+    splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
+    transform = QTransform().rotate(angle).scale(scale, scale)
+    rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
+    splash.setPixmap(rotated)
+    splash.show()
+
+    while scale < 1.0:
+        app.processEvents()
+        angle -= 1
+        scale += 0.01
+        transform = QTransform().rotate(angle).scale(scale, scale)
+        rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
+        splash.setPixmap(rotated)
+    widget = None
     if isActive:
-      app = QApplication(sys.argv)
-      stylesheet ="""
-    QPushButton {
-    background-color: #3498db;
-    color: white;
-    font-size: 14px;
-    padding: 10px;
-    border: 10px;
-    border-radius: 5px;
-    }
-
-    QPushButton:hover {
-        background-color: #2980b9;
-    }
-
-    QMainWindow {
-        background-color: #D3D3D3;  
-        border: 4px solid #bdc3c7;
-        
-    }
-    
-    """
-    
-      app.setStyleSheet(stylesheet)
-      app.setWindowIcon(
-          QIcon(os.path.join(":/sigtrack_icon")))
-
-      # ======FOR SPLASH SCREEN======
-
-      # Load the image for the splash screen
-      logger.info("Loading splash screen")
-      pixmap = QPixmap(os.path.join(":/sigtrack"))
-
-      # Rotate and scale the image until it can't be seen
-      angle = 100
-      scale = 0.0
-
-      # Create the splash screen and show it
-      splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
-      transform = QTransform().rotate(angle).scale(scale, scale)
-      rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
-      splash.setPixmap(rotated)
-      splash.show()
-
-      while scale < 1.0:
-          app.processEvents()
-          angle -= 1
-          scale += 0.01
-          transform = QTransform().rotate(angle).scale(scale, scale)
-          rotated = pixmap.transformed(transform, Qt.SmoothTransformation)
-          splash.setPixmap(rotated)
-
       # ======SPLASH SCREEN ENDED======
 
       widget = MainWindow()
@@ -507,5 +507,12 @@ if __name__ == "__main__":
       widget.show()
       sys.exit(app.exec())
     else:
-      logger.error(message)
+        splash.close()
+        widget = QMessageBox()
+        widget.setText(
+            f"License Error: {message}"
+        )
+        widget.exec()
+        logger.error(message)
+    
 
