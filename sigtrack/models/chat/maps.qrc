@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="lora">resources/maps/lora_map.html</file>
+    <file alias="google">resources/maps/google_map.html</file>
+    <file alias="mapbox">resources/maps/mapbox.html</file>
+    <file alias="maptiler">resources/maps/maptiler.html</file>
+  </qresource>
+</RCC>

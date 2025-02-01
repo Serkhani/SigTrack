@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (QMainWindow, QDockWidget, QWidget, QVBoxLayout, QSizePolicy, QSpacerItem,
                                QToolButton, QToolBar,QScrollArea)
-from PySide6.QtCore import Qt, QSize, Slot
+from PySide6.QtCore import Qt, QSize, Slot, QFile, QTextStream
 from PySide6.QtGui import QIcon, QFont
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from sigtrack.models.chat.item_model import ItemModel
@@ -11,12 +11,26 @@ from sigtrack.models.chat.modules.symbols import SymbolManager
 from sigtrack.models.chat.modules.weather import WeatherApp
 import sigtrack.models.chat.qt_icons_rc
 import sigtrack.models.chat.nato_icons_rc
+import sigtrack.models.chat.maps_rc
 import meshtastic.serial_interface
 from pubsub import pub
 
+
 # class Serial:
 #     def __init__(self):
-#         self.nodes = []
+#         self.nodes = {
+#                 '1': {},
+#                 '2': {},
+#                 '3': {},
+#                 '4': {},
+#                 '5': {},
+#                 '6': {},
+#                 '7': {},
+#                 '8': {},
+#                 '9': {},
+#                 '10': {},
+#             }
+        
 # interface = Serial()
 interface = meshtastic.serial_interface.SerialInterface()
 
@@ -30,13 +44,13 @@ class MapDisplay(QMainWindow):
         
         self.setWindowTitle("LoRa Chat Application")
         self.setGeometry(100, 100, 1500, 750)
-        self.setup_map(interface)
+        # self.setup_map(interface)
         self.setup_toolbar()
         #self.symbol_button = QToolButton()
         #self.symbol_manager= SymbolManager()
         self.model = ItemModel()
         self.font = QFont()
-        # self.setup_map(interface)
+        self.setup_map(interface)
 
         # Create a dock widget for stacking interfaces
         self.messageDock_widget = QDockWidget(self)
@@ -44,7 +58,7 @@ class MapDisplay(QMainWindow):
         self.messageDock_widget.setMaximumSize(500,750)
         self.messageDock_widget.setWindowTitle("Messages")
         self.messageDock_widget.setStyleSheet("""
-            QDockWidget::tittle {
+            QDockWidget::title {
                 font-weight: bold;
                 }
             """)
@@ -200,15 +214,36 @@ class MapDisplay(QMainWindow):
         #print(f"{nodes_js_data} +IOIO")
 
         # Read HTML content from file
-        with open('sigtrack/models/chat/resources/maps/lora_map.html', 'r') as file:
-            html_content = file.read()
+        # with open('sigtrack/models/chat/resources/maps/lora_map.html', 'r') as file:
+        # # with open(':/lora', 'r') as file:
+        #     html_content = file.read()
         
-        # Replace placeholder with actual node data
-        html_contents = html_content.replace("{nodes_js_data}", nodes_js_data)
-        self.web_view.setHtml(html_contents)
+        # # Replace placeholder with actual node data
+        # html_contents = html_content.replace("{nodes_js_data}", nodes_js_data)
+        # self.web_view.setHtml(html_contents)
+        file = QFile(":/lora")
+        if file.open(QFile.ReadOnly | QFile.Text):
+            stream = QTextStream(file)
+            html_content = stream.readAll()
+            file.close()
+            
+            # Replace placeholder with actual node data
+            html_contents = html_content.replace("{nodes_js_data}", nodes_js_data)
+            self.web_view.setHtml(html_contents)
+        else:
+            print("Error: Could not open resource file ':lora'")
     
    
+#     def get_file_path(relative_path):
+#         """ Get the correct file path for PyInstaller compatibility """
+#         if getattr(sys, 'frozen', False):  # Running as EXE
+#             base_path = sys._MEIPASS
+#         else:
+#             base_path = os.path.abspath(os.path.dirname(__file__))
+        
+#         return os.path.join(base_path, relative_path)
 
+# html_file_path = get_file_path("sigtrack/models/chat/resources/maps/lora_map.html")
     def show_weather(self):
         self.scroll_area3 = QScrollArea()
         self.scroll_area3.setWidgetResizable(True)
@@ -568,14 +603,25 @@ class MapDisplay(QMainWindow):
         for node_id, (latitude, longitude, short_name) in nodes_data.items():
             nodes_js_data += f"new mapboxgl.Marker().setLngLat([{longitude}, {latitude}]).addTo(map).setPopup(new mapboxgl.Popup().setText('{short_name}'));"
 
-        # Read HTML content from file
-        with open('sigtrack/models/chat/resources/maps/mapbox.html', 'r') as file:
-            html_content = file.read()
+        # # Read HTML content from file
+        # with open('sigtrack/models/chat/resources/maps/mapbox.html', 'r') as file:
+        #     html_content = file.read()
 
-        # Replace placeholder with actual node data
-        html_content = html_content.replace("{nodes_js_data}", nodes_js_data)
+        # # Replace placeholder with actual node data
+        # html_content = html_content.replace("{nodes_js_data}", nodes_js_data)
 
-        self.web_view.setHtml(html_content)
+        # self.web_view.setHtml(html_content)
+        file = QFile(":/mapbox")
+        if file.open(QFile.ReadOnly | QFile.Text):
+            stream = QTextStream(file)
+            html_content = stream.readAll()
+            file.close()
+            
+            # Replace placeholder with actual node data
+            html_contents = html_content.replace("{nodes_js_data}", nodes_js_data)
+            self.web_view.setHtml(html_contents)
+        else:
+            print("Error: Could not open resource file ':lora'")
         
     @Slot()
     def load_google_map(self, interface):
@@ -607,9 +653,20 @@ class MapDisplay(QMainWindow):
         for node_id, (latitude, longitude, short_name) in nodes_data.items():
             nodes_js_data +=f"new google.maps.Marker({{position: {{lat: {latitude}, lng: {longitude}}}, map: map, title: '{short_name}'}});\n"
             
-        with open('sigtrack/models/chat/resources/maps/google_map.html', 'r') as file:
-            html_content = file.read()
-            self.web_view.setHtml(html_content)
+        # with open('sigtrack/models/chat/resources/maps/google_map.html', 'r') as file:
+        #     html_content = file.read()
+        #     self.web_view.setHtml(html_content)
+        file = QFile(":/google")
+        if file.open(QFile.ReadOnly | QFile.Text):
+            stream = QTextStream(file)
+            html_content = stream.readAll()
+            file.close()
+            
+            # Replace placeholder with actual node data
+            html_contents = html_content.replace("{nodes_js_data}", nodes_js_data)
+            self.web_view.setHtml(html_contents)
+        else:
+            print("Error: Could not open resource file ':lora'")
             
     @Slot()
     def load_leaflet_map(self, interface):
@@ -641,14 +698,25 @@ class MapDisplay(QMainWindow):
         for node_id, (latitude, longitude, short_name) in nodes_data.items():
             nodes_js_data += f"L.marker([{latitude}, {longitude}]).addTo(map).bindPopup('{short_name}');"
 
-        # Read HTML content from file
-        with open('sigtrack/models/chat/resources/maps/lora_map.html', 'r') as file:
-            html_content = file.read()
+        # # Read HTML content from file
+        # with open('sigtrack/models/chat/resources/maps/lora_map.html', 'r') as file:
+        #     html_content = file.read()
 
-        # Replace placeholder with actual node data
-        html_content = html_content.replace("{nodes_js_data}", nodes_js_data)
+        # # Replace placeholder with actual node data
+        # html_content = html_content.replace("{nodes_js_data}", nodes_js_data)
 
-        self.web_view.setHtml(html_content)
+        # self.web_view.setHtml(html_content)
+        file = QFile(":/lora")
+        if file.open(QFile.ReadOnly | QFile.Text):
+            stream = QTextStream(file)
+            html_content = stream.readAll()
+            file.close()
+            
+            # Replace placeholder with actual node data
+            html_contents = html_content.replace("{nodes_js_data}", nodes_js_data)
+            self.web_view.setHtml(html_contents)
+        else:
+            print("Error: Could not open resource file ':lora'")
 
     
 

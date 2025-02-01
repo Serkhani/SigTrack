@@ -442,8 +442,9 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
 
-    # isActive, message = activateLicense()
-    isActive, message = False, "No license key file found"
+    isActive, message = activateLicense()
+    # isActive, message = False, "No license key file found"
+    # isActive, message = True, ""
 
     app = QApplication(sys.argv)
     stylesheet ="""
@@ -498,14 +499,14 @@ QMainWindow {
         splash.setPixmap(rotated)
     widget = None
     if isActive:
-      # ======SPLASH SCREEN ENDED======
+        # ======SPLASH SCREEN ENDED======
 
-      widget = MainWindow()
-      widget.setWindowTitle("SigTrack")
-      # Close the splash screen and continue with the main application
-      splash.finish(widget)#Makes splash screen wait until the widget is loaded then it closes.
-      widget.show()
-      sys.exit(app.exec())
+        widget = MainWindow()
+        widget.setWindowTitle("SigTrack")
+        # Close the splash screen and continue with the main application
+        splash.finish(widget)#Makes splash screen wait until the widget is loaded then it closes.
+        widget.show()
+        sys.exit(app.exec())
     else:
         splash.close()
         widget = QMessageBox()
