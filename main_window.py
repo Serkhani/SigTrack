@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (QApplication, QDockWidget, QFileDialog, QLabel,
                                QMainWindow, QMessageBox, QSplashScreen)
 from sigtrack.controllers.chatCon import ItemController
 from sigtrack.models.chat.ChatModel import ItemModel
-from sigtrack.models.streaming.streaming_model import StreamingObject
+from sigtrack.models.streaming.streaming_model import StreamingApp
 from sigtrack.views.chat.ChatView import ItemView
 
 from sigtrack.views.constants import PHOTO_EXTENSIONS
@@ -241,16 +241,8 @@ class MainWindow(QMainWindow):
         # create dock widget
         dockWidget = DockWidget(self)
         dockWidget.setWindowTitle("streaming")
-        
-        ui = StreamingObject()
-        
-        # MainWindow = QtWidgets.QMainWindow()
-        # ui = ()
-        # dockWidget = QDockWidget(MainWindow)
-        ui.setupUi(dockWidget)
-        # MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), dockWidget)
-        # MainWindow.show()
-        # dockWidget.setWidget(view)
+        view = StreamingApp()
+        dockWidget.setWidget(view)
         self.addDockWidget(_DOCK_POSITIONS[self.getDockIndex()], dockWidget)
 
     def getDockIndex(self):
