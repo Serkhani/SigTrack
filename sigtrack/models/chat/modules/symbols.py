@@ -2,7 +2,7 @@ import os
 from PySide2.QtWidgets import (QWidget,QTabWidget,QVBoxLayout,QGridLayout,QScrollArea,QLabel)
 from PySide2.QtGui import QIcon,QPixmap,QDrag,QImage
 from PySide2.QtCore import QSize, Qt,Signal,QUrl,QBuffer,QByteArray,QIODevice,QMimeData
-import sigtrack.models.chat.nato_icons_rc
+import sigtrack.models.chat.nato_rc
 import sigtrack.models.chat.qt_icons_rc
 import base64
 # import sigtrack.resources.icons.chat_icons.Nato_Icons
@@ -96,7 +96,7 @@ class SymbolManager(QWidget):
             images_folder =f"sigtrack/models/chat/resources/Nato_Icons/{folder}/"
             images = [(f":/resources/Nato_Icons/{folder}/{img}", img) for img in os.listdir(images_folder) if img.endswith(".png")]
             # images = []
-            print(images)
+            # print(images)
 
             row = 0
             col = 0

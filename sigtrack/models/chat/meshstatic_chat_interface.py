@@ -71,7 +71,7 @@ class MeshtasticChatInterface(QWidget):
 
         # Broadcast icon button
         self.broadcast_icon = QRadioButton()
-        self.broadcast_icon.setIcon(QIcon(":qt_icons/broadcast_line_icon.svg"))
+        self.broadcast_icon.setIcon(QIcon(":/resources/qt_icons/broadcast_line_icon.svg"))
         self.broadcast_icon.setToolTip("BroadCast")
         self.left_layout.addWidget(self.broadcast_icon)
         
