@@ -54,7 +54,7 @@ class Peers(QWidget):
                 # print(long_name)
                 # print(node_id)
                 # print(modell)
-        self.model.add_nodeInfo(node_id,short_name,long_name,modell)
+            self.model.add_nodeInfo(node_id,short_name,long_name,modell)
 
         # Remove row numbers
         self.table_widget.verticalHeader().setVisible(False)
